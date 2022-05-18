@@ -78,7 +78,11 @@ end
 -- init
 for _, child in pairs(script:GetChildren()) do
 	if child:IsA("ModuleScript") then
+		plugin:Deactivate()
 		local pluginData: PluginData = require(child)
+		plugin:Activate(true)
 		setupPlugin(pluginData)
 	end
 end
+
+plugin:Deactivate()

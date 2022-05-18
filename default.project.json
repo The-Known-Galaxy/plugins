@@ -3,6 +3,8 @@
     "tree": {
         "$className": "DataModel",
         "ServerScriptService": {
+            "$className": "ServerScriptService",
+            "$ignoreUnknownInstances": true,
             "Source": {
                 "$ignoreUnknownInstances": false,
                 "$path": "src",
@@ -12,6 +14,7 @@
             }
         },
         "Workspace": {
+            "$className": "Workspace",
             "$properties": {
                 "FilteringEnabled": true
             },
@@ -39,6 +42,7 @@
             }
         },
         "Lighting": {
+            "$className": "Lighting",
             "$properties": {
                 "Ambient": [
                     0,

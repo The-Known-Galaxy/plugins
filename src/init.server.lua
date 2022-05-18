@@ -3,6 +3,11 @@ local PluginToolbar = plugin:CreateToolbar("TKG Suite")
 local Janitor = require(script.Packages.Janitor)
 local WidgetUtility = require(script.WidgetUtility)
 
+local PluginEnabledStatus = {
+	ModelUtility = true,
+	AutoFolder = false,
+}
+
 type WidgetInfo = {
 	title: string,
 	dockWidgetPluginGuiInfo: DockWidgetPluginGuiInfo,
@@ -48,7 +53,7 @@ local function setupPlugin(pluginData: PluginData)
 end
 
 --// MODEL UTILITY
-do
+if PluginEnabledStatus.ModelUtility == true then
 	local DEFAULTS = {
 		INITIAL_DOCK_STATE = Enum.InitialDockState.Float,
 		INITIAL_ENABLED = false,
@@ -153,7 +158,7 @@ do
 end
 
 --//AutoFolder
-do
+if PluginEnabledStatus.AutoFolder == true then
 	local PLUGIN_NAME = "AutoFolder"
 	local janitor = Janitor.new()
 

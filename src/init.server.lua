@@ -40,7 +40,7 @@ local function setupPlugin(pluginData: PluginData)
 
 		if pluginData.hasWidget == true then
 			local widget = createWidget(pluginData)
-			WidgetUtility.syncDockButton(newDockButton, widget)
+			WidgetUtility.syncDockButtonToWidget(newDockButton, widget)
 			WidgetUtility.syncWidgetColor(widget)
 			pluginData.rootGuiObject.Parent = widget
 		end

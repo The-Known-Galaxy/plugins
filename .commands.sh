@@ -8,3 +8,8 @@ run_unit_tests() {
     run-in-roblox --place build/default.rbxl --script run-unit-tests.luau
     echo "TEST RUNNING FINISHED"
 }
+
+run_static_analysis() {
+    selene --version
+    selene --display-style Rich src lune
+}

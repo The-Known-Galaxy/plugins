@@ -9,6 +9,7 @@ Below are links to all documentation relevant to the tooling this project uses.
 - [Lune](https://lune-org.github.io/docs)
 - [Luau](https://luau-lang.org/)
 - [Moonwave](https://eryn.io/moonwave/)
+- [React Best Practices](https://blog.boyned.com/articles/things-i-learned-using-react/) by Kampfkarren
 
 # Development Workflow
 

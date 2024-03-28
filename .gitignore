@@ -9,3 +9,4 @@ build/
 sourcemap.json
 .env
 Packages
+node_modules

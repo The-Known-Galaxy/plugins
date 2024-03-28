@@ -1,0 +1,34 @@
+title = "TKG Plugin Suite"                                 # From Git
+gitRepoUrl = "https://github.com/The-Known-Galaxy/plugins" # From Git
+
+gitSourceBranch = "master"
+changelog = true
+classOrder = []
+
+autoSectionPath = "src"
+
+# [docusaurus]
+# onBrokenLinks = "throw"
+# onBrokenMarkdownLinks = "warn"
+# favicon = ""
+
+# # From git:
+# organizationName = "The Known Galaxy"
+# projectName = "TKG Plugin Suite"
+# url = "https://AuthorName.github.io"
+# baseUrl = "/MyProjectName"
+# tagline = "tagline test?"
+
+# [navbar]
+# hideableSidebar = true
+
+[footer]
+style = "dark"
+copyright = "Copyright © 2024 The Known Galaxy. Built with Moonwave and Docusaurus"
+
+# [[footer.links]]
+# title = "examples"
+
+# [[footer.links.items]]
+# label = "example"
+# href = "https://example.com/"

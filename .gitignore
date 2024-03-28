@@ -8,3 +8,4 @@ build/
 # project files
 sourcemap.json
 .env
+Packages

@@ -3,8 +3,9 @@
 
 # To add a new tool, add an entry to this table.
 [tools]
-# for live-syncing into studio
+# build system
 rojo = "rojo-rbx/rojo@7.3.0"
+lune = "lune-org/lune@0.8.2"
 
 # for managing dependency libraries
 wally = "upliftgames/wally@0.3.1"

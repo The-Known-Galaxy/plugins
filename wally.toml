@@ -7,3 +7,4 @@ realm = "shared"
 [dependencies]
 t = "osyrisrblx/t@3.0.0"
 Janitor = "howmanysmall/janitor@1.13.15"
+TestEZ = "roblox/testez@0.4.1"

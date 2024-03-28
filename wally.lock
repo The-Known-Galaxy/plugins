@@ -13,6 +13,11 @@ version = "3.0.0"
 dependencies = []
 
 [[package]]
+name = "roblox/testez"
+version = "0.4.1"
+dependencies = []
+
+[[package]]
 name = "tkg/plugins"
 version = "0.1.0"
-dependencies = [["Janitor", "howmanysmall/janitor@1.14.1"], ["t", "osyrisrblx/t@3.0.0"]]
+dependencies = [["Janitor", "howmanysmall/janitor@1.14.1"], ["TestEZ", "roblox/testez@0.4.1"], ["t", "osyrisrblx/t@3.0.0"]]

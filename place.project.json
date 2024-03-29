@@ -12,6 +12,9 @@
                 },
                 "Libraries": {
                     "$path": "Packages"
+                },
+                "Assets": {
+                    "$path": "assets"
                 }
             }
         }

@@ -1,0 +1,8 @@
+name = "TKG Plugin Suite"
+upload-to-group-id = 6153729 # tkg group id
+
+[[inputs]]
+glob = "assets/images/*.{png,jpg}"
+codegen = true
+codegen-path = "assets/images/init.luau"
+codegen-base-path = "assets/images"

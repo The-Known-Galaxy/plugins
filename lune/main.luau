@@ -1,6 +1,7 @@
 local process = require("@lune/process")
 local fs = require("@lune/fs")
 local stdio = require("@lune/stdio")
+local roblox = require("@lune/roblox")
 
 local Util = require("lib/Util")
 local Out = require("lib/Out")
@@ -94,6 +95,22 @@ function ProgramActions.build.remove_plugin()
 		else
 			Out.Warn("plugin not removed due to IO problems...")
 		end
+	end
+end
+
+--[=[
+	Syncs all images used by the plugin with Tarmac into ROBLOX asset servers (uploads them).
+]=]
+function ProgramActions.sync_images()
+	Out.Info("syncing all image assets to ROBLOX...")
+
+	local result = process.spawn("tarmac", { "sync", "--auth", roblox.getAuthCookie(true), "--target", "roblox" })
+	if result.ok then
+		print(result.stdout)
+		Out.Success("Images successfully synced!")
+	else
+		print(result.stderr)
+		Out.Warn("Something went wrong...")
 	end
 end
 

@@ -33,16 +33,17 @@ export type SavedState = any
 	@within PluginFacade
 	.DevelopmentMode boolean -- Whether Hot-Reloading is turned on.
 	.PluginObject Plugin -- Reference to the running plugin instance, from which native ROBLOX calls can be made.
+	.CurrentRoot Instance | any -- A reference to the top-level root of the plugin, wherever it might be. ALL REQUIRES SHOULD BE DIRECTED FROM HERE
 ]=]
 export type PluginFacade = {
 	DevelopmentMode: boolean,
 	PluginObject: Plugin,
+	Root: Instance | any,
 	_toolbars: { [PluginToolbarName]: PluginToolbar },
 	_pluginGuis: any,
 	_buttons: { [PluginToolbar]: { [PluginToolbarButtonName]: PluginToolbarButton } },
 	_watching: any,
 	_beforeUnload: any?,
-	_currentRoot: Instance | any,
 	_source: Instance | any,
 
 	Setup: (self: PluginFacade, settings: PluginFacadeSetupSettings) -> (),
@@ -70,7 +71,7 @@ local PluginFacade = {
 	_buttons = {},
 	_watching = {},
 	_beforeUnload = nil,
-	_currentRoot = nil,
+	Root = nil,
 	_source = nil,
 }
 
@@ -79,9 +80,9 @@ local PluginFacade = {
 ]=]
 function PluginFacade.Setup(self: PluginFacade, settings: PluginFacadeSetupSettings)
 	self.DevelopmentMode = settings.DevelopmentMode
-	self._currentRoot = settings.currentRoot
-	self._source = settings.source
+	self.Root = settings.currentRoot
 	self.PluginObject = settings.pluginReference
+	self._source = settings.source
 end
 
 --[=[
@@ -123,7 +124,7 @@ function PluginFacade.CreateButton(
 		self._buttons[toolbar] = existingButtons
 	end
 
-	local button = toolbar:CreateButton(name, tooltip, icon, text)
+	local button = toolbar:CreateButton(name or "default name", tooltip or "default tooltip", icon or "", text)
 
 	existingButtons[name] = button
 
@@ -170,19 +171,23 @@ end
 	:::
 ]=]
 function PluginFacade.LoadPlugin(self: PluginFacade, savedState: SavedState)
-	local ok, result = pcall(require, self._currentRoot.Plugin.Main)
+	-- this technically needs a pcall, but it's whatever
+	local Logger = require(script.Parent.Modules.Logger)
+
+	local ok, result = pcall(require, self.Root.Plugin.Main)
 
 	if not ok then
-		warn("Plugin failed to load: " .. result)
+		Logger.Warn("Plugin failed to load: " .. result)
 		return
 	end
 
 	local requiredMainModule = result
 
+	-- requiredMainModule(self, savedState) -- use this when testing things that break and you want to see the stack trace
 	ok, result = pcall(requiredMainModule, self, savedState)
 
 	if not ok then
-		warn("Plugin failed to run: " .. result)
+		Logger.Warn("Plugin failed to run: " .. result)
 		return
 	end
 end
@@ -205,7 +210,7 @@ end
 ]=]
 function PluginFacade.HotReloadPlugin(self: PluginFacade)
 	local saveState = self:UnloadPlugin()
-	PluginFacade._currentRoot = self._source:Clone()
+	PluginFacade.Root = self._source:Clone()
 
 	self:LoadPlugin(saveState)
 end

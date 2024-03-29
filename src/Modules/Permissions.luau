@@ -5,13 +5,11 @@
 ]=]
 
 local GroupService = game:GetService("GroupService")
-local ServerStorage = game:GetService("ServerStorage")
-
 local StudioService = game:GetService("StudioService")
 
-local Config = require(ServerStorage.TKGSuite.Plugin.Config)
-local RankData = require(ServerStorage.TKGSuite.Plugin.Modules.Data.RankData)
-local Logger = require(ServerStorage.TKGSuite.Plugin.Modules.Logger)
+local Config = require(script.Parent.Parent.Config)
+local RankData = require(script.Parent.Data.RankData)
+local Logger = require(script.Parent.Logger)
 
 export type UserGroup = {
 	EmblemId: number,

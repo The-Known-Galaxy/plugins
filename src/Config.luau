@@ -11,6 +11,7 @@ local Config = {}
 	@within Config
 	
 	Change to `true` to enable hot reloading support.
+	You must rebuild the plugin and the place for this to take effect.
 	Opening a place containing the code synced via Rojo will cause the plugin to be reloaded in edit mode.
 	(No need for play solo or the hotswap plugin.)
 ]=]
@@ -58,7 +59,14 @@ Config.Name.PluginRoot = "TKGSuite"
 
 	Primary icon asset string for the plugin.
 ]=]
-Config.MainIcon = nil -- defined in `Loader` since non-ROBLOX Lune scripts also need to access this file
+Config.MainIcon = nil -- non-ROBLOX Lune scripts also need to access this file, so initially nil
+
+if game ~= nil then
+	-- unless in a roblox context
+	local ServerStorage = game:GetService("ServerStorage")
+	local images = require(ServerStorage.TKGSuite.Assets.images)
+	Config.MainIcon = images.sienartech_notext
+end
 
 --[=[
 	@prop GroupIds { [string]: number }

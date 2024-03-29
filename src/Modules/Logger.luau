@@ -1,6 +1,4 @@
-local ServerStorage = game:GetService("ServerStorage")
-
-local Config = require(ServerStorage.TKGSuite.Plugin.Config)
+local Config = require(script.Parent.Parent.Config)
 --[=[
     @class Logger
     

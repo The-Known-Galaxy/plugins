@@ -1,27 +1,26 @@
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
-local Config = require(ServerStorage.TKGSuite.Plugin.Config)
-local Logger = require(ServerStorage.TKGSuite.Plugin.Modules.Logger)
-local Permissions = require(ServerStorage.TKGSuite.Plugin.Modules.Permissions)
 local PluginFacade = require(ServerStorage.TKGSuite.Plugin.PluginFacade)
+local Config = require(script.Parent.Config)
+local Logger = require(script.Parent.Modules.Logger)
+local Permissions = require(script.Parent.Modules.Permissions)
 
 local _TKGSuite = script:FindFirstAncestor(Config.Name.PluginRoot)
 
-local function getSuffix(facade: PluginFacade.PluginFacade): (string, string)
-	if facade.DevelopmentMode then
+local function getToolbarNameSuffixes(pluginFacade: PluginFacade.PluginFacade): (string, string)
+	local EMPTY_STRING = ""
+	if pluginFacade.DevelopmentMode then
 		return ` [DEV-{Config.Version}]`, `Dev-{Config.Version}`
 	else
-		return "", ""
+		return EMPTY_STRING, EMPTY_STRING
 	end
 end
 
 local function MainPluginExecutor(facade: PluginFacade.PluginFacade, _savedState)
-	local displaySuffix, nameSuffix = getSuffix(facade)
+	local displaySuffix, nameSuffix = getToolbarNameSuffixes(facade)
 	local toolbar = facade:CreateToolbar(`{Config.Name.Long}{displaySuffix}`)
-	local toggleButton =
-		facade:CreateButton(toolbar, `{Config.Name.Short}`, `Open the {Config.Name.Long} window`, Config.MainIcon)
-
+	local toggleButton = facade:CreateButton(toolbar, `{Config.Name.Long}`, `Open {Config.Name.Short}`, Config.MainIcon)
 	-- local store = Rodux.Store.new(Reducer, savedState)
 
 	local info = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 0, 0)

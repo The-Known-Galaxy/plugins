@@ -6,5 +6,6 @@
   "luau-lsp.sourcemap.rojoProjectFile": "place.project.json",
   "luau-lsp.types.definitionFiles": [
     "testez.d.lua"
-  ]
+  ],
+  "luau-lsp.completion.imports.requireStyle": "alwaysRelative"
 }

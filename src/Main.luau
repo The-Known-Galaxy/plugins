@@ -1,6 +1,7 @@
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
+local images = require(ServerStorage.TKGSuite.Assets.images)
 local PluginFacade = require(ServerStorage.TKGSuite.Plugin.PluginFacade)
 
 local _TKGSuite = script:FindFirstAncestor("TKGSuite")
@@ -16,7 +17,7 @@ end
 local function MainPluginExecutor(facade: PluginFacade.PluginFacade, _savedState)
 	local displaySuffix, nameSuffix = getSuffix(facade)
 	local toolbar = facade:CreateToolbar("TKGSuite" .. displaySuffix)
-	local toggleButton = facade:CreateButton(toolbar, "TKGSuite", "Open the TKGSuite window", "")
+	local toggleButton = facade:CreateButton(toolbar, "TKGSuite", "Open the TKGSuite window", images.tkg)
 
 	-- local store = Rodux.Store.new(Reducer, savedState)
 

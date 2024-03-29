@@ -1,3 +1,13 @@
+[inputs."assets/images/sienartech.png"]
+hash = "7ad1d37b3326b477a79bbe224c18a6d92be5915fdae4beab6a04856079603d1c"
+id = 16915526479
+packable = false
+
+[inputs."assets/images/sienartech_notext.png"]
+hash = "8896051a2f44cd2ab42c799ddac2e3feb98ec9a5d6a3d796da16103f1a4c66c3"
+id = 16915526745
+packable = false
+
 [inputs."assets/images/tkg.png"]
 hash = "7eb2c19aa95dd1a8b97662a6adb03912a20f965f8e2780abeae1737f6fca974e"
 id = 16915168098

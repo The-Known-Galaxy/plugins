@@ -17,7 +17,7 @@ end
 local function MainPluginExecutor(facade: PluginFacade.PluginFacade, _savedState)
 	local displaySuffix, nameSuffix = getSuffix(facade)
 	local toolbar = facade:CreateToolbar("TKGSuite" .. displaySuffix)
-	local toggleButton = facade:CreateButton(toolbar, "TKGSuite", "Open the TKGSuite window", images.tkg)
+	local toggleButton = facade:CreateButton(toolbar, "TKGSuite", "Open the TKGSuite window", images.sienartech_notext)
 
 	-- local store = Rodux.Store.new(Reducer, savedState)
 

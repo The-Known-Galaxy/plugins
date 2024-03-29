@@ -4,6 +4,15 @@
     A dynamic plugin hot-reloader, used in developing the plugin.
 ]=]
 
+--[=[
+	@interface PluginFacadeSetupSettings
+	@within PluginFacade
+	
+	.DevelopmentMode boolean -- Whether to turn on development mode.
+	.currentRoot Instance -- The root [Instance] where the plugin is stored in.
+	.source Instance -- The root [Instance] from which the module "clones" itself for hot-reloading.
+	.pluginReference Plugin -- A reference to the [Plugin] object available in the plugin calling script.
+]=]
 export type PluginFacadeSetupSettings = {
 	DevelopmentMode: boolean,
 	currentRoot: Instance,
@@ -12,7 +21,19 @@ export type PluginFacadeSetupSettings = {
 }
 export type PluginToolbarName = string
 export type PluginToolbarButtonName = string
+
+--[=[
+	@type SavedState any
+	@within PluginFacade
+]=]
 export type SavedState = any
+
+--[=[
+	@interface PluginFacade
+	@within PluginFacade
+	.DevelopmentMode boolean -- Whether Hot-Reloading is turned on.
+	.PluginObject Plugin -- Reference to the running plugin instance, from which native ROBLOX calls can be made.
+]=]
 export type PluginFacade = {
 	DevelopmentMode: boolean,
 	PluginObject: Plugin,
@@ -24,19 +45,8 @@ export type PluginFacade = {
 	_currentRoot: Instance | any,
 	_source: Instance | any,
 
-	--[=[
-        Sets up the PluginFacade instance.
-    ]=]
 	Setup: (self: PluginFacade, settings: PluginFacadeSetupSettings) -> (),
-
-	--[=[
-        Abstraction for plugin:CreateToolbar
-    ]=]
 	CreateToolbar: (self: PluginFacade, name: string) -> PluginToolbar,
-
-	--[=[
-        Abstraction for toolbar:CreateButton
-    ]=]
 	CreateButton: (
 		self: PluginFacade,
 		toolbar: PluginToolbar,
@@ -45,40 +55,11 @@ export type PluginFacade = {
 		icon: string,
 		text: string?
 	) -> PluginToolbarButton,
-
-	--[=[
-        Wrapper around plugin:CreatePluginGui
-    ]=]
 	CreateDockWidgetPluginGui: (self: PluginFacade, name: string, info: DockWidgetPluginGuiInfo) -> DockWidgetPluginGui,
-
-	--[=[
-        Wrapper around plugin:GetMouse
-    ]=]
-	GetMouse: (self: PluginFacade) -> PluginMouse,
-
-	--[=[
-        Sets the method to call the next time the system tries to reload
-    ]=]
 	RegisterPreUnloadHook: (self: PluginFacade, callback: (...any) -> ...any) -> (),
-
-	--[=[
-        Loads the entire plugin.
-    ]=]
 	LoadPlugin: (self: PluginFacade, savedState: SavedState) -> (),
-
-	--[=[
-        Unloads the plugin.
-    ]=]
 	UnloadPlugin: (self: PluginFacade) -> SavedState?,
-
-	--[=[
-        Reloads the plugin. Used in hot-reloading.
-    ]=]
 	HotReloadPlugin: (self: PluginFacade) -> (),
-
-	--[=[
-        Watch for changes to the given instance and its children, and then hot-reload the entire plugin to reflect those changes.
-    ]=]
 	WatchInstanceForChanges: (self: PluginFacade, instance: Instance) -> (),
 }
 local PluginFacade = {
@@ -93,6 +74,9 @@ local PluginFacade = {
 	_source = nil,
 }
 
+--[=[
+	Sets up the PluginFacade module.
+]=]
 function PluginFacade.Setup(self: PluginFacade, settings: PluginFacadeSetupSettings)
 	self.DevelopmentMode = settings.DevelopmentMode
 	self._currentRoot = settings.currentRoot
@@ -100,7 +84,10 @@ function PluginFacade.Setup(self: PluginFacade, settings: PluginFacadeSetupSetti
 	self.PluginObject = settings.pluginReference
 end
 
-function PluginFacade.CreateToolbar(self: PluginFacade, name)
+--[=[
+	Abstraction for [Plugin:CreateToolbar]
+]=]
+function PluginFacade.CreateToolbar(self: PluginFacade, name: string): PluginToolbar
 	if self._toolbars[name] then
 		return self._toolbars[name]
 	end
@@ -112,6 +99,9 @@ function PluginFacade.CreateToolbar(self: PluginFacade, name)
 	return toolbar
 end
 
+--[=[
+	Abstraction for [PluginToolbar:CreateButton]
+]=]
 function PluginFacade.CreateButton(
 	self: PluginFacade,
 	toolbar: PluginToolbar,
@@ -140,6 +130,9 @@ function PluginFacade.CreateButton(
 	return button
 end
 
+--[=[
+	Wrapper around [Plugin:CreateDockWidgetPluginGui]
+]=]
 function PluginFacade.CreateDockWidgetPluginGui(
 	self: PluginFacade,
 	name: string,
@@ -155,14 +148,27 @@ function PluginFacade.CreateDockWidgetPluginGui(
 	return gui
 end
 
+--[=[
+	Wrapper around [Plugin:GetMouse]
+]=]
 function PluginFacade.GetMouse(self: PluginFacade): PluginMouse
 	return self.PluginObject:GetMouse()
 end
 
-function PluginFacade.RegisterPreUnloadHook(self: PluginFacade, callback)
+--[=[
+	Sets the method to call the next time the plugin tries to hot-reload.
+]=]
+function PluginFacade.RegisterPreUnloadHook(self: PluginFacade, callback: (...any) -> ...any)
 	self._beforeUnload = callback
 end
 
+--[=[
+	Loads the entire plugin.
+
+	:::warning
+	Will fail to run if `root.Plugin.Main` is not a [ModuleScript] that returns a `function`.
+	:::
+]=]
 function PluginFacade.LoadPlugin(self: PluginFacade, savedState: SavedState)
 	local ok, result = pcall(require, self._currentRoot.Plugin.Main)
 
@@ -181,6 +187,9 @@ function PluginFacade.LoadPlugin(self: PluginFacade, savedState: SavedState)
 	end
 end
 
+--[=[
+	Unloads the entire plugin.
+]=]
 function PluginFacade.UnloadPlugin(self: PluginFacade): SavedState?
 	if self._beforeUnload then
 		local saveState = self._beforeUnload()
@@ -191,6 +200,9 @@ function PluginFacade.UnloadPlugin(self: PluginFacade): SavedState?
 	return nil
 end
 
+--[=[
+	Reloads the entire plugin. Used in hot-reloading.
+]=]
 function PluginFacade.HotReloadPlugin(self: PluginFacade)
 	local saveState = self:UnloadPlugin()
 	PluginFacade._currentRoot = self._source:Clone()
@@ -198,7 +210,14 @@ function PluginFacade.HotReloadPlugin(self: PluginFacade)
 	self:LoadPlugin(saveState)
 end
 
-function PluginFacade.WatchInstanceForChanges(self: PluginFacade, instance)
+--[=[	
+	Watch for changes to the given instance and its children, and then hot-reload the entire plugin to reflect those changes.
+
+	:::note
+	Recursive. Should be called on the root instance _once_, and it'll watch all descendant instances.
+	:::
+]=]
+function PluginFacade.WatchInstanceForChanges(self: PluginFacade, instance: Instance): ()
 	if self._watching[instance] then
 		return
 	end

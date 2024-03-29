@@ -5,6 +5,7 @@ local roblox = require("@lune/roblox")
 
 local Util = require("lib/Util")
 local Out = require("lib/Out")
+local remodel = require("remodel")
 
 if process.os ~= "windows" then
 	error("Functionality for non-Windows systems has not been implemented yet.")
@@ -111,6 +112,51 @@ function ProgramActions.sync_images()
 	else
 		print(result.stderr)
 		Out.Warn("Something went wrong...")
+	end
+end
+
+--[=[
+	Deploys the plugin to an existing asset ID, making it go LIVE.
+]=]
+function ProgramActions.deploy()
+	Out.Info("Deploying to ROBLOX Marketplace...")
+
+	local config = require("../src/Config")
+	if config.UseDevelopmentSource == true then
+		Out.Warn("DevelopmentMode is turned on. will not deploy!")
+		return
+	end
+
+	local deploymentDirectory = "build/deploy"
+	if not fs.isDir(deploymentDirectory) then
+		Out.Info("creating deployment directory...")
+		fs.writeDir(deploymentDirectory)
+	end
+
+	Out.Info("building plugin for deployment...")
+	local pluginOutput = `{deploymentDirectory}/plugin.rbxm`
+	local result = process.spawn("rojo", {
+		"build",
+		"--output",
+		pluginOutput,
+		"plugin.project.json",
+	})
+	if not result.ok then
+		Out.Warn("Something went wrong!")
+		print(result.stderr)
+		return
+	end
+
+	-- taking 1st array index since it returns an array of Instances, but we'll only ever have 1 instance in said array
+	Out.Info("reading generated plugin file...")
+	local pluginInstance = remodel.readModelFile(pluginOutput)[1]
+	Out.Info("overwriting existing model asset...")
+	local ok, writingResult = pcall(remodel.writeExistingModelAsset, pluginInstance, 16915363791)
+	if ok then
+		Out.Success("deployment finished!")
+	else
+		Out.Warn("something went wrong during overwriting!")
+		print(writingResult)
 	end
 end
 

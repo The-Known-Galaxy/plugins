@@ -1,0 +1,19 @@
+{
+    "name": "place",
+    "tree": {
+        "$className": "DataModel",
+        "ServerScriptService": {
+            "$className": "ServerScriptService",
+            "$ignoreUnknownInstances": true,
+            "TKGSuite": {
+                "$className": "Folder",
+                "Source": {
+                    "$path": "src"
+                },
+                "Libraries": {
+                    "$path": "Packages"
+                }
+            }
+        }
+    }
+}

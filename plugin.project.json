@@ -1,0 +1,15 @@
+{
+    "name": "plugin",
+    "tree": {
+        "$className": "Folder",
+        "TKGSuite": {
+            "$className": "Folder",
+            "Source": {
+                "$path": "src"
+            },
+            "Libraries": {
+                "$path": "Packages"
+            }
+        }
+    }
+}

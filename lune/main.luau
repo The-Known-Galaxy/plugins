@@ -42,7 +42,7 @@ function ProgramActions.build.plugin()
 	if appDataDirectory ~= nil and appDataDirectory ~= "" then
 		Out.Info("building plugin into Studio plugin directory...")
 		local pluginOutputPath =
-			Path.Join(appDataDirectory:gsub("Roaming", "Local"), "Roblox", "Plugins", "TKGSuite.rbxm")
+			Path.Join(appDataDirectory:gsub("Roaming", "Local"), "Roblox", "Plugins", "TKGSuite.rbxmx")
 		if fs.isFile(pluginOutputPath) then
 			Out.Info("existing plugin file found. deleting...")
 			fs.removeFile(pluginOutputPath)

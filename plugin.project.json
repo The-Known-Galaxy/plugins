@@ -4,7 +4,7 @@
         "$className": "Folder",
         "TKGSuite": {
             "$className": "Folder",
-            "Source": {
+            "Plugin": {
                 "$path": "src"
             },
             "Libraries": {

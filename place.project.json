@@ -2,12 +2,12 @@
     "name": "place",
     "tree": {
         "$className": "DataModel",
-        "ServerScriptService": {
-            "$className": "ServerScriptService",
+        "ServerStorage": {
+            "$className": "ServerStorage",
             "$ignoreUnknownInstances": true,
             "TKGSuite": {
                 "$className": "Folder",
-                "Source": {
+                "Plugin": {
                     "$path": "src"
                 },
                 "Libraries": {

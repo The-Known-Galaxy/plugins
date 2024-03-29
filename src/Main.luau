@@ -2,6 +2,8 @@ local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
 local Config = require(ServerStorage.TKGSuite.Plugin.Config)
+local Logger = require(ServerStorage.TKGSuite.Plugin.Modules.Logger)
+local Permissions = require(ServerStorage.TKGSuite.Plugin.Modules.Permissions)
 local PluginFacade = require(ServerStorage.TKGSuite.Plugin.PluginFacade)
 
 local _TKGSuite = script:FindFirstAncestor(Config.Name.PluginRoot)
@@ -30,6 +32,12 @@ local function MainPluginExecutor(facade: PluginFacade.PluginFacade, _savedState
 	toggleButton:SetActive(gui.Enabled)
 
 	local connection = toggleButton.Click:Connect(function()
+		if not Permissions.CanUsePlugin() then
+			Logger.Warn(
+				"You are not allowed to use this plugin! You must be some kind of contributor to the Known Galaxy."
+			)
+			return
+		end
 		gui.Enabled = not gui.Enabled
 		toggleButton:SetActive(gui.Enabled)
 	end)

@@ -17,8 +17,11 @@ if not RunService:IsClient() then
 	return
 end
 
+local images = require(ServerStorage.TKGSuite.Assets.images)
 local Config = require(script.Parent.Config)
 local PluginFacade = require(script.Parent.PluginFacade)
+
+Config.MainIcon = images.sienartech_notext
 
 local shouldUseDevelopmentSource = Config.UseDevelopmentSource
 local developmentSource = ServerStorage:FindFirstChild(Config.Name.PluginRoot)

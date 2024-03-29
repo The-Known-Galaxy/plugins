@@ -4,10 +4,6 @@
 	Plugin configuration module.
 ]=]
 
-local ServerStorage = game:GetService("ServerStorage")
-
-local images = require(ServerStorage.TKGSuite.Assets.images)
-
 local Config = {}
 
 --[=[
@@ -62,6 +58,17 @@ Config.Name.PluginRoot = "TKGSuite"
 
 	Primary icon asset string for the plugin.
 ]=]
-Config.MainIcon = images.sienartech_notext
+Config.MainIcon = nil -- defined in `Loader` since non-ROBLOX Lune scripts also need to access this file
+
+--[=[
+	@prop GroupIds { [string]: number }
+	@within Config
+
+	Group IDs for all required groups that the plugin needs to know about.
+]=]
+Config.GroupIds = {
+	SienarTechSystemsDevelopment = 12675845,
+	TheKnownGalaxy = 6153729,
+}
 
 return Config

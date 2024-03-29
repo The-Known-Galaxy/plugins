@@ -3,7 +3,16 @@ gitRepoUrl = "https://github.com/The-Known-Galaxy/plugins" # From Git
 
 gitSourceBranch = "main"
 changelog = true
-classOrder = []
+
+# [[classOrder]]
+# section = "Modules"
+# classes = ["Logger", "Permissions"]
+# collapsed = true
+
+# [[classOrder]]
+# section = "Modules/Data"
+# classes = ["GroupIds", "RankData"]
+# collapsed = true
 
 autoSectionPath = "src"
 
@@ -21,6 +30,20 @@ autoSectionPath = "src"
 
 # [navbar]
 # hideableSidebar = true
+
+[home]
+enabled = true
+includeReadme = true
+
+[[home.features]]
+title = "Centralised"
+description = "All of TKG's custom Studio plugins are centralised in this one plugin. Every possible developer tool or utility made to be used in Studio is written, maintained and managed from this repository."
+# image = "https://url"
+
+[[home.features]]
+title = "Well Documented"
+description = "Almost all parts of the inner workings of these plugins are documented on this site. If there's some niche part of a plugin's internal functionality you're curious about, then it's written here."
+# image = "https://url"
 
 [footer]
 style = "dark"

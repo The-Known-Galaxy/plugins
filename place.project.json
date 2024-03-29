@@ -1,0 +1,22 @@
+{
+    "name": "place",
+    "tree": {
+        "$className": "DataModel",
+        "ServerStorage": {
+            "$className": "ServerStorage",
+            "$ignoreUnknownInstances": true,
+            "TKGSuite": {
+                "$className": "Folder",
+                "Plugin": {
+                    "$path": "src"
+                },
+                "Libraries": {
+                    "$path": "Packages"
+                },
+                "Assets": {
+                    "$path": "assets"
+                }
+            }
+        }
+    }
+}

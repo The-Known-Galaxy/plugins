@@ -25,3 +25,8 @@ run_docsite() {
     ./node_modules/.bin/moonwave dev --code src
     echo "DOC SITE STOPPED"
 }
+
+run() {
+    lune --version
+    lune run main
+}

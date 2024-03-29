@@ -3,6 +3,7 @@ gitRepoUrl = "https://github.com/The-Known-Galaxy/plugins" # From Git
 
 gitSourceBranch = "main"
 changelog = true
+apiCategories = ["constructor", "utility", "methods"]
 
 # [[classOrder]]
 # section = "Modules"

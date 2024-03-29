@@ -2,7 +2,7 @@ local process = require("@lune/process")
 local fs = require("@lune/fs")
 local stdio = require("@lune/stdio")
 
-local Path = require("lib/Path")
+local Util = require("lib/Util")
 local Out = require("lib/Out")
 
 if process.os ~= "windows" then
@@ -25,6 +25,7 @@ local ProgramActions: ActionTree = {
 ]=]
 function ProgramActions.build.place()
 	Out.Info("building place...")
+
 	local result = process.spawn("rojo", { "build", "--output", "build/place.rbxl", "place.project.json" })
 	if result.ok then
 		Out.Success("place built!")
@@ -38,27 +39,61 @@ end
     Builds the plugin directly into the Studio plugin folder on the current operating system.
 ]=]
 function ProgramActions.build.plugin()
-	local appDataDirectory = process.env.APPDATA
-	if appDataDirectory ~= nil and appDataDirectory ~= "" then
-		Out.Info("building plugin into Studio plugin directory...")
-		local pluginOutputPath =
-			Path.Join(appDataDirectory:gsub("Roaming", "Local"), "Roblox", "Plugins", "TKGSuite.rbxmx")
-		if fs.isFile(pluginOutputPath) then
-			Out.Info("existing plugin file found. deleting...")
-			fs.removeFile(pluginOutputPath)
-		end
-		local result = process.spawn("rojo", {
-			"build",
-			"--output",
-			pluginOutputPath,
-			"plugin.project.json",
-		})
-
-		if result.ok then
-			Out.Success("plugin building successful!")
-		end
-	else
+	local pluginOutputPath = Util.GetLocalPluginPath()
+	if pluginOutputPath == nil then
 		Out.Warn("no APPDATA environment variable")
+		return
+	end
+
+	Out.Info("building plugin into Studio plugin directory...")
+	if fs.isFile(pluginOutputPath) then
+		Out.Info("existing plugin file found. deleting...")
+		fs.removeFile(pluginOutputPath)
+	end
+
+	local result = process.spawn("rojo", {
+		"build",
+		"--output",
+		pluginOutputPath,
+		"plugin.project.json",
+	})
+
+	if result.ok then
+		Out.Success("plugin building successful!")
+	end
+end
+
+--[=[
+	Builds the plugin, the build place, and then starts the place instance that was just built.
+]=]
+function ProgramActions.build.plugin_and_place()
+	ProgramActions.build.plugin()
+	ProgramActions.build.place()
+end
+
+--[=[
+	Removes the plugin file from the local Studio plugin folder, so it doesn't get in the way of using the actual plugin.
+]=]
+function ProgramActions.build.remove_plugin()
+	Out.Info("removing local plugin...")
+
+	local pluginPath = Util.GetLocalPluginPath()
+	if pluginPath == nil then
+		Out.Warn("plugin path could not be established! likely because APPDATA is missing")
+		return
+	end
+
+	if not fs.isFile(pluginPath) then
+		Out.Success("plugin doesn't exist! nothing to remove!")
+		return
+	else
+		Out.Info("plugin found")
+		local ok, _result = pcall(fs.removeFile, pluginPath)
+		if ok then
+			Out.Success("plugin successfully removed!")
+		else
+			Out.Warn("plugin not removed due to IO problems...")
+		end
 	end
 end
 
@@ -75,6 +110,8 @@ local function WalkActionTree(root: ActionTree)
 			message = value
 		end
 	end
+
+	table.sort(options)
 
 	local quitString = stdio.color("red") .. "quit" .. stdio.color("reset")
 	table.insert(options, quitString)

@@ -1,14 +1,14 @@
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
-local images = require(ServerStorage.TKGSuite.Assets.images)
+local Config = require(ServerStorage.TKGSuite.Plugin.Config)
 local PluginFacade = require(ServerStorage.TKGSuite.Plugin.PluginFacade)
 
-local _TKGSuite = script:FindFirstAncestor("TKGSuite")
+local _TKGSuite = script:FindFirstAncestor(Config.Name.PluginRoot)
 
 local function getSuffix(facade: PluginFacade.PluginFacade): (string, string)
 	if facade.DevelopmentMode then
-		return " [DEV]", "Dev"
+		return ` [DEV-{Config.Version}]`, `Dev-{Config.Version}`
 	else
 		return "", ""
 	end
@@ -16,15 +16,16 @@ end
 
 local function MainPluginExecutor(facade: PluginFacade.PluginFacade, _savedState)
 	local displaySuffix, nameSuffix = getSuffix(facade)
-	local toolbar = facade:CreateToolbar("TKGSuite" .. displaySuffix)
-	local toggleButton = facade:CreateButton(toolbar, "TKGSuite", "Open the TKGSuite window", images.sienartech_notext)
+	local toolbar = facade:CreateToolbar(`{Config.Name.Long}{displaySuffix}`)
+	local toggleButton =
+		facade:CreateButton(toolbar, `{Config.Name.Short}`, `Open the {Config.Name.Long} window`, Config.MainIcon)
 
 	-- local store = Rodux.Store.new(Reducer, savedState)
 
 	local info = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 0, 0)
-	local gui = facade:CreateDockWidgetPluginGui("TKGSuite" .. nameSuffix, info)
-	gui.Name = "TKGSuite" .. nameSuffix
-	gui.Title = "TKGSuite " .. displaySuffix
+	local gui = facade:CreateDockWidgetPluginGui(`{Config.Name.Long}{nameSuffix}`, info)
+	gui.Name = `{Config.Name.Long}{nameSuffix}`
+	gui.Title = `{Config.Name.Long}{displaySuffix}`
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	toggleButton:SetActive(gui.Enabled)
 
@@ -55,7 +56,7 @@ local function MainPluginExecutor(facade: PluginFacade.PluginFacade, _savedState
 
 	local unloadConnection
 	unloadConnection = gui.AncestryChanged:Connect(function()
-		print("New TKGSuite version coming online; unloading the old version")
+		print(`New {Config.Name.Long} version coming online; unloading the old version`)
 		unloadConnection:Disconnect()
 		facade:UnloadPlugin()
 	end)

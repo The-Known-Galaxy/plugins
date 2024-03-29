@@ -21,7 +21,7 @@ local Config = require(script.Parent.Config)
 local PluginFacade = require(script.Parent.PluginFacade)
 
 local shouldUseDevelopmentSource = Config.UseDevelopmentSource
-local developmentSource = ServerStorage:FindFirstChild("TKGSuite")
+local developmentSource = ServerStorage:FindFirstChild(Config.Name.PluginRoot)
 
 -- The source that's shipped integrated into the plugin.
 -- If this code is executing inside a locally installed plugin instance, then `builtInSource` will refer to that instance.
@@ -39,7 +39,7 @@ if shouldUseDevelopmentSource then
 		mainPluginExecutionSource = developmentSource
 		currentRoot = mainPluginExecutionSource
 	else
-		warn("TKGSuite development source is not present, running using built-in source.")
+		warn(`{Config.Name.PluginRoot} development source is not present, running using built-in source.`)
 	end
 end
 

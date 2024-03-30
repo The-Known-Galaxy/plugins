@@ -1,12 +1,4 @@
-run_static_analysis() {
-    echo "TOOL VERSIONS"
-    selene --version
-    echo "RUNNING STATIC ANALYSIS"
-    selene --display-style Rich src lune
-    echo "STATIC ANALYSIS FINISHED"
-}
-
-run_docsite() {
+docsite() {
     echo "TOOL VERSIONS"
     echo "npm $(npm --version)"
     echo "moonwave $(./node_modules/.bin/moonwave --version)"
@@ -15,7 +7,7 @@ run_docsite() {
     echo "DOC SITE STOPPED"
 }
 
-run() {
+plugins() {
     lune --version
     lune run main
 }

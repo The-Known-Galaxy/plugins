@@ -22,6 +22,9 @@ local ProgramActions: ActionTree = {
 	build = {
 		message = "What would you like to build?",
 	},
+	run = {
+		message = "What would you like to run?",
+	},
 }
 
 --[=[
@@ -71,6 +74,7 @@ function ProgramActions.build.plugin()
 		Out.Success("plugin building successful!")
 		return true
 	end
+	return false
 end
 
 --[=[
@@ -169,7 +173,7 @@ function ProgramActions.deploy()
 	end
 end
 
-function ProgramActions.run_unit_tests()
+function ProgramActions.run.unit_tests()
 	local ok = ProgramActions.build.place(TEST_PLACE_NAME)
 
 	if not ok then
@@ -193,6 +197,20 @@ function ProgramActions.run_unit_tests()
 		fs.removeFile(fullTestPlaceName)
 	end
 	Out.Success("cleaned up successfully!")
+
+	return result.ok
+end
+
+function ProgramActions.run.static_analysis()
+	Out.Info("running selene's static analysis on codebase...")
+	local result = process.spawn("selene", { "--display-style", "Rich", "src", "lune" })
+	if result.ok then
+		print(result.stdout)
+		Out.Success("no problems in codebase!")
+	else
+		print(result.stdout)
+		Out.Warn("there are problems you should deal with...")
+	end
 
 	return result.ok
 end

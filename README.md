@@ -36,4 +36,4 @@ source .commands.sh
 ```
 docsite
 ```
-8. Refer to the [Introduction](docs/Guides/intro) for further instructions on how to contribute plugin modules to TKT!
+8. Refer to the [Introduction](docs/intro) for further instructions on how to contribute plugin modules to TKT!

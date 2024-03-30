@@ -10,3 +10,6 @@ sourcemap.json
 .env
 Packages
 node_modules
+
+# GH Pages files
+moonwave_build/*

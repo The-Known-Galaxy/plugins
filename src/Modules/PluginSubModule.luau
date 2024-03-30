@@ -64,6 +64,7 @@ export type PreLoadExecutor = () -> (boolean, string?)
     @prop ButtonIcon string
     @within PluginSubModule
     @readonly
+    @since 0.1.0 
 
     The asset string for the icon of the [PluginToolbarButton] that activates/deactivates this submodule. 
 ]=]
@@ -71,6 +72,7 @@ export type PreLoadExecutor = () -> (boolean, string?)
     @prop ActiveByDefault boolean
     @within PluginSubModule
     @readonly
+    @since 0.1.0 
 
     Whether the submodule is turned active immediately after loading.
 ]=]
@@ -78,6 +80,7 @@ export type PreLoadExecutor = () -> (boolean, string?)
     @prop Active boolean 
     @within PluginSubModule
     @readonly
+    @since 0.1.0 
     
     Whether the plugin is currently active or not.
 ]=]
@@ -85,6 +88,7 @@ export type PreLoadExecutor = () -> (boolean, string?)
     @prop DisplayName string 
     @within PluginSubModule
     @readonly
+    @since 0.1.0 
     
     The display name of the submodule. Used in places like the [PluginToolbarButton] for the submodule.
 ]=]
@@ -92,6 +96,7 @@ export type PreLoadExecutor = () -> (boolean, string?)
     @prop Tooltip string 
     @within PluginSubModule
     @readonly
+    @since 0.1.0 
     
     A short description-like text for the submodule. Used in places like the [PluginToolbarButton] for the submodule.
 ]=]
@@ -147,6 +152,7 @@ local DEFAULTS: PluginSubModuleProperties = {
 local nextSubModuleId = NextId.New()
 --[=[
     @tag constructor 
+    @since 0.1.0 
     Creates a new PluginSubModule.
 ]=]
 function PluginSubModule.new(config: PluginSubModuleConfig): PluginSubModule
@@ -166,6 +172,7 @@ end
 
 --[=[
     @tag methods
+    @since 0.1.0 
     Register a function that runs _before_ the submodule is about to **load**.
     Its returnvalue's truthyness is used to decide if the submodule should continue to load.
     If it does not load, then no other lifecycle methods run.
@@ -178,6 +185,7 @@ end
 
 --[=[
     @tag methods
+    @since 0.1.0 
     Register a function that runs _after_ the submodule has loaded.
     
     It is best to do any actual initialisation code in here.
@@ -189,6 +197,7 @@ end
 
 --[=[
     @tag methods
+    @since 0.1.0 
     Register a function that runs _after_ the submodule has been "activated".
     [PluginSubModule.Active] will be `true` at this point in time.
 
@@ -201,6 +210,7 @@ end
 
 --[=[
     @tag methods
+    @since 0.1.0 
     Register a function that runs _after_ the submodule has been "deactivated".
     [PluginSubModule.Active] will be `false` at this point in time.
 
@@ -213,6 +223,7 @@ end
 
 --[=[
     @tag methods
+    @since 0.1.0 
     Register a function that runs _before_ the submodule is about to **unload**.
 
     This has no practical usage in most production use-cases, since this hook is only invoked when the entire plugin's modules are unloaded and the plugin's execution is stopped.

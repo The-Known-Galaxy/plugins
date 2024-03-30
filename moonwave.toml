@@ -33,7 +33,7 @@ favicon = "assets/images/sienartech_notext.png"
 # From git:
 organizationName = "The Known Galaxy"
 projectName = "The Known Tools"
-url = "https://The-Known-Galaxy.github.io"
+url = "https://the-known-galaxy.github.io/"
 baseUrl = "/plugins"
 tagline = "The Known Galaxy's Plugin Hub"
 

@@ -1,4 +1,4 @@
-title = "TKG Plugin Suite"                                 # From Git
+title = "The Known Tools"                                  # From Git
 gitRepoUrl = "https://github.com/The-Known-Galaxy/plugins" # From Git
 
 gitSourceBranch = "main"
@@ -35,7 +35,7 @@ organizationName = "The Known Galaxy"
 projectName = "The Known Tools"
 url = "https://the-known-galaxy.github.io/"
 baseUrl = "/plugins"
-tagline = "The Known Galaxy's Plugin Hub"
+tagline = "The Known Galaxy's Plugin of Plugins"
 
 [docusaurus.themeConfig.colorMode]
 defaultMode = "dark"

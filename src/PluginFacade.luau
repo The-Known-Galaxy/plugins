@@ -66,12 +66,12 @@ export type PluginFacade = {
 local PluginFacade = {
 	DevelopmentMode = false, -- default. Value influenced by the one in Config
 	PluginObject = nil,
+	Root = nil,
 	_toolbars = {},
 	_pluginGuis = {},
 	_buttons = {},
 	_watching = {},
 	_beforeUnload = nil,
-	Root = nil,
 	_source = nil,
 }
 

@@ -26,16 +26,17 @@
         print(math.random(1, 10))
     end)
 
-    reeturn newSubModule
+    return newSubModule
     ```
 ]=]
 local Config = require(script.Parent.Parent.Config)
 local Llama = require(script.Parent.Parent.Parent.Libraries.Llama)
+local NextId = require(script.Parent.Utilities.NextId)
 
 type PluginSubModuleImpl = {
 	__index: PluginSubModuleImpl,
 	new: (config: PluginSubModuleConfig) -> PluginSubModule,
-	OnPreLoad: (self: PluginSubModule, executor: LifeCycleExecutor) -> (),
+	OnPreLoad: (self: PluginSubModule, executor: PreLoadExecutor) -> (),
 	OnPostLoad: (self: PluginSubModule, executor: LifeCycleExecutor) -> (),
 	OnActivate: (self: PluginSubModule, executor: LifeCycleExecutor) -> (),
 	OnDeactivate: (self: PluginSubModule, executor: LifeCycleExecutor) -> (),
@@ -51,11 +52,20 @@ type PluginSubModuleImpl = {
 export type LifeCycleExecutor = () -> boolean?
 
 --[=[
+    @type PreLoadExecutor () -> (boolean, string?)
+    @within PluginSubModule
+    
+    Executor function that is hooked specifically into the PreLoad life cycle.
+    Can optionally return a `string` explaining _why_ the module failed to load.
+]=]
+export type PreLoadExecutor = () -> (boolean, string?)
+
+--[=[
     @prop ButtonIcon string
     @within PluginSubModule
     @readonly
 
-    The asset string for the icon of the button that activates/deactivates this submodule. 
+    The asset string for the icon of the [PluginToolbarButton] that activates/deactivates this submodule. 
 ]=]
 --[=[
     @prop ActiveByDefault boolean
@@ -71,12 +81,29 @@ export type LifeCycleExecutor = () -> boolean?
     
     Whether the plugin is currently active or not.
 ]=]
+--[=[
+    @prop DisplayName string 
+    @within PluginSubModule
+    @readonly
+    
+    The display name of the submodule. Used in places like the [PluginToolbarButton] for the submodule.
+]=]
+--[=[
+    @prop Tooltip string 
+    @within PluginSubModule
+    @readonly
+    
+    A short description-like text for the submodule. Used in places like the [PluginToolbarButton] for the submodule.
+]=]
 export type PluginSubModuleProperties = {
 	ButtonIcon: string,
 	ActiveByDefault: boolean,
 	Active: boolean,
+	DisplayName: string,
+	Tooltip: string,
+	UID: string,
 	_executors: {
-		PreLoad: LifeCycleExecutor?,
+		PreLoad: PreLoadExecutor,
 		PostLoad: LifeCycleExecutor?,
 		Activate: LifeCycleExecutor?,
 		Deactivate: LifeCycleExecutor?,
@@ -95,6 +122,8 @@ export type PluginSubModuleProperties = {
 export type PluginSubModuleConfig = {
 	ButtonIcon: string,
 	ActiveByDefault: boolean,
+	DisplayName: string,
+	Tooltip: string,
 }
 export type PluginSubModule = typeof(setmetatable({} :: PluginSubModuleProperties, {} :: PluginSubModuleImpl))
 
@@ -105,22 +134,30 @@ local DEFAULTS: PluginSubModuleProperties = {
 	ButtonIcon = Config.MainIcon,
 	ActiveByDefault = false,
 	Active = false,
+	DisplayName = "Default Display Name",
+	Tooltip = "Default tooltip",
+	UID = "",
 	_executors = {
-		PreLoad = function(): boolean?
+		PreLoad = function(): (boolean, string?)
 			return true
 		end,
 	},
 }
 
+local nextSubModuleId = NextId.New()
 --[=[
     @tag constructor 
     Creates a new PluginSubModule.
 ]=]
 function PluginSubModule.new(config: PluginSubModuleConfig): PluginSubModule
-	local properties = Llama.Dictionary.merge(DEFAULTS, {
+	local properties: PluginSubModuleProperties = Llama.Dictionary.merge(DEFAULTS, {
 		ButtonIcon = config.ButtonIcon,
 		ActiveByDefault = config.ActiveByDefault,
+		DisplayName = config.DisplayName,
+		Tooltip = config.Tooltip,
 	})
+
+	properties.UID = tostring(nextSubModuleId())
 
 	local self = setmetatable(properties, PluginSubModule)
 
@@ -135,7 +172,7 @@ end
 
     This is the best place to do permission checks or other contextual checks against whether the rest of the module should run.
 ]=]
-function PluginSubModule:OnPreLoad(executor: LifeCycleExecutor)
+function PluginSubModule:OnPreLoad(executor: PreLoadExecutor)
 	self._executors.PreLoad = executor
 end
 

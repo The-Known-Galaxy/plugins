@@ -27,7 +27,7 @@ end
 local Config = require(script.Parent.Config)
 local PluginFacade = require(script.Parent.PluginFacade)
 
-local shouldUseDevelopmentSource = Config.UseDevelopmentSource
+local shouldUseDevelopmentSource = Config.DevelopmentMode
 local developmentSource = ServerStorage:FindFirstChild(Config.Name.PluginRoot)
 
 -- The source that's shipped integrated into the plugin.

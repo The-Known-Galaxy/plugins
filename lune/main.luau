@@ -133,8 +133,16 @@ end
 ]=]
 function ProgramActions.deploy()
 	local config = require("../src/Config")
-	if config.UseDevelopmentSource == true then
-		Out.Warn("DevelopmentMode is turned on. will not deploy!")
+	if config.DevelopmentMode == true then
+		Out.Warn(
+			`cannot deploy since {stdio.color("blue")}Config.DevelopmentMode{stdio.color(Out.TYPE.WARNING.color)} is turned on! aborting...`
+		)
+		return false
+	end
+
+	local confirmedDeploy = stdio.prompt("confirm", "are you sure you want to deploy?", false)
+	if not confirmedDeploy then
+		Out.Info("aborting deployment...")
 		return false
 	end
 

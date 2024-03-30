@@ -16,12 +16,12 @@
         ActiveByDefault = true,
     })
 
-    newSubModule:OnPreLoad(function()
+    newSubModule:OnPreLoad(function(_pluginFacade: PluginFacade.PluginFacade)
         -- only person with user id 456 can use this module!
         return StudioService:GetUserId() == 456
     end)
 
-    newSubModule:OnActivate(function()
+    newSubModule:OnActivate(function(_pluginFacade: PluginFacade.PluginFacade)
         print("I'm a plugin that logs a random number to console!")
         print(math.random(1, 10))
     end)
@@ -31,6 +31,7 @@
 ]=]
 local Config = require(script.Parent.Parent.Config)
 local Llama = require(script.Parent.Parent.Parent.Libraries.Llama)
+local PluginFacade = require(script.Parent.Parent.PluginFacade)
 local NextId = require(script.Parent.Utilities.NextId)
 
 type PluginSubModuleImpl = {
@@ -44,21 +45,23 @@ type PluginSubModuleImpl = {
 }
 
 --[=[
-    @type LifeCycleExecutor () -> boolean?
+    @type LifeCycleExecutor (pluginFacade: PluginFacade) -> boolean?
     @within PluginSubModule
     
     Executor function that is hooked into any of the life cycle events.
+    Access to the [PluginFacade] instance is provided to support whatever custom behaviour is desired.
 ]=]
-export type LifeCycleExecutor = () -> boolean?
+export type LifeCycleExecutor = (pluginFacade: PluginFacade.PluginFacade) -> boolean?
 
 --[=[
-    @type PreLoadExecutor () -> (boolean, string?)
+    @type PreLoadExecutor (pluginFacade: PluginFacade) -> (boolean, string?)
     @within PluginSubModule
     
     Executor function that is hooked specifically into the PreLoad life cycle.
     Can optionally return a `string` explaining _why_ the module failed to load.
+    Access to the [PluginFacade] instance is provided to support whatever custom behaviour is desired.
 ]=]
-export type PreLoadExecutor = () -> (boolean, string?)
+export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade) -> (boolean, string?)
 
 --[=[
     @prop ButtonIcon string
@@ -181,7 +184,7 @@ local DEFAULTS: PluginSubModuleProperties = {
 	DevelopmentModule = false,
 	UID = "",
 	_executors = {
-		PreLoad = function(): (boolean, string?)
+		PreLoad = function(_pluginFacade: PluginFacade.PluginFacade): (boolean, string?)
 			return true
 		end,
 	},

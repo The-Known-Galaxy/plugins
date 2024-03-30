@@ -258,7 +258,7 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 			continue
 		end
 
-		local shouldLoad, reason = module._executors.PreLoad()
+		local shouldLoad, reason = module._executors.PreLoad(self.PluginFacade)
 
 		-- creating a button for it
 		local moduleId = tostring(module.UID)
@@ -333,7 +333,7 @@ function SubModuleManager:InvokeLifeCycleHookIfExists(managedModule: ManagedModu
 	local executors = managedModule.Module._executors
 
 	if executors[executorName] ~= nil and type(executors[executorName]) == "function" then
-		local ok, result = pcall(executors[executorName])
+		local ok, result = pcall(executors[executorName], self.PluginFacade)
 
 		-- warning when life cycle executor fails
 		if not ok then

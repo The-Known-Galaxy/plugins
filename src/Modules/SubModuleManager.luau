@@ -47,20 +47,71 @@ type SubModuleManagerProperties = {
 }
 export type SubModuleManager = typeof(setmetatable({} :: SubModuleManagerProperties, {} :: SubModuleManagerImpl))
 
+--[=[
+    @type ModuleScriptCollection { ModuleScript }
+    @within SubModuleManager
+    Simply an array of [ModuleScript] objects.
+]=]
 export type ModuleScriptCollection = { ModuleScript }
+
+--[=[
+    @type SubModuleCollection { PluginSubModule }
+    @within SubModuleManager
+    Simply an array of [PluginSubModule]s.
+]=]
 export type SubModuleCollection = { PluginSubModule.PluginSubModule }
 
-export type LoadResult = {
-	Ok: boolean,
+export type LoadResultBase = {
 	ModuleScript: ModuleScript,
 }
-export type LoadSuccess = LoadResult & {
+
+--[=[
+    @interface LoadSuccess
+    @within SubModuleManager
+    .Ok true -- Whether the load was successful.
+    .ModuleScript ModuleScript -- The module instance that was loaded.
+    .Module PluginSubModule -- The returned module after a successful load.
+
+    An object representing a successful module load.
+]=]
+export type LoadSuccess = LoadResultBase & {
+	Ok: true,
 	Module: PluginSubModule.PluginSubModule,
 }
-export type LoadFailure = LoadResult & {
+
+--[=[
+    @interface LoadFailure
+    @within SubModuleManager
+    .Ok false -- Whether the load was successful.
+    .ModuleScript ModuleScript -- The module instance that was loaded.
+    .FailureReason string -- A description of why the load failed.
+
+    An object representing an unsuccessful module load.
+]=]
+export type LoadFailure = LoadResultBase & {
+	Ok: false,
 	FailureReason: string,
 }
 
+--[=[
+    @type LoadResult LoadSuccess | LoadFailure
+    @within SubModuleManager
+    Indicating a generic load result - could be a success or a failure.
+]=]
+export type LoadResult = LoadSuccess | LoadFailure
+
+--[=[
+    @interface ManagedModule
+    @within SubModuleManager
+    
+    .Module PluginSubModule -- The submodule that is being managed.
+    .ShouldLoad boolean -- A flag indicating whether the module should and has actually been loaded.
+    .NotLoadingReason string? -- A written explanation that is outputted whenever the submodule is invoked, but it is not loaded.
+    .ToolbarButton PluginToolbarButton -- The button associated with this submodule. 
+
+    This is an common interfacing data structure that holds all relevant management and loading data about a given submodule.
+    It is very useful to pass around the various management methods since each of its data are needed in their own contexts.
+]=]
 export type ManagedModule = {
 	Module: PluginSubModule.PluginSubModule,
 	ShouldLoad: boolean,
@@ -74,6 +125,11 @@ local SUFFIX_SEPARATOR = "."
 local SubModuleManager: SubModuleManagerImpl = {} :: SubModuleManagerImpl
 SubModuleManager.__index = SubModuleManager
 
+--[=[
+    @tag constructor
+    @since 0.1.0 
+    Constructs a new [SubModuleManager].
+]=]
 function SubModuleManager.new(): SubModuleManager
 	local self = setmetatable({
 		_janitor = Janitor.new(),
@@ -85,6 +141,8 @@ function SubModuleManager.new(): SubModuleManager
 end
 
 --[=[
+    @tag utility
+    @since 0.1.0
     Validates whether an instance is likely a valid [PluginSubModule].
     Does not `require` it if it is one though.
 ]=]
@@ -93,6 +151,8 @@ function SubModuleManager.ValidPluginSubModule(instance: Instance): boolean
 end
 
 --[=[
+    @tag methods
+    @since 0.1.0
     Finds all [ModuleScript]s that could potentially return a [PluginSubModule] and requires them.
     A module identifiable by the manager is one where the name has `.module` at the end of it.
 ]=]
@@ -109,8 +169,12 @@ function SubModuleManager:CollectModules(root: Instance): ModuleScriptCollection
 end
 
 --[=[
+    @tag methods
+    @since 0.1.0
     Loads all the module scripts inside the collection, validating them.
     Uses [Promises](https://eryn.io/roblox-lua-promise/) internally.
+    
+    @return Promise<{LoadResult}> -- A promise resolving with an array of module invocation results.
 ]=]
 function SubModuleManager:LoadModules(moduleCollection: ModuleScriptCollection): any
 	local loadPromises = {}
@@ -119,7 +183,7 @@ function SubModuleManager:LoadModules(moduleCollection: ModuleScriptCollection):
 
 	local function wrapInSuccess(subModule: PluginSubModule.PluginSubModule): LoadSuccess
 		return {
-			Ok = true,
+			Ok = true :: true, -- this type casting is fucking wild (removing this will make luau-analyze complain, or at least luau-lsp will)
 			ModuleScript = currentModuleScript,
 			Module = subModule,
 		}
@@ -127,7 +191,7 @@ function SubModuleManager:LoadModules(moduleCollection: ModuleScriptCollection):
 
 	local function wrapInFailure(reason: string): LoadFailure
 		return {
-			Ok = false,
+			Ok = false :: false, -- crazy...
 			ModuleScript = currentModuleScript,
 			FailureReason = reason,
 		}
@@ -168,6 +232,8 @@ function SubModuleManager:LoadModules(moduleCollection: ModuleScriptCollection):
 end
 
 --[=[
+    @tag methods
+    @since 0.1.0
     Runs all life cycle hooks on plugin sub-modules.
     Creates activation buttons for all submodules too, in a toolbar with the given name.
 ]=]
@@ -214,6 +280,8 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 end
 
 --[=[
+    @tag methods
+    @since 0.1.0
     Declares all managed modules that this manager knows about as unloaded, and calls necessary life cycle hooks on them.
     This should be done only once.
 ]=]
@@ -243,6 +311,8 @@ function SubModuleManager:UnloadAllModules()
 end
 
 --[=[
+    @tag methods
+    @since 0.1.0
     Invokes a given life cycle executor hook on a managed module.
 ]=]
 function SubModuleManager:InvokeLifeCycleHookIfExists(managedModule: ManagedModule, executorName: string)
@@ -259,6 +329,8 @@ function SubModuleManager:InvokeLifeCycleHookIfExists(managedModule: ManagedModu
 end
 
 --[=[
+    @tag methods
+    @since 0.1.0
     Toggles a [PluginSubModule.Active] status whilst also validating if someone can, _and_ calls the necessary life cycle hooks.
     Optionally can also force a module's activation.
 ]=]

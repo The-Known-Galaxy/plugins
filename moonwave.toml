@@ -5,15 +5,20 @@ gitSourceBranch = "main"
 changelog = true
 apiCategories = ["constructor", "utility", "methods"]
 
-# [[classOrder]]
-# section = "Modules"
-# classes = ["Logger", "Permissions"]
-# collapsed = true
+[[classOrder]]
+section = "Utilities"
+classes = ["Logger", "Permissions", "NextId"]
+collapsed = true
 
-# [[classOrder]]
-# section = "Modules/Data"
-# classes = ["GroupIds", "RankData"]
-# collapsed = true
+[[classOrder]]
+section = "Data Modules"
+classes = ["GroupIds", "RankData"]
+collapsed = true
+
+[[classOrder]]
+section = "Plugin Architecture"
+classes = ["PluginFacade", "PluginSubModule", "SubModuleManager"]
+collapsed = false
 
 autoSectionPath = "src"
 

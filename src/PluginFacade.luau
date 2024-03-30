@@ -1,13 +1,51 @@
 --[=[
-    @class PluginFacade
-    
-    A dynamic plugin hot-reloader, used in developing the plugin.
+	@class PluginFacade
+
+	Main Plugin manager and executor.
+	Controls main plugin execution, and Hot-Reloading the plugin during development.
+	Also acts as an interface and wrapper between the regular ROBLOX [Plugin] object and some of its methods.
+
+	Original credit to the _concept and design_ of this module goes to Tiffany352 and Kampfkarren from (Original code copied from [Kampfkarren's Hoarcekat plugin Loader](https://github.com/Kampfkarren/hoarcekat/blob/master/src/Loader.server.lua))
+	Although, I ([ShadowEngineer](https://github.com/ShadowEngineer)) spent a lot of hours refactoring and rewriting the module into 2 files (this one and [Loader]) alongside implementing some more custom behaviour, and properly documenting it.
+
+	Intended usage:
+	```lua
+	local shouldUseDevelopmentSource = true
+	local developmentSource = ServerStorage:FindFirstChild(Config.Name.PluginRoot)
+
+	-- assumes top-level plugin [Folder] is 2 parents up.
+	local builtInSource = script.Parent.Parent
+
+	-- `source` is where we should watch for changes.
+	-- `currentRoot` is the clone we make of source to avoid require()
+	-- returning stale values.
+	local mainPluginExecutionSource = builtInSource
+	local currentRoot = mainPluginExecutionSource
+
+	if shouldUseDevelopmentSource then
+		if developmentSource ~= nil then
+			mainPluginExecutionSource = developmentSource
+			currentRoot = mainPluginExecutionSource
+		else
+			warn(`{Config.Name.PluginRoot} development source is not present, running using built-in source.`)
+		end
+	end
+
+	PluginFacade:Setup({
+		DevelopmentMode = shouldUseDevelopmentSource and developmentSource ~= nil,
+		currentRoot = currentRoot,
+		source = mainPluginExecutionSource,
+		pluginReference = plugin,
+	})
+	PluginFacade:LoadPlugin()
+	PluginFacade:WatchInstanceForChanges(mainPluginExecutionSource)
+
+	```
 ]=]
 
 --[=[
 	@interface PluginFacadeSetupSettings
 	@within PluginFacade
-	
 	.DevelopmentMode boolean -- Whether to turn on development mode.
 	.currentRoot Instance -- The root [Instance] where the plugin is stored in.
 	.source Instance -- The root [Instance] from which the module "clones" itself for hot-reloading.
@@ -29,11 +67,39 @@ export type PluginToolbarButtonName = string
 export type SavedState = any
 
 --[=[
+	@prop DevelopmentMode boolean
+	@within PluginFacade
+	@readonly
+	@since 0.1.0
+	
+	Whether the plugin's execution is currently in "developer mode".
+	Can be used as a flag for having debug-specific features turned on.
+	Also a proxy for whether Hot-Reloading is turned on.
+]=]
+--[=[
+	@prop PluginObject Plugin
+	@within PluginFacade
+	@readonly
+	@since 0.1.0
+	
+	Reference to the running plugin instance, from which native ROBLOX calls can be made.
+	Since the [Plugin] instance is only accessible from the top-level execution [Script] that ROBLOX Studio executes the plugin with,
+	a reference to it is stored in here for when native [Plugin] interfaces are required in other files.
+]=]
+--[=[
+	@prop CurrentRoot Instance
+	@within PluginFacade
+	@readonly
+	@since 0.1.0
+	
+	A reference to the top-level root of the plugin, wherever it might be. ALL REQUIRES SHOULD BE DIRECTED FROM HERE
+]=]
+--[=[
 	@interface PluginFacade
 	@within PluginFacade
-	.DevelopmentMode boolean -- Whether Hot-Reloading is turned on.
-	.PluginObject Plugin -- Reference to the running plugin instance, from which native ROBLOX calls can be made.
-	.CurrentRoot Instance | any -- A reference to the top-level root of the plugin, wherever it might be. ALL REQUIRES SHOULD BE DIRECTED FROM HERE
+	.DevelopmentMode boolean
+	.PluginObject Plugin
+	.CurrentRoot Instance
 ]=]
 export type PluginFacade = {
 	DevelopmentMode: boolean,
@@ -76,7 +142,15 @@ local PluginFacade = {
 }
 
 --[=[
+	@tag methods
+	@tag constructor
+	@since 0.1.0
 	Sets up the PluginFacade module.
+	Although not a traditional "constructor" that most Object Classes have in OOP, it sets up the rest of the module.
+
+	:::warning
+	Call this before any other methods! Otherwise, undefined or erroneous behaviour might occur.
+	:::
 ]=]
 function PluginFacade.Setup(self: PluginFacade, settings: PluginFacadeSetupSettings)
 	self.DevelopmentMode = settings.DevelopmentMode
@@ -86,6 +160,8 @@ function PluginFacade.Setup(self: PluginFacade, settings: PluginFacadeSetupSetti
 end
 
 --[=[
+	@tag methods
+	@since 0.1.0
 	Abstraction for [Plugin:CreateToolbar]
 ]=]
 function PluginFacade.CreateToolbar(self: PluginFacade, name: string): PluginToolbar
@@ -101,6 +177,8 @@ function PluginFacade.CreateToolbar(self: PluginFacade, name: string): PluginToo
 end
 
 --[=[
+	@tag methods
+	@since 0.1.0
 	Abstraction for [PluginToolbar:CreateButton]
 ]=]
 function PluginFacade.CreateButton(
@@ -132,6 +210,8 @@ function PluginFacade.CreateButton(
 end
 
 --[=[
+	@tag methods
+	@since 0.1.0
 	Wrapper around [Plugin:CreateDockWidgetPluginGui]
 ]=]
 function PluginFacade.CreateDockWidgetPluginGui(
@@ -150,13 +230,17 @@ function PluginFacade.CreateDockWidgetPluginGui(
 end
 
 --[=[
-	Wrapper around [Plugin:GetMouse]
+	@tag methods
+	@since 0.1.0
+	Wrapper around [Plugin:GetMouse].
 ]=]
 function PluginFacade.GetMouse(self: PluginFacade): PluginMouse
 	return self.PluginObject:GetMouse()
 end
 
 --[=[
+	@tag methods
+	@since 0.1.0
 	Sets the method to call the next time the plugin tries to hot-reload.
 ]=]
 function PluginFacade.RegisterPreUnloadHook(self: PluginFacade, callback: (...any) -> ...any)
@@ -164,6 +248,8 @@ function PluginFacade.RegisterPreUnloadHook(self: PluginFacade, callback: (...an
 end
 
 --[=[
+	@tag methods
+	@since 0.1.0
 	Loads the entire plugin.
 
 	:::warning
@@ -193,6 +279,8 @@ function PluginFacade.LoadPlugin(self: PluginFacade, savedState: SavedState)
 end
 
 --[=[
+	@tag methods
+	@since 0.1.0
 	Unloads the entire plugin.
 ]=]
 function PluginFacade.UnloadPlugin(self: PluginFacade): SavedState?
@@ -206,6 +294,8 @@ function PluginFacade.UnloadPlugin(self: PluginFacade): SavedState?
 end
 
 --[=[
+	@tag methods
+	@since 0.1.0
 	Reloads the entire plugin. Used in hot-reloading.
 ]=]
 function PluginFacade.HotReloadPlugin(self: PluginFacade)
@@ -215,7 +305,9 @@ function PluginFacade.HotReloadPlugin(self: PluginFacade)
 	self:LoadPlugin(saveState)
 end
 
---[=[	
+--[=[
+	@tag methods
+	@since 0.1.0
 	Watch for changes to the given instance and its children, and then hot-reload the entire plugin to reflect those changes.
 
 	:::note

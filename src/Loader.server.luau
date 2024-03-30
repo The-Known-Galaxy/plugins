@@ -1,8 +1,15 @@
--- Taken from https://github.com/tiffany352/Roblox-Tag-Editor/blob/bd48fb7ceea6bcd1cd9c515891ae4eb4eb9d1a71/src/Loader.server.lua#L24
--- Thank you Tiffany352!!!
+--[=[
+	@class Loader
+	
+	Primary plugin execution entry point.
+	Runs the rest of the plugin.
 
--- ShadowEngineer: Taken from https://github.com/Kampfkarren/hoarcekat/blob/master/src/Loader.server.lua
--- Thank you to Tiffany352 and Kampfkarren!
+	Originally taken from [Tag Editor Loader](https://github.com/tiffany352/Roblox-Tag-Editor/blob/bd48fb7ceea6bcd1cd9c515891ae4eb4eb9d1a71/src/Loader.server.lua#L24) by Kampfkarren.
+	> Kampfkarren: Thank you Tiffany352!!!
+
+	Then taken from [Hoarcekat Loader](https://github.com/Kampfkarren/hoarcekat/blob/master/src/Loader.server.lua).
+	> ShadowEngineer: Thank you Kampfkarren!
+]=]
 
 -- Sanity check.
 if not plugin then

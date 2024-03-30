@@ -1,5 +1,4 @@
 --!strict
-local PluginDebugService = game:GetService("PluginDebugService")
 --[=[
     @class SubModuleManager
     
@@ -363,6 +362,11 @@ function SubModuleManager:ToggleModuleActivation(managedModule: ManagedModule, f
 
 	self:InvokeLifeCycleHookIfExists(managedModule, if module.Active then "Activate" else "Deactivate")
 	managedModule.ToolbarButton:SetActive(module.Active)
+
+	if module.OneClickExecution and module.Active then
+		-- deactivate immediately after activating
+		self:ToggleModuleActivation(managedModule, false)
+	end
 end
 
 return SubModuleManager

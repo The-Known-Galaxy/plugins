@@ -366,7 +366,7 @@ function PluginFacade.WatchInstanceForChanges(self: PluginFacade, instance: Inst
 	end
 
 	local connection1 = instance.Changed:Connect(function()
-		print("Reloading change in... ", instance:GetFullName())
+		print("Reloading from change in...", instance:GetFullName())
 
 		self:HotReloadPlugin()
 	end)

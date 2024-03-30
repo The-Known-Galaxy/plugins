@@ -100,12 +100,34 @@ export type PreLoadExecutor = () -> (boolean, string?)
     
     A short description-like text for the submodule. Used in places like the [PluginToolbarButton] for the submodule.
 ]=]
+--[=[
+    @prop OneClickExecution boolean
+    @within PluginSubModule
+    @readonly
+    @since 0.1.0 
+    
+    Whether the submodule's button should activate and then immediately deactivate the submodule - functioning like a single-click event.
+    Both the `Activate` and `Deactivate` hooks will fire in their respective order.
+
+    Useful for instances like "hey I want this submodule to do something small every time I click it".
+
+    [PluginSubModule.ActiveByDefault] means this plugin will one-shot execute its functionality immediately when the Studio starts.
+]=]
+--[=[
+    @prop UID string
+    @within PluginSubModule
+    @readonly
+    @since 0.1.0 
+    
+    A unique identifier for the submodule, meant for internal use.
+]=]
 export type PluginSubModuleProperties = {
 	ButtonIcon: string,
 	ActiveByDefault: boolean,
 	Active: boolean,
 	DisplayName: string,
 	Tooltip: string,
+	OneClickExecution: boolean,
 	UID: string,
 	_executors: {
 		PreLoad: PreLoadExecutor,
@@ -122,6 +144,7 @@ export type PluginSubModuleProperties = {
     .ActiveByDefault boolean?
     .DisplayName string?
     .Tooltip string?
+    .OneClickExecution: boolean?
 
     Supplied to the constructor to overwrite default module parameters.
 ]=]
@@ -130,6 +153,7 @@ export type PluginSubModuleConfig = {
 	ActiveByDefault: boolean?,
 	DisplayName: string?,
 	Tooltip: string?,
+	OneClickExecution: boolean?,
 }
 export type PluginSubModule = typeof(setmetatable({} :: PluginSubModuleProperties, {} :: PluginSubModuleImpl))
 
@@ -142,6 +166,7 @@ local DEFAULTS: PluginSubModuleProperties = {
 	Active = false,
 	DisplayName = "Default Display Name",
 	Tooltip = "Default tooltip",
+	OneClickExecution = false,
 	UID = "",
 	_executors = {
 		PreLoad = function(): (boolean, string?)
@@ -162,6 +187,7 @@ function PluginSubModule.new(config: PluginSubModuleConfig): PluginSubModule
 		ActiveByDefault = config.ActiveByDefault,
 		DisplayName = config.DisplayName,
 		Tooltip = config.Tooltip,
+		OneClickExecution = config.OneClickExecution,
 	})
 
 	properties.UID = tostring(nextSubModuleId())

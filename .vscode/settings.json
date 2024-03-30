@@ -1,0 +1,11 @@
+{
+  "luau-lsp.require.mode": "relativeToFile",
+  "luau-lsp.require.directoryAliases": {
+    "@lune/": "~/.lune/.typedefs/0.8.2/"
+  },
+  "luau-lsp.sourcemap.rojoProjectFile": "place.project.json",
+  "luau-lsp.types.definitionFiles": [
+    "testez.d.lua"
+  ],
+  "luau-lsp.completion.imports.requireStyle": "alwaysRelative"
+}

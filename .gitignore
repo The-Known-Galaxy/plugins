@@ -4,3 +4,9 @@ build/
 # Roblox Studio lock files
 /*.rbxlx.lock
 /*.rbxl.lock
+
+# project files
+sourcemap.json
+.env
+Packages
+node_modules

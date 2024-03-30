@@ -1,0 +1,68 @@
+title = "TKG Plugin Suite"                                 # From Git
+gitRepoUrl = "https://github.com/The-Known-Galaxy/plugins" # From Git
+
+gitSourceBranch = "main"
+changelog = true
+apiCategories = ["constructor", "utility", "methods"]
+
+[[classOrder]]
+section = "Plugin Architecture"
+classes = ["PluginFacade", "PluginSubModule", "SubModuleManager"]
+collapsed = true
+
+[[classOrder]]
+section = "Plugin Sub-Modules"
+classes = []
+collapsed = false
+
+[[classOrder]]
+section = "Utilities"
+classes = ["Logger", "Permissions", "NextId"]
+collapsed = true
+
+[[classOrder]]
+section = "Data Modules"
+classes = ["GroupIds", "RankData"]
+collapsed = true
+
+autoSectionPath = "src"
+
+# [docusaurus]
+# onBrokenLinks = "throw"
+# onBrokenMarkdownLinks = "warn"
+# favicon = ""
+
+# # From git:
+# organizationName = "The Known Galaxy"
+# projectName = "TKG Plugin Suite"
+# url = "https://AuthorName.github.io"
+# baseUrl = "/MyProjectName"
+# tagline = "tagline test?"
+
+# [navbar]
+# hideableSidebar = true
+
+[home]
+enabled = true
+includeReadme = true
+
+[[home.features]]
+title = "Centralised"
+description = "All of TKG's custom Studio plugins are centralised in this one plugin. Every possible developer tool or utility made to be used in Studio is written, maintained and managed from this repository."
+# image = "https://url"
+
+[[home.features]]
+title = "Well Documented"
+description = "Almost all parts of the inner workings of these plugins are documented on this site. If there's some niche part of a plugin's internal functionality you're curious about, then it's written here."
+# image = "https://url"
+
+[footer]
+style = "dark"
+copyright = "Copyright © 2024 The Known Galaxy. Built with Moonwave and Docusaurus"
+
+# [[footer.links]]
+# title = "examples"
+
+# [[footer.links.items]]
+# label = "example"
+# href = "https://example.com/"

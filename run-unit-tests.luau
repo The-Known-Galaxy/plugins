@@ -1,5 +1,5 @@
-local ServerScriptService = game:GetService("ServerScriptService")
-local TestEZ = require(ServerScriptService.TKGSuite.Runner.Packages.TestEZ)
+local ServerStorage = game:GetService("ServerStorage")
+local TestEZ = require(ServerStorage.TKGSuite.Libraries.TestEZ)
 
 --[=[
 	Finds all the children of all the `roots`, and returns an array of them where the children with the names present in `exclude` are removed.
@@ -24,7 +24,7 @@ local function filterRoots(roots: { Instance }, exclude: { string }): { Instance
 end
 
 -- running tests
-local results = TestEZ.TestBootstrap:run(filterRoots({ ServerScriptService }, { "Packages" }))
+local results = TestEZ.TestBootstrap:run(filterRoots({ ServerStorage.TKGSuite }, { "Libraries" }))
 
 -- warning for bad results
 if #results.errors > 0 or results.failureCount > 0 then

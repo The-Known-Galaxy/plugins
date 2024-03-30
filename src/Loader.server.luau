@@ -1,8 +1,15 @@
--- Taken from https://github.com/tiffany352/Roblox-Tag-Editor/blob/bd48fb7ceea6bcd1cd9c515891ae4eb4eb9d1a71/src/Loader.server.lua#L24
--- Thank you Tiffany352!!!
+--[=[
+	@class Loader
+	
+	Primary plugin execution entry point.
+	Runs the rest of the plugin.
 
--- ShadowEngineer: Taken from https://github.com/Kampfkarren/hoarcekat/blob/master/src/Loader.server.lua
--- Thank you to Tiffany352 and Kampfkarren!
+	Originally taken from [Tag Editor Loader](https://github.com/tiffany352/Roblox-Tag-Editor/blob/bd48fb7ceea6bcd1cd9c515891ae4eb4eb9d1a71/src/Loader.server.lua#L24) by Kampfkarren.
+	> Kampfkarren: Thank you Tiffany352!!!
+
+	Then taken from [Hoarcekat Loader](https://github.com/Kampfkarren/hoarcekat/blob/master/src/Loader.server.lua).
+	> ShadowEngineer: Thank you Kampfkarren!
+]=]
 
 -- Sanity check.
 if not plugin then
@@ -20,8 +27,8 @@ end
 local Config = require(script.Parent.Config)
 local PluginFacade = require(script.Parent.PluginFacade)
 
-local shouldUseDevelopmentSource = Config.UseDevelopmentSource
-local developmentSource = ServerStorage:FindFirstChild("TKGSuite")
+local shouldUseDevelopmentSource = Config.DevelopmentMode
+local developmentSource = ServerStorage:FindFirstChild(Config.Name.PluginRoot)
 
 -- The source that's shipped integrated into the plugin.
 -- If this code is executing inside a locally installed plugin instance, then `builtInSource` will refer to that instance.
@@ -36,18 +43,22 @@ local currentRoot = mainPluginExecutionSource
 
 if shouldUseDevelopmentSource then
 	if developmentSource ~= nil then
+		warn(`{Config.Name.PluginRoot} running in development mode using development source in ServerStorage.`)
 		mainPluginExecutionSource = developmentSource
 		currentRoot = mainPluginExecutionSource
 	else
-		warn("TKGSuite development source is not present, running using built-in source.")
+		warn(`{Config.Name.PluginRoot} development source is not present, running using built-in source.`)
 	end
 end
 
+local developmentMode = shouldUseDevelopmentSource and developmentSource ~= nil
 PluginFacade:Setup({
-	DevelopmentMode = shouldUseDevelopmentSource and developmentSource ~= nil,
+	DevelopmentMode = developmentMode,
 	currentRoot = currentRoot,
 	source = mainPluginExecutionSource,
 	pluginReference = plugin,
 })
 PluginFacade:LoadPlugin()
-PluginFacade:WatchInstanceForChanges(mainPluginExecutionSource)
+if developmentMode then
+	PluginFacade:WatchInstanceForChanges(mainPluginExecutionSource)
+end

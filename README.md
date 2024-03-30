@@ -9,6 +9,7 @@ Below are links to all documentation relevant to the tooling this project uses.
 - [Lune](https://lune-org.github.io/docs)
 - [Luau](https://luau-lang.org/)
 - [Moonwave](https://eryn.io/moonwave/)
+- [React Best Practices](https://blog.boyned.com/articles/things-i-learned-using-react/) by Kampfkarren
 
 # Development Workflow
 
@@ -16,39 +17,23 @@ Below are links to all documentation relevant to the tooling this project uses.
 1. Ensure you have [Node.js 14+](https://nodejs.org/en) installed.
 2. Ensure you have [aftman](https://github.com/LPGhatguy/aftman) installed.
 3. Run
-```sh
+```
 aftman install
 ```
 4. Run
-```sh
+```
 wally install
 ```
 5. Run
-```sh
+```
 npm install
 ```
-
-## Developing
-Before any development can occur, ensure you run:
-```sh
+6. Run
+```
 source .commands.sh
 ```
-Then, to get in-depth developer help from a docsite, run:
-```sh
-run_docsite
+7. Run
 ```
-
-### Running Unit Tests
-After sourcing commands, run:
-```sh
-run_unit_tests
+docsite
 ```
-
-### Static Analysis & Formatting
-After sourcing commands, run:
-```sh
-run_static_analysis
-```
-
-## Deploying
-TODO
+8. Refer to the [Introduction](docs/Guides/intro) for further instructions on how to contribute plugin modules to TKT!

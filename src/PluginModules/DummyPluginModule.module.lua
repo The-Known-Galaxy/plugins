@@ -11,6 +11,7 @@ local newSubModule = PluginSubModule.new({
 	DisplayName = "Dummy Number Generator",
 	Tooltip = "Dummy tool for printing random numbers",
 	OneClickExecution = true,
+	DevelopmentModule = true,
 })
 
 newSubModule:OnPreLoad(function()

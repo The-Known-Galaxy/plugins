@@ -114,6 +114,15 @@ export type PreLoadExecutor = () -> (boolean, string?)
     [PluginSubModule.ActiveByDefault] means this plugin will one-shot execute its functionality immediately when the Studio starts.
 ]=]
 --[=[
+    @prop DevelopmentModule boolean
+    @within PluginSubModule
+    @readonly
+    @since 0.1.0 
+    
+    If true, then this submodule **only** loads when [PluginFacade.DevelopmentMode] is turned on.
+    Useful for creating submodules intended entirely for testing or plugin development purposes.
+]=]
+--[=[
     @prop UID string
     @within PluginSubModule
     @readonly
@@ -128,6 +137,7 @@ export type PluginSubModuleProperties = {
 	DisplayName: string,
 	Tooltip: string,
 	OneClickExecution: boolean,
+	DevelopmentModule: boolean,
 	UID: string,
 	_executors: {
 		PreLoad: PreLoadExecutor,
@@ -154,6 +164,7 @@ export type PluginSubModuleConfig = {
 	DisplayName: string?,
 	Tooltip: string?,
 	OneClickExecution: boolean?,
+	DevelopmentModule: boolean?,
 }
 export type PluginSubModule = typeof(setmetatable({} :: PluginSubModuleProperties, {} :: PluginSubModuleImpl))
 
@@ -167,6 +178,7 @@ local DEFAULTS: PluginSubModuleProperties = {
 	DisplayName = "Default Display Name",
 	Tooltip = "Default tooltip",
 	OneClickExecution = false,
+	DevelopmentModule = false,
 	UID = "",
 	_executors = {
 		PreLoad = function(): (boolean, string?)
@@ -188,6 +200,7 @@ function PluginSubModule.new(config: PluginSubModuleConfig): PluginSubModule
 		DisplayName = config.DisplayName,
 		Tooltip = config.Tooltip,
 		OneClickExecution = config.OneClickExecution,
+		DevelopmentModule = config.DevelopmentModule,
 	})
 
 	properties.UID = tostring(nextSubModuleId())

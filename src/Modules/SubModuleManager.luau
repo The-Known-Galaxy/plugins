@@ -251,6 +251,13 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 
 	-- pre-loading and setting up modules
 	for _, module in pluginSubModules do
+		-- development modules should be skipped in non-development contexts.
+		if module.DevelopmentModule and self.PluginFacade.DevelopmentMode then
+			Logger.Warn(`Loading submodule [{module.DisplayName}] for development.`)
+		else
+			continue
+		end
+
 		local shouldLoad, reason = module._executors.PreLoad()
 
 		-- creating a button for it

@@ -276,6 +276,11 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 		if shouldLoad then
 			self:InvokeLifeCycleHookIfExists(self.ManagedModules[moduleId], "Postload")
 		end
+
+		-- turning modules on by default if they should be
+		if module.ActiveByDefault then
+			self:ToggleModuleActivation(self.ManagedModules[moduleId], true)
+		end
 	end
 end
 

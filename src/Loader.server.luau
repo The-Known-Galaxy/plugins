@@ -43,6 +43,7 @@ local currentRoot = mainPluginExecutionSource
 
 if shouldUseDevelopmentSource then
 	if developmentSource ~= nil then
+		warn(`{Config.Name.PluginRoot} running in development mode using development source in ServerStorage.`)
 		mainPluginExecutionSource = developmentSource
 		currentRoot = mainPluginExecutionSource
 	else
@@ -50,11 +51,14 @@ if shouldUseDevelopmentSource then
 	end
 end
 
+local developmentMode = shouldUseDevelopmentSource and developmentSource ~= nil
 PluginFacade:Setup({
-	DevelopmentMode = shouldUseDevelopmentSource and developmentSource ~= nil,
+	DevelopmentMode = developmentMode,
 	currentRoot = currentRoot,
 	source = mainPluginExecutionSource,
 	pluginReference = plugin,
 })
 PluginFacade:LoadPlugin()
-PluginFacade:WatchInstanceForChanges(mainPluginExecutionSource)
+if developmentMode then
+	PluginFacade:WatchInstanceForChanges(mainPluginExecutionSource)
+end

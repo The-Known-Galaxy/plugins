@@ -118,17 +118,18 @@ export type PluginSubModuleProperties = {
 --[=[
     @interface PluginSubModuleConfig
     @within PluginSubModule
-    
-    .ButtonIcon string
-    .ActiveByDefault boolean
+    .ButtonIcon string?
+    .ActiveByDefault boolean?
+    .DisplayName string?
+    .Tooltip string?
 
     Supplied to the constructor to overwrite default module parameters.
 ]=]
 export type PluginSubModuleConfig = {
-	ButtonIcon: string,
-	ActiveByDefault: boolean,
-	DisplayName: string,
-	Tooltip: string,
+	ButtonIcon: string?,
+	ActiveByDefault: boolean?,
+	DisplayName: string?,
+	Tooltip: string?,
 }
 export type PluginSubModule = typeof(setmetatable({} :: PluginSubModuleProperties, {} :: PluginSubModuleImpl))
 

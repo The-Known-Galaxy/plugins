@@ -8,7 +8,18 @@
 	Original credit to the _concept and design_ of this module goes to Tiffany352 and Kampfkarren from (Original code copied from [Kampfkarren's Hoarcekat plugin Loader](https://github.com/Kampfkarren/hoarcekat/blob/master/src/Loader.server.lua))
 	Although, I ([ShadowEngineer](https://github.com/ShadowEngineer)) spent a lot of hours refactoring and rewriting the module into 2 files (this one and [Loader]) alongside implementing some more custom behaviour, and properly documenting it.
 
-	Intended usage:
+	:::warning
+	Caveats:
+	1. Although it is fine to relatively or absolutely `require` this, it is **NOT** fine to directly use it form the `require` source.
+		- This is because in development mode when hot reloading is turned on, the development source will be different from the original plugin invocation source, and that will cause erroneous behaviour.
+		- It is best to **pass around a reference to the original [PluginFacade] instance**.
+		- [PluginSubModule]s have this behaviour built in so you don't need to explicitly do it there.
+		- If you need to write any new architectural code, keep this in mind.
+	2. By virtue of what it is, you cannot work on this module itself (or [Loader]) for that matter with hot-reloading.
+		- You must follow the traditional approach of rojo-syncing in the new code, and then right-click > Save Local Plugin on the top-level `TKGSuite` instance.
+	:::
+
+	Intended setup usage:
 	```lua
 	local shouldUseDevelopmentSource = true
 	local developmentSource = ServerStorage:FindFirstChild(Config.Name.PluginRoot)
@@ -39,7 +50,6 @@
 	})
 	PluginFacade:LoadPlugin()
 	PluginFacade:WatchInstanceForChanges(mainPluginExecutionSource)
-
 	```
 ]=]
 
@@ -58,7 +68,6 @@ export type PluginFacadeSetupSettings = {
 	pluginReference: Plugin,
 }
 export type PluginToolbarName = string
-export type PluginToolbarButtonName = string
 
 --[=[
 	@type SavedState any
@@ -107,10 +116,11 @@ export type PluginFacade = {
 	Root: Instance | any,
 	_toolbars: { [PluginToolbarName]: PluginToolbar },
 	_pluginGuis: any,
-	_buttons: { [PluginToolbar]: { [PluginToolbarButtonName]: PluginToolbarButton } },
+	_buttons: { [PluginToolbar]: { [string]: PluginToolbarButton } },
 	_watching: any,
 	_beforeUnload: any?,
 	_source: Instance | any,
+	_setup: boolean,
 
 	Setup: (self: PluginFacade, settings: PluginFacadeSetupSettings) -> (),
 	CreateToolbar: (self: PluginFacade, name: string) -> PluginToolbar,
@@ -139,7 +149,16 @@ local PluginFacade = {
 	_watching = {},
 	_beforeUnload = nil,
 	_source = nil,
+	_setup = false,
 }
+
+-- setup protection
+local function assertNoSetup(module: PluginFacade)
+	assert(
+		module._setup,
+		`Cannot call PluginFacade:{debug.info(2, "n")}() because the module is not setup. Call PluginFacade:Setup() first, or if you think you already HAVE :Setup the module, then ensure that you are getting this module by reference from Main.`
+	)
+end
 
 --[=[
 	@tag methods
@@ -157,6 +176,9 @@ function PluginFacade.Setup(self: PluginFacade, settings: PluginFacadeSetupSetti
 	self.Root = settings.currentRoot
 	self.PluginObject = settings.pluginReference
 	self._source = settings.source
+
+	-- in-case this module is called from a different context and is not setup, none of the functions in the module should work.
+	self._setup = true
 end
 
 --[=[
@@ -165,12 +187,12 @@ end
 	Abstraction for [Plugin:CreateToolbar]
 ]=]
 function PluginFacade.CreateToolbar(self: PluginFacade, name: string): PluginToolbar
+	assertNoSetup(self)
 	if self._toolbars[name] then
 		return self._toolbars[name]
 	end
 
 	local toolbar = self.PluginObject:CreateToolbar(name)
-
 	self._toolbars[name] = toolbar
 
 	return toolbar
@@ -189,6 +211,7 @@ function PluginFacade.CreateButton(
 	icon: string,
 	text: string?
 ): PluginToolbarButton
+	assertNoSetup(self)
 	local existingButtons = self._buttons[toolbar]
 
 	if existingButtons then
@@ -203,7 +226,6 @@ function PluginFacade.CreateButton(
 	end
 
 	local button = toolbar:CreateButton(name or "default name", tooltip or "default tooltip", icon or "", text)
-
 	existingButtons[name] = button
 
 	return button
@@ -219,6 +241,7 @@ function PluginFacade.CreateDockWidgetPluginGui(
 	name: string,
 	info: DockWidgetPluginGuiInfo
 ): DockWidgetPluginGui
+	assertNoSetup(self)
 	if self._pluginGuis[name] then
 		return self._pluginGuis[name]
 	end
@@ -235,6 +258,7 @@ end
 	Wrapper around [Plugin:GetMouse].
 ]=]
 function PluginFacade.GetMouse(self: PluginFacade): PluginMouse
+	assertNoSetup(self)
 	return self.PluginObject:GetMouse()
 end
 
@@ -244,6 +268,7 @@ end
 	Sets the method to call the next time the plugin tries to hot-reload.
 ]=]
 function PluginFacade.RegisterPreUnloadHook(self: PluginFacade, callback: (...any) -> ...any)
+	assertNoSetup(self)
 	self._beforeUnload = callback
 end
 
@@ -257,6 +282,7 @@ end
 	:::
 ]=]
 function PluginFacade.LoadPlugin(self: PluginFacade, savedState: SavedState)
+	assertNoSetup(self)
 	-- this technically needs a pcall, but it's whatever
 	local Logger = require(script.Parent.Modules.Logger)
 
@@ -284,13 +310,26 @@ end
 	Unloads the entire plugin.
 ]=]
 function PluginFacade.UnloadPlugin(self: PluginFacade): SavedState?
-	if self._beforeUnload then
-		local saveState = self._beforeUnload()
-		self._beforeUnload = nil
+	assertNoSetup(self)
 
-		return saveState
+	local savedState = nil
+	if self._beforeUnload then
+		savedState = self._beforeUnload()
+		self._beforeUnload = nil
 	end
-	return nil
+
+	-- cleanup of buttons and toolbars
+	-- not necessary
+	-- for _name: string, toolbar: PluginToolbar in self._toolbars do
+	-- 	for _buttonName: string, button: PluginToolbarButton in self._buttons[toolbar] do
+	-- 		button:Destroy()
+	-- 	end
+	-- 	self._buttons[toolbar] = nil
+	-- 	toolbar:Destroy()
+	-- end
+	-- self._toolbars = {} :: any
+
+	return savedState
 end
 
 --[=[
@@ -299,6 +338,7 @@ end
 	Reloads the entire plugin. Used in hot-reloading.
 ]=]
 function PluginFacade.HotReloadPlugin(self: PluginFacade)
+	assertNoSetup(self)
 	local saveState = self:UnloadPlugin()
 	PluginFacade.Root = self._source:Clone()
 
@@ -315,6 +355,7 @@ end
 	:::
 ]=]
 function PluginFacade.WatchInstanceForChanges(self: PluginFacade, instance: Instance): ()
+	assertNoSetup(self)
 	if self._watching[instance] then
 		return
 	end
@@ -325,7 +366,7 @@ function PluginFacade.WatchInstanceForChanges(self: PluginFacade, instance: Inst
 	end
 
 	local connection1 = instance.Changed:Connect(function()
-		print("Reloading due to", instance:GetFullName())
+		print("Reloading change in... ", instance:GetFullName())
 
 		self:HotReloadPlugin()
 	end)

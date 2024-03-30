@@ -7,7 +7,7 @@
 local GroupService = game:GetService("GroupService")
 local StudioService = game:GetService("StudioService")
 
-local Config = require(script.Parent.Parent.Config)
+local GroupIds = require(script.Parent.Data.GroupIds)
 local RankData = require(script.Parent.Data.RankData)
 local Logger = require(script.Parent.Logger)
 
@@ -38,7 +38,7 @@ function Permissions.CanUsePlugin(): boolean
 	local userGroups: UserGroups = GroupService:GetGroupsAsync(loggedInUserId)
 
 	for _, group in userGroups do
-		if group.Id == Config.GroupIds.SienarTechSystemsDevelopment then
+		if group.Id == GroupIds.TESTERS then
 			if group.Rank >= RankData.TESTERS.Contractor then
 				return true
 			end

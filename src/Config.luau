@@ -61,22 +61,10 @@ Config.Name.PluginRoot = "TKGSuite"
 ]=]
 Config.MainIcon = nil -- non-ROBLOX Lune scripts also need to access this file, so initially nil
 
-if game ~= nil then
+if script ~= nil then
 	-- unless in a roblox context
-	local ServerStorage = game:GetService("ServerStorage")
-	local images = require(ServerStorage.TKGSuite.Assets.images)
+	local images = require(script.Parent.Parent.Assets.images)
 	Config.MainIcon = images.sienartech_notext
 end
-
---[=[
-	@prop GroupIds { [string]: number }
-	@within Config
-
-	Group IDs for all required groups that the plugin needs to know about.
-]=]
-Config.GroupIds = {
-	SienarTechSystemsDevelopment = 12675845,
-	TheKnownGalaxy = 6153729,
-}
 
 return Config

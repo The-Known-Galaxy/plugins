@@ -1,9 +1,8 @@
-local ServerStorage = game:GetService("ServerStorage")
-
-local PluginFacade = require(ServerStorage.TKGSuite.Plugin.PluginFacade)
+local PluginFacade = require(script.Parent.PluginFacade)
 local Config = require(script.Parent.Config)
 local Logger = require(script.Parent.Modules.Logger)
 local Permissions = require(script.Parent.Modules.Permissions)
+local SubModuleManager = require(script.Parent.Modules.SubModuleManager)
 
 local _TKGSuite = script:FindFirstAncestor(Config.Name.PluginRoot)
 
@@ -25,22 +24,29 @@ local function MainPluginExecutor(facade: PluginFacade.PluginFacade, _savedState
 	end
 
 	local displaySuffix, _nameSuffix = getToolbarNameSuffixes(facade)
-	local mainPluginToolbar = facade:CreateToolbar(`{Config.Name.Long}{displaySuffix}`)
+	local toolbarName = `{Config.Name.Long}{displaySuffix}`
+	facade:CreateToolbar(toolbarName)
 
-	-- local app = Roact.createElement(RoactRodux.StoreProvider, {
-	-- 	store = store,
-	-- }, {
-	-- 	App = Roact.createElement(App, {
-	-- 		Mouse = plugin:getMouse(),
-	-- 	}),
-	-- })
+	local manager = SubModuleManager.new(facade)
+	local possibleSubModuleInstances = manager:CollectModules(script.Parent.PluginModules)
+	manager:LoadModules(possibleSubModuleInstances):andThen(function(results: { SubModuleManager.LoadResult })
+		local loadedSubModules: SubModuleManager.SubModuleCollection = {}
 
-	-- local instance = Roact.mount(app, gui, "TKGSuite")
+		-- processing module loading
+		for _, moduleLoad in results do
+			if moduleLoad.Ok then
+				table.insert(loadedSubModules, moduleLoad.Module)
+			else
+				Logger.Warn(`{moduleLoad.ModuleScript.Name} failed to load because: {moduleLoad.FailureReason}`)
+			end
+		end
+
+		-- running life cycles
+		manager:RunLifeCycles(loadedSubModules, toolbarName)
+	end)
 
 	facade:RegisterPreUnloadHook(function()
-		-- Roact.unmount(instance)
-		mainPluginToolbar:Destroy()
-		-- return store:getState()
+		manager:UnloadAllModules()
 	end)
 end
 

@@ -1,4 +1,5 @@
 --!strict
+local PluginDebugService = game:GetService("PluginDebugService")
 --[=[
     @class SubModuleManager
     
@@ -31,7 +32,7 @@ local PluginSubModule = require(script.Parent.PluginSubModule)
 
 type SubModuleManagerImpl = {
 	__index: SubModuleManagerImpl,
-	new: () -> SubModuleManager,
+	new: (facade: PluginFacade.PluginFacade) -> SubModuleManager,
 	ValidPluginSubModule: (instance: Instance) -> boolean,
 	CollectModules: (self: SubModuleManager, root: Instance) -> ModuleScriptCollection,
 	LoadModules: (self: SubModuleManager, moduleCollection: ModuleScriptCollection) -> any,
@@ -42,6 +43,7 @@ type SubModuleManagerImpl = {
 }
 type SubModuleManagerProperties = {
 	_janitor: typeof(Janitor.new()),
+	PluginFacade: PluginFacade.PluginFacade,
 	ManagedModules: { [string]: ManagedModule },
 	ManagingModules: boolean,
 }
@@ -130,11 +132,12 @@ SubModuleManager.__index = SubModuleManager
     @since 0.1.0 
     Constructs a new [SubModuleManager].
 ]=]
-function SubModuleManager.new(): SubModuleManager
+function SubModuleManager.new(facade: PluginFacade.PluginFacade): SubModuleManager
 	local self = setmetatable({
 		_janitor = Janitor.new(),
 		ManagedModules = {},
 		ManagingModules = false,
+		PluginFacade = facade,
 	}, SubModuleManager)
 
 	return self
@@ -245,7 +248,7 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 	self.ManagingModules = true
 
 	-- if a toolbar with the given name already exists, then it doesn't create it, just fetches it like a GET request
-	local toolbar = PluginFacade:CreateToolbar(toolbarName)
+	local toolbar = self.PluginFacade:CreateToolbar(toolbarName)
 
 	-- pre-loading and setting up modules
 	for _, module in pluginSubModules do
@@ -254,7 +257,7 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 		-- creating a button for it
 		local moduleId = tostring(module.UID)
 		local submoduleButton =
-			PluginFacade:CreateButton(toolbar, moduleId, module.Tooltip, module.ButtonIcon, module.DisplayName)
+			self.PluginFacade:CreateButton(toolbar, moduleId, module.Tooltip, module.ButtonIcon, module.DisplayName)
 
 		-- remembering the module's meta data for management
 		self.ManagedModules[moduleId] = {

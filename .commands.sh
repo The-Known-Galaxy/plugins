@@ -7,7 +7,7 @@ docsite() {
     echo "DOC SITE STOPPED"
 }
 
-docsuite_build() {
+docsite_build() {
     echo "TOOL VERSIONS"
     echo "npm $(npm --version)"
     echo "moonwave $(./node_modules/.bin/moonwave --version)"

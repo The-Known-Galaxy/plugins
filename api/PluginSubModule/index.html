@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="plugin-moonwave plugin-id-moonwave">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v2.3.1">
+<title data-rh="true">PluginSubModule | TKG Plugin Suite</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://the-known-galaxy.github.io/plugins/api/PluginSubModule"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="PluginSubModule | TKG Plugin Suite"><meta data-rh="true" name="description" content="Every tool, submodule, and sub-plugin must be one of these.
+All custom behaviour is put into this.
+These are then loaded, activated, deactivated and unloaded (in other words, entirely managed) by [SubModuleManager].
+
+Intended use is something like this:
+```lua
+local StudioService = game:GetService(&quot;StudioService&quot;)
+local PluginSubModule = require(script.path.to.PluginSubModule)
+
+local newSubModule = PluginSubModule.new({
+    ButtonIcon = &quot;rbxassetid://123&quot;,
+    ActiveByDefault = true,
+})
+
+newSubModule:OnPreLoad(function(_pluginFacade: PluginFacade.PluginFacade)
+    -- only person with user id 456 can use this module!
+    return StudioService:GetUserId() == 456
+end)
+
+newSubModule:OnActivate(function(_pluginFacade: PluginFacade.PluginFacade)
+    print(&quot;I&#x27;m a plugin that logs a random number to console!&quot;)
+    print(math.random(1, 10))
+end)
+
+return newSubModule
+```"><meta data-rh="true" property="og:description" content="Every tool, submodule, and sub-plugin must be one of these.
+All custom behaviour is put into this.
+These are then loaded, activated, deactivated and unloaded (in other words, entirely managed) by [SubModuleManager].
+
+Intended use is something like this:
+```lua
+local StudioService = game:GetService(&quot;StudioService&quot;)
+local PluginSubModule = require(script.path.to.PluginSubModule)
+
+local newSubModule = PluginSubModule.new({
+    ButtonIcon = &quot;rbxassetid://123&quot;,
+    ActiveByDefault = true,
+})
+
+newSubModule:OnPreLoad(function(_pluginFacade: PluginFacade.PluginFacade)
+    -- only person with user id 456 can use this module!
+    return StudioService:GetUserId() == 456
+end)
+
+newSubModule:OnActivate(function(_pluginFacade: PluginFacade.PluginFacade)
+    print(&quot;I&#x27;m a plugin that logs a random number to console!&quot;)
+    print(math.random(1, 10))
+end)
+
+return newSubModule
+```"><link data-rh="true" rel="icon" href="/plugins/assets/images/sienartech_notext.png"><link data-rh="true" rel="canonical" href="https://the-known-galaxy.github.io/plugins/api/PluginSubModule"><link data-rh="true" rel="alternate" href="https://the-known-galaxy.github.io/plugins/api/PluginSubModule" hreflang="en"><link data-rh="true" rel="alternate" href="https://the-known-galaxy.github.io/plugins/api/PluginSubModule" hreflang="x-default"><link rel="stylesheet" href="/plugins/assets/css/styles.e1adec2f.css">
+<link rel="preload" href="/plugins/assets/js/runtime~main.b2b49a0e.js" as="script">
+<link rel="preload" href="/plugins/assets/js/main.17b6aa1c.js" as="script">
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
+<div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/plugins/"><b class="navbar__title text--truncate">TKG Plugin Suite</b></a><a class="navbar__item navbar__link" href="/plugins/docs/intro">Docs</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/plugins/api/">API</a></div><div class="navbar__items navbar__items--right"><a href="https://create.roblox.com/store/asset/16915363791/TKG-The-Known-Tools" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Plugin<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><a href="https://github.com/The-Known-Galaxy/plugins" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="searchBox_ZlJk"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input type="search" id="search_input_react" placeholder="Loading..." aria-label="Search" class="navbar__search-input search-bar" disabled=""></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0 docPageContainer_wNNk"><div class="docPage_Dpn1"><div class="docSidebarContainer_o_re"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" aria-expanded="true" href="/plugins/api/PluginFacade">Plugin Architecture</a></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/plugins/api/PluginFacade">​Plugin​Facade</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/plugins/api/PluginSubModule">​Plugin​Sub​Module</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/plugins/api/SubModuleManager">​Sub​Module​Manager</a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a href="#" class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="true">Plugin Sub-Modules</a></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/plugins/api/Logger">Utilities</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/plugins/api/GroupIds">Data Modules</a></div></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/plugins/api/Config">​Config</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/plugins/api/DummyPluginModule">​Dummy​Plugin​Module</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/plugins/api/Loader">​Loader</a></li></ul></nav></div></div><main class="docMainContainer_HJE1"><div class="container padding-vert--lg"><div class="row"><div class="col docItemCol_MU3C"><div class="docItemContainer_Wv98"><article><div class="member_J0w1 markdown"><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_oUs_"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><header><h1 class="docTitle_mZRt" style="text-decoration:none"><span style="display:inline-block">Plugin</span><span style="display:inline-block">Sub</span><span style="display:inline-block">Module</span></h1><div class="luaClassTags_EipM"></div><div>
+<p>
+  Every tool, submodule, and sub-plugin must be one of these.
+  All custom behaviour is put into this.
+  These are then loaded, activated, deactivated and unloaded (in other words, entirely managed) by <a href="/plugins/api/SubModuleManager">SubModuleManager</a>.
+</p>
+<p>Intended use is something like this:</p>
+<pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> StudioService <span class="token operator">=</span> game<span class="token punctuation">:</span><span class="token function">GetService</span><span class="token punctuation">(</span><span class="token string">"StudioService"</span><span class="token punctuation">)</span>
+<span class="token keyword">local</span> PluginSubModule <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>script<span class="token punctuation">.</span>path<span class="token punctuation">.</span>to<span class="token punctuation">.</span>PluginSubModule<span class="token punctuation">)</span>
+
+<span class="token keyword">local</span> newSubModule <span class="token operator">=</span> PluginSubModule<span class="token punctuation">.</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    ButtonIcon <span class="token operator">=</span> <span class="token string">"rbxassetid://123"</span><span class="token punctuation">,</span>
+    ActiveByDefault <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+newSubModule<span class="token punctuation">:</span><span class="token function">OnPreLoad</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>_pluginFacade<span class="token punctuation">:</span> PluginFacade<span class="token punctuation">.</span>PluginFacade<span class="token punctuation">)</span>
+    <span class="token comment">-- only person with user id 456 can use this module!</span>
+    <span class="token keyword">return</span> StudioService<span class="token punctuation">:</span><span class="token function">GetUserId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">456</span>
+<span class="token keyword">end</span><span class="token punctuation">)</span>
+
+newSubModule<span class="token punctuation">:</span><span class="token function">OnActivate</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>_pluginFacade<span class="token punctuation">:</span> PluginFacade<span class="token punctuation">.</span>PluginFacade<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"I'm a plugin that logs a random number to console!"</span><span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">end</span><span class="token punctuation">)</span>
+
+<span class="token keyword">return</span> newSubModule
+</code></pre>
+</div></header><h2 class="anchor anchorWithStickyNavbar_LWe7" id="types">Types<a href="#types" class="hash-link" aria-label="Direct link to Types" title="Direct link to Types">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="LifeCycleExecutor"><code style="text-decoration:none">LifeCycleExecutor</code><a href="#LifeCycleExecutor" class="hash-link" aria-label="Direct link to LifeCycleExecutor" title="Direct link to LifeCycleExecutor">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L54"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code class="purple_ieR2">type</code> <code>LifeCycleExecutor<!-- --> = </code> <code class="purple_ieR2">(</code><code>pluginFacade<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginFacade#PluginFacade">PluginFacade</a></code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="blue_P4bS">boolean?</code></div><div>
+<p>
+  Executor function that is hooked into any of the life cycle events.
+  Access to the <a href="/plugins/api/PluginFacade#PluginFacade">PluginFacade</a> instance is provided to support whatever custom behaviour is desired.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="PreLoadExecutor"><code style="text-decoration:none">PreLoadExecutor</code><a href="#PreLoadExecutor" class="hash-link" aria-label="Direct link to PreLoadExecutor" title="Direct link to PreLoadExecutor">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L64"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code class="purple_ieR2">type</code> <code>PreLoadExecutor<!-- --> = </code> <code class="purple_ieR2">(</code><code>pluginFacade<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginFacade#PluginFacade">PluginFacade</a></code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="purple_ieR2">(</code><div class="inset_uKQm"><code class="blue_P4bS">boolean</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">string?</code></div><code class="purple_ieR2">)</code></div><div>
+<p>
+  Executor function that is hooked specifically into the PreLoad life cycle.
+  Can optionally return a <code>string</code> explaining <em>why</em> the module failed to load.
+  Access to the <a href="/plugins/api/PluginFacade#PluginFacade">PluginFacade</a> instance is provided to support whatever custom behaviour is desired.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="PluginSubModuleConfig"><code style="text-decoration:none">PluginSubModuleConfig</code><a href="#PluginSubModuleConfig" class="hash-link" aria-label="Direct link to PluginSubModuleConfig" title="Direct link to PluginSubModuleConfig">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L164"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code class="purple_ieR2">interface</code> <code>PluginSubModuleConfig<!-- --> <!-- -->{</code><div class="inset_uKQm"><div><code>ButtonIcon<!-- -->: </code><code class="blue_P4bS">string?</code></div><div><code>ActiveByDefault<!-- -->: </code><code class="blue_P4bS">boolean?</code></div><div><code>DisplayName<!-- -->: </code><code class="blue_P4bS">string?</code></div><div><code>Tooltip<!-- -->: </code><code class="blue_P4bS">string?</code></div><div><code>OneClickExecution:<!-- -->: </code><code class="blue_P4bS">boolean?</code></div></div><code>}</code></div><div>
+<p>Supplied to the constructor to overwrite default module parameters.</p>
+</div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="properties">Properties<a href="#properties" class="hash-link" aria-label="Direct link to Properties" title="Direct link to Properties">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="ButtonIcon"><code style="text-decoration:none">ButtonIcon</code><a href="#ButtonIcon" class="hash-link" aria-label="Direct link to ButtonIcon" title="Direct link to ButtonIcon">​</a></h3><span class="badge_Ba2I" style="color:#e74c3c"><span class="badgeTooltip_cWXP">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_H9D_"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L74"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.<!-- -->ButtonIcon<!-- -->:<!-- --> </code> <code class="blue_P4bS">string</code></div><div>
+<p>The asset string for the icon of the <a href="https://developer.roblox.com/en-us/api-reference/class/PluginToolbarButton" target="_blank">PluginToolbarButton</a> that activates/deactivates this submodule.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="ActiveByDefault"><code style="text-decoration:none">ActiveByDefault</code><a href="#ActiveByDefault" class="hash-link" aria-label="Direct link to ActiveByDefault" title="Direct link to ActiveByDefault">​</a></h3><span class="badge_Ba2I" style="color:#e74c3c"><span class="badgeTooltip_cWXP">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_H9D_"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L82"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.<!-- -->ActiveByDefault<!-- -->:<!-- --> </code> <code class="blue_P4bS">boolean</code></div><div>
+<p>Whether the submodule is turned active immediately after loading.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Active"><code style="text-decoration:none">Active</code><a href="#Active" class="hash-link" aria-label="Direct link to Active" title="Direct link to Active">​</a></h3><span class="badge_Ba2I" style="color:#e74c3c"><span class="badgeTooltip_cWXP">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_H9D_"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L90"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.<!-- -->Active<!-- -->:<!-- --> </code> <code class="blue_P4bS">boolean</code></div><div>
+<p>Whether the plugin is currently active or not.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="DisplayName"><code style="text-decoration:none">DisplayName</code><a href="#DisplayName" class="hash-link" aria-label="Direct link to DisplayName" title="Direct link to DisplayName">​</a></h3><span class="badge_Ba2I" style="color:#e74c3c"><span class="badgeTooltip_cWXP">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_H9D_"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L98"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.<!-- -->DisplayName<!-- -->:<!-- --> </code> <code class="blue_P4bS">string</code></div><div>
+<p>The display name of the submodule. Used in places like the <a href="https://developer.roblox.com/en-us/api-reference/class/PluginToolbarButton" target="_blank">PluginToolbarButton</a> for the submodule.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Tooltip"><code style="text-decoration:none">Tooltip</code><a href="#Tooltip" class="hash-link" aria-label="Direct link to Tooltip" title="Direct link to Tooltip">​</a></h3><span class="badge_Ba2I" style="color:#e74c3c"><span class="badgeTooltip_cWXP">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_H9D_"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L106"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.<!-- -->Tooltip<!-- -->:<!-- --> </code> <code class="blue_P4bS">string</code></div><div>
+<p>A short description-like text for the submodule. Used in places like the <a href="https://developer.roblox.com/en-us/api-reference/class/PluginToolbarButton" target="_blank">PluginToolbarButton</a> for the submodule.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OneClickExecution"><code style="text-decoration:none">OneClickExecution</code><a href="#OneClickExecution" class="hash-link" aria-label="Direct link to OneClickExecution" title="Direct link to OneClickExecution">​</a></h3><span class="badge_Ba2I" style="color:#e74c3c"><span class="badgeTooltip_cWXP">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_H9D_"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L119"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.<!-- -->OneClickExecution<!-- -->:<!-- --> </code> <code class="blue_P4bS">boolean</code></div><div>
+<p>
+  Whether the submodule's button should activate and then immediately deactivate the submodule - functioning like a single-click event.
+  Both the <code>Activate</code> and <code>Deactivate</code> hooks will fire in their respective order.
+</p>
+<p>Useful for instances like "hey I want this submodule to do something small every time I click it".</p>
+<p><a href="/plugins/api/PluginSubModule#ActiveByDefault">PluginSubModule.ActiveByDefault</a> means this plugin will one-shot execute its functionality immediately when the Studio starts.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="DevelopmentModule"><code style="text-decoration:none">DevelopmentModule</code><a href="#DevelopmentModule" class="hash-link" aria-label="Direct link to DevelopmentModule" title="Direct link to DevelopmentModule">​</a></h3><span class="badge_Ba2I" style="color:#e74c3c"><span class="badgeTooltip_cWXP">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_H9D_"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L128"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.<!-- -->DevelopmentModule<!-- -->:<!-- --> </code> <code class="blue_P4bS">boolean</code></div><div>
+<p>
+  If true, then this submodule <strong>only</strong> loads when <a href="/plugins/api/PluginFacade#PluginFacade#DevelopmentMode">PluginFacade.DevelopmentMode</a> is turned on.
+  Useful for creating submodules intended entirely for testing or plugin development purposes.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="UID"><code style="text-decoration:none">UID</code><a href="#UID" class="hash-link" aria-label="Direct link to UID" title="Direct link to UID">​</a></h3><span class="badge_Ba2I" style="color:#e74c3c"><span class="badgeTooltip_cWXP">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_H9D_"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L136"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.<!-- -->UID<!-- -->:<!-- --> </code> <code class="blue_P4bS">string</code></div><div>
+<p>A unique identifier for the submodule, meant for internal use.</p>
+</div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="functions">Functions<a href="#functions" class="hash-link" aria-label="Direct link to Functions" title="Direct link to Functions">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="new"><code style="text-decoration:none">new</code><a href="#new" class="hash-link" aria-label="Direct link to new" title="Direct link to new">​</a></h3><span class="docTag__6UZ" style="border-color:#70cc00;color:#70cc00">constructor</span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L199"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->.</code><code class="green_DgR4">new</code><code>(</code><code>config<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginSubModule#PluginSubModuleConfig">PluginSubModuleConfig</a></code><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginSubModule">PluginSubModule</a></code></div><div>
+<p>Creates a new PluginSubModule.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OnPreLoad"><code style="text-decoration:none">OnPreLoad</code><a href="#OnPreLoad" class="hash-link" aria-label="Direct link to OnPreLoad" title="Direct link to OnPreLoad">​</a></h3><span class="docTag__6UZ" style="border-color:#dc0073;color:#dc0073">methods</span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L225"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->:</code><code class="green_DgR4">OnPreLoad</code><code>(</code><code>executor<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginSubModule#PreLoadExecutor">PreLoadExecutor</a></code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Register a function that runs <em>before</em> the submodule is about to <strong>load</strong>.
+  Its returnvalue's truthyness is used to decide if the submodule should continue to load.
+  If it does not load, then no other lifecycle methods run.
+</p>
+<p>This is the best place to do permission checks or other contextual checks against whether the rest of the module should run.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OnPostLoad"><code style="text-decoration:none">OnPostLoad</code><a href="#OnPostLoad" class="hash-link" aria-label="Direct link to OnPostLoad" title="Direct link to OnPostLoad">​</a></h3><span class="docTag__6UZ" style="border-color:#dc0073;color:#dc0073">methods</span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L237"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->:</code><code class="green_DgR4">OnPostLoad</code><code>(</code><code>executor<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginSubModule#LifeCycleExecutor">LifeCycleExecutor</a></code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Register a function that runs <em>after</em> the submodule has loaded.</p>
+<p>
+  It is best to do any actual initialisation code in here.
+  Declaring buttons, context actions, mounting UIs, etc.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OnActivate"><code style="text-decoration:none">OnActivate</code><a href="#OnActivate" class="hash-link" aria-label="Direct link to OnActivate" title="Direct link to OnActivate">​</a></h3><span class="docTag__6UZ" style="border-color:#dc0073;color:#dc0073">methods</span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L250"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->:</code><code class="green_DgR4">OnActivate</code><code>(</code><code>executor<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginSubModule#LifeCycleExecutor">LifeCycleExecutor</a></code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Register a function that runs <em>after</em> the submodule has been "activated".
+  <a href="/plugins/api/PluginSubModule#Active">PluginSubModule.Active</a> will be <code>true</code> at this point in time.
+</p>
+<p>
+  It is best to start executing the module's main functionality from here, whatever it may be.
+  Opening up widget UIs, running primary processing code, etc.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OnDeactivate"><code style="text-decoration:none">OnDeactivate</code><a href="#OnDeactivate" class="hash-link" aria-label="Direct link to OnDeactivate" title="Direct link to OnDeactivate">​</a></h3><span class="docTag__6UZ" style="border-color:#dc0073;color:#dc0073">methods</span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L263"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->:</code><code class="green_DgR4">OnDeactivate</code><code>(</code><code>executor<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginSubModule#LifeCycleExecutor">LifeCycleExecutor</a></code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>
+  Register a function that runs <em>after</em> the submodule has been "deactivated".
+  <a href="/plugins/api/PluginSubModule#Active">PluginSubModule.Active</a> will be <code>false</code> at this point in time.
+</p>
+<p>
+  It is best to pause/stop executing the module's main functionlity from here, whatever it may be.
+  Closing widget UIs, pausing or stopping primary processing code, etc.
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="OnPreUnload"><code style="text-decoration:none">OnPreUnload</code><a href="#OnPreUnload" class="hash-link" aria-label="Direct link to OnPreUnload" title="Direct link to OnPreUnload">​</a></h3><span class="docTag__6UZ" style="border-color:#dc0073;color:#dc0073">methods</span><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->0.1.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/Modules/PluginSubModule.luau#L275"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>PluginSubModule<!-- -->:</code><code class="green_DgR4">OnPreUnload</code><code>(</code><code>executor<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/PluginSubModule#LifeCycleExecutor">LifeCycleExecutor</a></code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Register a function that runs <em>before</em> the submodule is about to <strong>unload</strong>.</p>
+<p>
+  This has no practical usage in most production use-cases, since this hook is only invoked when the entire plugin's modules are unloaded and the plugin's execution is stopped.
+  In other words, whenever <strong>you are live testing it with <a href="/plugins/api/Config#DevelopmentMode">Config.DevelopmentMode</a> turned on (hot reloading) or when the end-user deactivates the plugin from the menu</strong>
+</p>
+</div></div></article></div><details><summary>Show raw api</summary><pre style="max-width:100%;white-space:pre-wrap">{
+    &quot;functions&quot;: [
+        {
+            &quot;name&quot;: &quot;new&quot;,
+            &quot;desc&quot;: &quot;Creates a new PluginSubModule.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;config&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;PluginSubModuleConfig&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;PluginSubModule\r\n&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;tags&quot;: [
+                &quot;constructor&quot;
+            ],
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 199,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OnPreLoad&quot;,
+            &quot;desc&quot;: &quot;Register a function that runs _before_ the submodule is about to **load**.\nIts returnvalue&#x27;s truthyness is used to decide if the submodule should continue to load.\nIf it does not load, then no other lifecycle methods run.\n\nThis is the best place to do permission checks or other contextual checks against whether the rest of the module should run.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;executor&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;PreLoadExecutor&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;tags&quot;: [
+                &quot;methods&quot;
+            ],
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 225,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OnPostLoad&quot;,
+            &quot;desc&quot;: &quot;Register a function that runs _after_ the submodule has loaded.\n\nIt is best to do any actual initialisation code in here.\nDeclaring buttons, context actions, mounting UIs, etc.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;executor&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;LifeCycleExecutor&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;tags&quot;: [
+                &quot;methods&quot;
+            ],
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 237,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OnActivate&quot;,
+            &quot;desc&quot;: &quot;Register a function that runs _after_ the submodule has been \&quot;activated\&quot;.\n[PluginSubModule.Active] will be `true` at this point in time.\n\nIt is best to start executing the module&#x27;s main functionality from here, whatever it may be.\nOpening up widget UIs, running primary processing code, etc.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;executor&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;LifeCycleExecutor&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;tags&quot;: [
+                &quot;methods&quot;
+            ],
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 250,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OnDeactivate&quot;,
+            &quot;desc&quot;: &quot;Register a function that runs _after_ the submodule has been \&quot;deactivated\&quot;.\n[PluginSubModule.Active] will be `false` at this point in time.\n\nIt is best to pause/stop executing the module&#x27;s main functionlity from here, whatever it may be.\nClosing widget UIs, pausing or stopping primary processing code, etc.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;executor&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;LifeCycleExecutor&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;tags&quot;: [
+                &quot;methods&quot;
+            ],
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 263,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OnPreUnload&quot;,
+            &quot;desc&quot;: &quot;Register a function that runs _before_ the submodule is about to **unload**.\n\nThis has no practical usage in most production use-cases, since this hook is only invoked when the entire plugin&#x27;s modules are unloaded and the plugin&#x27;s execution is stopped.\nIn other words, whenever **you are live testing it with [Config.DevelopmentMode] turned on (hot reloading) or when the end-user deactivates the plugin from the menu**&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;executor&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;LifeCycleExecutor&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;tags&quot;: [
+                &quot;methods&quot;
+            ],
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 275,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        }
+    ],
+    &quot;properties&quot;: [
+        {
+            &quot;name&quot;: &quot;ButtonIcon&quot;,
+            &quot;desc&quot;: &quot;The asset string for the icon of the [PluginToolbarButton] that activates/deactivates this submodule. &quot;,
+            &quot;lua_type&quot;: &quot;string&quot;,
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 74,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;ActiveByDefault&quot;,
+            &quot;desc&quot;: &quot;Whether the submodule is turned active immediately after loading.&quot;,
+            &quot;lua_type&quot;: &quot;boolean&quot;,
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 82,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;Active&quot;,
+            &quot;desc&quot;: &quot;Whether the plugin is currently active or not.&quot;,
+            &quot;lua_type&quot;: &quot;boolean&quot;,
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 90,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;DisplayName&quot;,
+            &quot;desc&quot;: &quot;The display name of the submodule. Used in places like the [PluginToolbarButton] for the submodule.&quot;,
+            &quot;lua_type&quot;: &quot;string&quot;,
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 98,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;Tooltip&quot;,
+            &quot;desc&quot;: &quot;A short description-like text for the submodule. Used in places like the [PluginToolbarButton] for the submodule.&quot;,
+            &quot;lua_type&quot;: &quot;string&quot;,
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 106,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;OneClickExecution&quot;,
+            &quot;desc&quot;: &quot;Whether the submodule&#x27;s button should activate and then immediately deactivate the submodule - functioning like a single-click event.\nBoth the `Activate` and `Deactivate` hooks will fire in their respective order.\n\nUseful for instances like \&quot;hey I want this submodule to do something small every time I click it\&quot;.\n\n[PluginSubModule.ActiveByDefault] means this plugin will one-shot execute its functionality immediately when the Studio starts.&quot;,
+            &quot;lua_type&quot;: &quot;boolean&quot;,
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 119,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;DevelopmentModule&quot;,
+            &quot;desc&quot;: &quot;If true, then this submodule **only** loads when [PluginFacade.DevelopmentMode] is turned on.\nUseful for creating submodules intended entirely for testing or plugin development purposes.&quot;,
+            &quot;lua_type&quot;: &quot;boolean&quot;,
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 128,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;UID&quot;,
+            &quot;desc&quot;: &quot;A unique identifier for the submodule, meant for internal use.&quot;,
+            &quot;lua_type&quot;: &quot;string&quot;,
+            &quot;since&quot;: &quot;0.1.0&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 136,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        }
+    ],
+    &quot;types&quot;: [
+        {
+            &quot;name&quot;: &quot;LifeCycleExecutor&quot;,
+            &quot;desc&quot;: &quot;Executor function that is hooked into any of the life cycle events.\nAccess to the [PluginFacade] instance is provided to support whatever custom behaviour is desired.&quot;,
+            &quot;lua_type&quot;: &quot;(pluginFacade: PluginFacade) -&gt; boolean?&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 54,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;PreLoadExecutor&quot;,
+            &quot;desc&quot;: &quot;Executor function that is hooked specifically into the PreLoad life cycle.\nCan optionally return a `string` explaining _why_ the module failed to load.\nAccess to the [PluginFacade] instance is provided to support whatever custom behaviour is desired.&quot;,
+            &quot;lua_type&quot;: &quot;(pluginFacade: PluginFacade) -&gt; (boolean, string?)&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 64,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;PluginSubModuleConfig&quot;,
+            &quot;desc&quot;: &quot;Supplied to the constructor to overwrite default module parameters.&quot;,
+            &quot;fields&quot;: [
+                {
+                    &quot;name&quot;: &quot;ButtonIcon&quot;,
+                    &quot;lua_type&quot;: &quot;string?&quot;,
+                    &quot;desc&quot;: &quot;&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;ActiveByDefault&quot;,
+                    &quot;lua_type&quot;: &quot;boolean?&quot;,
+                    &quot;desc&quot;: &quot;&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;DisplayName&quot;,
+                    &quot;lua_type&quot;: &quot;string?&quot;,
+                    &quot;desc&quot;: &quot;&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;Tooltip&quot;,
+                    &quot;lua_type&quot;: &quot;string?&quot;,
+                    &quot;desc&quot;: &quot;&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;OneClickExecution:&quot;,
+                    &quot;lua_type&quot;: &quot;boolean?&quot;,
+                    &quot;desc&quot;: &quot;&quot;
+                }
+            ],
+            &quot;source&quot;: {
+                &quot;line&quot;: 164,
+                &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+            }
+        }
+    ],
+    &quot;name&quot;: &quot;PluginSubModule&quot;,
+    &quot;desc&quot;: &quot;Every tool, submodule, and sub-plugin must be one of these.\nAll custom behaviour is put into this.\nThese are then loaded, activated, deactivated and unloaded (in other words, entirely managed) by [SubModuleManager].\n\nIntended use is something like this:\n```lua\nlocal StudioService = game:GetService(\&quot;StudioService\&quot;)\nlocal PluginSubModule = require(script.path.to.PluginSubModule)\n\nlocal newSubModule = PluginSubModule.new({\n    ButtonIcon = \&quot;rbxassetid://123\&quot;,\n    ActiveByDefault = true,\n})\n\nnewSubModule:OnPreLoad(function(_pluginFacade: PluginFacade.PluginFacade)\n    -- only person with user id 456 can use this module!\n    return StudioService:GetUserId() == 456\nend)\n\nnewSubModule:OnActivate(function(_pluginFacade: PluginFacade.PluginFacade)\n    print(\&quot;I&#x27;m a plugin that logs a random number to console!\&quot;)\n    print(math.random(1, 10))\nend)\n\nreturn newSubModule\n```&quot;,
+    &quot;source&quot;: {
+        &quot;line&quot;: 32,
+        &quot;path&quot;: &quot;src/Modules/PluginSubModule.luau&quot;
+    }
+}</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a><ul><li><a href="#LifeCycleExecutor" class="table-of-contents__link toc-highlight">LifeCycleExecutor</a></li><li><a href="#PluginSubModuleConfig" class="table-of-contents__link toc-highlight">PluginSubModuleConfig</a></li><li><a href="#PreLoadExecutor" class="table-of-contents__link toc-highlight">PreLoadExecutor</a></li></ul></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a><ul><li><a href="#Active" class="table-of-contents__link toc-highlight">Active</a></li><li><a href="#ActiveByDefault" class="table-of-contents__link toc-highlight">ActiveByDefault</a></li><li><a href="#ButtonIcon" class="table-of-contents__link toc-highlight">ButtonIcon</a></li><li><a href="#DevelopmentModule" class="table-of-contents__link toc-highlight">DevelopmentModule</a></li><li><a href="#DisplayName" class="table-of-contents__link toc-highlight">DisplayName</a></li><li><a href="#OneClickExecution" class="table-of-contents__link toc-highlight">OneClickExecution</a></li><li><a href="#Tooltip" class="table-of-contents__link toc-highlight">Tooltip</a></li><li><a href="#UID" class="table-of-contents__link toc-highlight">UID</a></li></ul></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#constructor" class="table-of-contents__link toc-highlight">Constructor</a><ul><li><a href="#new" class="table-of-contents__link toc-highlight">.new</a></li></ul></li><li><a href="#methods" class="table-of-contents__link toc-highlight">Methods</a><ul><li><a href="#OnActivate" class="table-of-contents__link toc-highlight">:OnActivate</a></li><li><a href="#OnDeactivate" class="table-of-contents__link toc-highlight">:OnDeactivate</a></li><li><a href="#OnPostLoad" class="table-of-contents__link toc-highlight">:OnPostLoad</a></li><li><a href="#OnPreLoad" class="table-of-contents__link toc-highlight">:OnPreLoad</a></li><li><a href="#OnPreUnload" class="table-of-contents__link toc-highlight">:OnPreUnload</a></li></ul></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2024 The Known Galaxy. Built with Moonwave and Docusaurus</div></div></div></footer></div>
+<script src="/plugins/assets/js/runtime~main.b2b49a0e.js"></script>
+<script src="/plugins/assets/js/main.17b6aa1c.js"></script>
+</body>
+</html>

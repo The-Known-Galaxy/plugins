@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[847],{33481:e=>{e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"GroupIds","desc":"This file contains all the group IDs that we would ever need to use.","source":{"line":6,"path":"src/Modules/Data/GroupIds.luau"}}')}}]);

@@ -6,6 +6,16 @@ changelog = true
 apiCategories = ["constructor", "utility", "methods"]
 
 [[classOrder]]
+section = "Plugin Architecture"
+classes = ["PluginFacade", "PluginSubModule", "SubModuleManager"]
+collapsed = true
+
+[[classOrder]]
+section = "Plugin Sub-Modules"
+classes = []
+collapsed = false
+
+[[classOrder]]
 section = "Utilities"
 classes = ["Logger", "Permissions", "NextId"]
 collapsed = true
@@ -14,11 +24,6 @@ collapsed = true
 section = "Data Modules"
 classes = ["GroupIds", "RankData"]
 collapsed = true
-
-[[classOrder]]
-section = "Plugin Architecture"
-classes = ["PluginFacade", "PluginSubModule", "SubModuleManager"]
-collapsed = false
 
 autoSectionPath = "src"
 

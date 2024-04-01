@@ -25,19 +25,26 @@ export type UserGroups = { UserGroup }
 
 local Permissions = {}
 
---[=[
-    Whether the currently logged in Studio user can user this plugin.
-    @yields
-]=]
-function Permissions.CanUsePlugin(): boolean
+function Permissions._getGroups(): UserGroups | false
 	local loggedInUserId = StudioService:GetUserId()
 	if loggedInUserId == 0 then
 		Logger.Warn("Cannot detect who is logged into the Studio. UserID is 0.")
 		return false
 	end
-	local userGroups: UserGroups = GroupService:GetGroupsAsync(loggedInUserId)
+	return GroupService:GetGroupsAsync(loggedInUserId)
+end
 
-	for _, group in userGroups do
+--[=[
+    Whether the currently logged in Studio user can user this plugin.
+    @yields
+]=]
+function Permissions.CanUsePlugin(): boolean
+	local userGroups = Permissions._getGroups()
+	if userGroups == false then
+		return userGroups
+	end
+
+	for _, group: UserGroup in userGroups do
 		if group.Id == GroupIds.TESTERS then
 			if group.Rank >= RankData.TESTERS.Contractor then
 				return true
@@ -45,6 +52,27 @@ function Permissions.CanUsePlugin(): boolean
 		end
 	end
 	return false
+end
+
+function Permissions.CanUseHiltProcessor()
+	local userGroups = Permissions._getGroups()
+	if userGroups == false then
+		return userGroups
+	end
+
+	for _, group: UserGroup in userGroups do
+		if group.Id == GroupIds.TESTERS then
+			if group.Rank >= RankData.TESTERS.Architect then
+				return true
+			end
+		elseif group.Id == GroupIds.TKG then
+			if group.Rank >= RankData.TKG.Developer then
+				return true
+			end
+		end
+	end
+
+	return true
 end
 
 return Permissions

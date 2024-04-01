@@ -3,9 +3,10 @@ local Permissions = require(script.Parent.Parent.Modules.Permissions)
 local PluginSubModule = require(script.Parent.Parent.Modules.PluginSubModule)
 local PluginFacade = require(script.Parent.Parent.PluginFacade)
 local ImportHilt = require(script.ImportHilt)
+local images = require(script.Parent.Parent.Parent.Assets.images)
 
 local HiltSetProcessor = PluginSubModule.new({
-	ButtonIcon = nil,
+	ButtonIcon = images.hilt_collector_3,
 	DisplayName = "Hilt Set Processor",
 	Tooltip = "Handles importing, configuring and validating lightsaber hilt sets",
 	ActiveByDefault = false,

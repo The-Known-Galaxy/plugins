@@ -12,7 +12,7 @@ collapsed = true
 
 [[classOrder]]
 section = "Plugin Sub-Modules"
-classes = []
+classes = ["ImportHilt"]
 collapsed = false
 
 [[classOrder]]

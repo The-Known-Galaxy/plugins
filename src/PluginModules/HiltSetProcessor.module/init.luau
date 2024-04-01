@@ -23,7 +23,7 @@ HiltSetProcessor:OnPreLoad(function(_pluginFacade: PluginFacade.PluginFacade): (
 end)
 
 HiltSetProcessor:OnActivate(function(_pluginFacade: PluginFacade.PluginFacade): boolean?
-	return ImportHilt()
+	return ImportHilt.Import()
 end)
 
 return HiltSetProcessor

@@ -1,5 +1,5 @@
 --[=[
-    @class importHilt
+    @class ImportHilt
     
     Original code by [Nidoxs](https://github.com/Nidoxs).
     Refactored and improved by [ShadowEngineer](https://github.com/ShadowEngineer).
@@ -19,8 +19,9 @@ local ImportData = require(script.Parent.ImportData)
 local Logger = require(script.Parent.Parent.Parent.Modules.Logger)
 
 --[=[
-    @private
-    Checks whether a given string contains any of the keywords given.
+	@within ImportHilt
+	@private
+	Checks whether a given string contains any of the keywords given.
 ]=]
 local function nameMatchesKeyWords(name: string, keywords: ImportData.KeyWordList): boolean
 	name = name:lower()
@@ -32,44 +33,46 @@ local function nameMatchesKeyWords(name: string, keywords: ImportData.KeyWordLis
 	return false
 end
 
---[=[
-    Main executor function.
-    Also the return-value of this module.
+local ImportHilt = {}
 
-    Processes all objects in the selection, validates them as something you can import, and then turns it into a new model.
+--[=[
+	Main executor function.
+	Also the return-value of this module.
+
+	Processes all objects in the selection, validates them as something you can import, and then turns it into a new model.
 	Achieves this by checking each child part in the original mesh selection against a selection of key words that imply what section it belongs to.
 
 	New model form:
-    ```
-    Model: lightsaber_name
-        Model: lightsaber_name
-            Model: emitter
-            	Model: details
+	```
+	Model: lightsaber_name
+		Model: lightsaber_name
+			Model: emitter
+				Model: details
 					{ BasePart }
 				BasePart: root
-            Model: grip
-            	Model: details
+			Model: grip
+				Model: details
 					{ BasePart }
 				BasePart: root
-            Model: pommel
-            	Model: details
+			Model: pommel
+				Model: details
 					{ BasePart }
 				BasePart: root
-            Model: switch
-            	Model: details
+			Model: switch
+				Model: details
 					{ BasePart }
 				BasePart: root
-        Model: lightsaber_name_double_grip
-            Model: details
-    ```
+		Model: lightsaber_name_double_grip
+			Model: details
+	```
 
-    Expects an Instance of the form:
-    ```
-    Model: Lightsaber Name
+	Expects an Instance of the form:
+	```
+	Model: Lightsaber Name
 		{ BasePart }
-    ```
+	```
 ]=]
-return function()
+function ImportHilt.Import()
 	local selection = SelectionService:Get()
 	if not (#selection > 0) then
 		Logger.Warn(NO_SELECTION_ERROR)
@@ -216,3 +219,5 @@ return function()
 
 	SelectionService:Set(importedInstances)
 end
+
+return ImportHilt

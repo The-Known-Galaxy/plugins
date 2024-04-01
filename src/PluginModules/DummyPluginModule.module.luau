@@ -1,8 +1,9 @@
 --!strict
 --[=[
-    @class DummyPluginModule
-    
-    Test module for testing PluginSubModule implementation.
+	@class DummyPluginModule
+	@private
+
+	Test module for testing PluginSubModule implementation.
 ]=]
 
 local PluginSubModule = require(script.Parent.Parent.Modules.PluginSubModule)

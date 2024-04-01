@@ -7,6 +7,7 @@ local _ImportHilt = require(script.ImportHilt)
 local Config = require(script.Parent.Parent.Config)
 local SubModuleManager = require(script.Parent.Parent.Modules.SubModuleManager)
 local images = require(script.Parent.Parent.Parent.Assets.images)
+local React = require(script.Parent.Parent.Parent.Libraries.React)
 local ReactRoblox = require(script.Parent.Parent.Parent.Libraries.ReactRoblox)
 
 local displayName = "Hilt Set Processor"
@@ -42,7 +43,7 @@ HiltSetProcessor:OnPostLoad(
 		end)
 
 		pluginReactTree = ReactRoblox.createRoot(pluginWidgetGui)
-		pluginReactTree:render(HiltSetProcessorApp)
+		pluginReactTree:render(React.createElement(HiltSetProcessorApp))
 
 		return true
 	end

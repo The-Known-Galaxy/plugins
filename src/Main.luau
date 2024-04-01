@@ -11,7 +11,7 @@ local function getToolbarNameSuffixes(pluginFacade: PluginFacade.PluginFacade): 
 	if pluginFacade.DevelopmentMode then
 		return ` [DEV-{Config.Version}]`, ` Dev-{Config.Version}`
 	else
-		return EMPTY_STRING, EMPTY_STRING
+		return ` {Config.Version}`, EMPTY_STRING
 	end
 end
 

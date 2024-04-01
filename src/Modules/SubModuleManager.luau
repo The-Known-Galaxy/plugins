@@ -254,7 +254,7 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 		-- development modules should be skipped in non-development contexts.
 		if module.DevelopmentModule and self.PluginFacade.DevelopmentMode then
 			Logger.Warn(`Loading submodule [{module.DisplayName}] for development.`)
-		else
+		elseif module.DevelopmentModule then
 			continue
 		end
 

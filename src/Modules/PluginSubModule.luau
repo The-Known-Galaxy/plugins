@@ -142,13 +142,16 @@ export type PluginSubModuleProperties = {
 	OneClickExecution: boolean,
 	DevelopmentModule: boolean,
 	UID: string,
-	_executors: {
-		PreLoad: PreLoadExecutor,
-		PostLoad: LifeCycleExecutor?,
-		Activate: LifeCycleExecutor?,
-		Deactivate: LifeCycleExecutor?,
-		PreUnload: LifeCycleExecutor?,
-	},
+	_executors: typeof(setmetatable(
+		{},
+		{} :: {
+			PreLoad: PreLoadExecutor,
+			PostLoad: LifeCycleExecutor?,
+			Activate: LifeCycleExecutor?,
+			Deactivate: LifeCycleExecutor?,
+			PreUnload: LifeCycleExecutor?,
+		}
+	)),
 }
 --[=[
     @interface PluginSubModuleConfig
@@ -174,7 +177,13 @@ export type PluginSubModule = typeof(setmetatable({} :: PluginSubModulePropertie
 local PluginSubModule: PluginSubModuleImpl = {} :: PluginSubModuleImpl
 PluginSubModule.__index = PluginSubModule
 
-local DEFAULTS: PluginSubModuleProperties = {
+local DEFAULT_EXECUTORS = {
+	PreLoad = function(_pluginFacade: PluginFacade.PluginFacade): (boolean, string?)
+		return true
+	end,
+}
+
+local DEFAULTS = {
 	ButtonIcon = Config.MainIcon,
 	ActiveByDefault = false,
 	Active = false,
@@ -183,11 +192,7 @@ local DEFAULTS: PluginSubModuleProperties = {
 	OneClickExecution = false,
 	DevelopmentModule = false,
 	UID = "",
-	_executors = {
-		PreLoad = function(_pluginFacade: PluginFacade.PluginFacade): (boolean, string?)
-			return true
-		end,
-	},
+	_executors = {},
 }
 
 local nextSubModuleId = NextId.New()
@@ -207,6 +212,7 @@ function PluginSubModule.new(config: PluginSubModuleConfig): PluginSubModule
 	})
 
 	properties.UID = tostring(nextSubModuleId())
+	properties._executors = setmetatable({}, DEFAULT_EXECUTORS)
 
 	local self = setmetatable(properties, PluginSubModule)
 

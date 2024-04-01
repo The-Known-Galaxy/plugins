@@ -289,7 +289,6 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 
 		-- running post loading hooks
 		if shouldLoad then
-			print(`calling PostLoad on module {moduleId}`, self.ManagedModules[moduleId])
 			self:InvokeLifeCycleHookIfExists(self.ManagedModules[moduleId], "PostLoad")
 		end
 

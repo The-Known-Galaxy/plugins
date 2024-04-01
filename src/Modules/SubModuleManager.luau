@@ -39,6 +39,12 @@ type SubModuleManagerImpl = {
 	UnloadAllModules: (self: SubModuleManager) -> (),
 	InvokeLifeCycleHookIfExists: (self: SubModuleManager, module: ManagedModule, key: string) -> (),
 	ToggleModuleActivation: (self: SubModuleManager, managedModule: ManagedModule, forcedState: boolean?) -> (),
+	ToggleModuleActivationFromPlugin: (
+		self: SubModuleManager,
+		module: PluginSubModule.PluginSubModule,
+		forcedState: boolean?
+	) -> (),
+	GetManagedModuleFromSubModule: (self: SubModuleManager, module: PluginSubModule.PluginSubModule) -> ManagedModule?,
 }
 type SubModuleManagerProperties = {
 	_janitor: typeof(Janitor.new()),
@@ -283,7 +289,8 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 
 		-- running post loading hooks
 		if shouldLoad then
-			self:InvokeLifeCycleHookIfExists(self.ManagedModules[moduleId], "Postload")
+			print(`calling PostLoad on module {moduleId}`, self.ManagedModules[moduleId])
+			self:InvokeLifeCycleHookIfExists(self.ManagedModules[moduleId], "PostLoad")
 		end
 
 		-- turning modules on by default if they should be
@@ -333,7 +340,7 @@ function SubModuleManager:InvokeLifeCycleHookIfExists(managedModule: ManagedModu
 	local executors = managedModule.Module._executors
 
 	if executors[executorName] ~= nil and type(executors[executorName]) == "function" then
-		local ok, result = pcall(executors[executorName], self.PluginFacade)
+		local ok, result = pcall(executors[executorName], self.PluginFacade, self)
 
 		-- warning when life cycle executor fails
 		if not ok then
@@ -374,6 +381,36 @@ function SubModuleManager:ToggleModuleActivation(managedModule: ManagedModule, f
 		-- deactivate immediately after activating
 		self:ToggleModuleActivation(managedModule, false)
 	end
+end
+
+--[=[
+	@tag methods
+	@since 0.3.0
+	Toggles module activation but intended for use from inside a [PluginSubModule].
+	Achieves the same thing as [SubModuleManager:ToggleModuleActivation].
+]=]
+function SubModuleManager:ToggleModuleActivationFromPlugin(
+	module: PluginSubModule.PluginSubModule,
+	forcedState: boolean?
+): ()
+	local managedModule = self:GetManagedModuleFromSubModule(module)
+	if managedModule then
+		self:ToggleModuleActivation(managedModule, forcedState)
+	end
+end
+
+--[=[
+	@tag methods 
+	@since 0.3.0 
+	Finds the [ManagedModule] associated with the the given [PluginSubModule].
+]=]
+function SubModuleManager:GetManagedModuleFromSubModule(module: PluginSubModule.PluginSubModule): ManagedModule?
+	for _, managedModule in self.ManagedModules do
+		if managedModule.Module.UID == module.UID then
+			return managedModule
+		end
+	end
+	return nil
 end
 
 return SubModuleManager

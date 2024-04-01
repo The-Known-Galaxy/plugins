@@ -45,13 +45,13 @@ type PluginSubModuleImpl = {
 }
 
 --[=[
-    @type LifeCycleExecutor (pluginFacade: PluginFacade) -> boolean?
+    @type LifeCycleExecutor (pluginFacade: PluginFacade, manager: SubModuleManager) -> boolean?
     @within PluginSubModule
     
     Executor function that is hooked into any of the life cycle events.
     Access to the [PluginFacade] instance is provided to support whatever custom behaviour is desired.
 ]=]
-export type LifeCycleExecutor = (pluginFacade: PluginFacade.PluginFacade) -> boolean?
+export type LifeCycleExecutor = (pluginFacade: PluginFacade.PluginFacade, manager: any) -> boolean?
 
 --[=[
     @type PreLoadExecutor (pluginFacade: PluginFacade) -> (boolean, string?)
@@ -61,7 +61,7 @@ export type LifeCycleExecutor = (pluginFacade: PluginFacade.PluginFacade) -> boo
     Can optionally return a `string` explaining _why_ the module failed to load.
     Access to the [PluginFacade] instance is provided to support whatever custom behaviour is desired.
 ]=]
-export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade) -> (boolean, string?)
+export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager: any) -> (boolean, string?)
 
 --[=[
     @prop ButtonIcon string

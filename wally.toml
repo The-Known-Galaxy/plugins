@@ -19,5 +19,5 @@ Llama = "freddylist/llama@1.1.1"
 TestEZ = "roblox/testez@0.4.1"
 
 # react - these should be updated by version number TOGETHER
-react-roblox = "jsdotlua/react-roblox@17.1.0"
-react = "jsdotlua/react@17.1.0"
+ReactRoblox = "jsdotlua/react-roblox@17.1.0"
+React = "jsdotlua/react@17.1.0"

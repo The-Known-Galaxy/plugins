@@ -27,7 +27,7 @@ local function HiltSetProcessorApp(_props)
 	end, { selectionCount })
 
 	return e("Frame", {
-		BackgroundTransparency = 0,
+		BackgroundTransparency = 1,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Size = UDim2.new(1, 0, 1, 0),
 		Position = UDim2.new(0.5, 0, 0.5, 0),

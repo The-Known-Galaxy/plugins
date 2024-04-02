@@ -178,7 +178,7 @@ local function Button(props: Props)
 			TextScaled = true,
 		}),
 		Corner = e("UICorner", {
-			CornerRadius = UDim.new(0, 10),
+			CornerRadius = InterfaceConfig.Theme.CornerRadius,
 		}),
 		Stroke = e("UIStroke", {
 			Enabled = true,

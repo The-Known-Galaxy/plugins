@@ -55,6 +55,7 @@ InterfaceConfig.Springs = {
 InterfaceConfig.Theme = {
 	Background = Color3.fromRGB(40, 40, 40),
 	Font = Enum.Font.Ubuntu,
+	CornerRadius = UDim.new(0, 10),
 	Colours = InterfaceConfig.ColourPalettes.Painting,
 }
 

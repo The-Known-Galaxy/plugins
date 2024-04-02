@@ -1,6 +1,8 @@
 local Selection = game:GetService("Selection")
 
+local ImportHilt = require(script.Parent.ImportHilt)
 local Button = require(script.Parent.Parent.Parent.Modules.Interface.Components.Button)
+local Llama = require(script.Parent.Parent.Parent.Parent.Libraries.Llama)
 local React = require(script.Parent.Parent.Parent.Parent.Libraries.React)
 
 local e = React.createElement
@@ -10,7 +12,9 @@ local function HiltSetProcessorApp(_props)
 
 	React.useEffect(function()
 		local connection = Selection.SelectionChanged:Connect(function()
-			setSelection(Selection:Get())
+			setSelection(Llama.List.filter(Selection:Get(), function(value: Instance)
+				return value:IsA("Model")
+			end))
 		end)
 
 		return function()
@@ -43,9 +47,11 @@ local function HiltSetProcessorApp(_props)
 				text = `Import {selectionCount} Hilt{if selectionCount > 1 then "s" else ""}`,
 				disabledText = "Select Hilts to Import",
 				active = canImport,
-				onActivate = canImport and function()
-					print("clicked")
-				end,
+				onActivate = if canImport
+					then function()
+						ImportHilt.Import()
+					end
+					else nil,
 			} :: Button.Props
 		),
 	})

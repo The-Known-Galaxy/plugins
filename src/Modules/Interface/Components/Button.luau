@@ -1,10 +1,51 @@
+--[=[
+	@class Button
+	@tag Component 
+	@since 0.3.0 
+	
+	Generic button implementation for all UI to use.
+	Takes style themeing from [InterfaceConfig].
+
+	Implements 3 styles:
+	1. **Solid**: Solid-filled buttons, where hovering creates a white border and whitens the fill.
+	2. **Outline**: Transparent buttons with a theme-coloured border, where hovering whitens the border and slightly whitens the fill and makes it opaque.
+	3. **Text**: Transparent button with no border, where hovering slightly whitens the fill and makes it opaque.
+
+	With 2 kinds:
+	1. **Primary**: Uses the primary theme colour
+	2. **Secondary**: Uses the secondary theme colour.
+]=]
 local InterfaceConfig = require(script.Parent.Parent.InterfaceConfig)
 local Llama = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.Llama)
 local React = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.React)
+local ReactSpring = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.ReactSpring)
 
 local e = React.createElement
 
+--[=[ 
+	@type Callback () -> ()
+	@within Button
+	
+	Generic callback function.
+]=]
 type Callback = () -> ()
+--[=[ 
+	@interface Props
+	@within Button
+	.style "Solid" | "Outline" | "Text"
+	.kind "Primary" | "Secondary"
+	.active boolean? -- whether the button is active. Not  
+	.size UDim2?
+	.position UDim2?
+	.anchorPoint Vector2?
+	.onActivate Callback? -- fires when the button is pressed with LMB
+	.onHoverIn Callback? -- fires when the user enters hover on the button
+	.onHoverOut Callback? -- fires when the user exits hover on the button
+	.text string? -- the text to display when the button is active
+	.disabledText string? -- the text to display when the button is NOT active
+	.image string? -- image asset URL. If supplied, an image is shown instead of text
+	.children any? -- any children to pass to the button, if extra descendants are desired  
+]=]
 export type Props = {
 	style: "Solid" | "Outline" | "Text",
 	kind: "Primary" | "Secondary",
@@ -33,46 +74,99 @@ local DEFAULT_PROPS: Props = {
 	text = "Button Text",
 	disabledText = "Disabled",
 }
+local BUTTON_BORDER_STROKE_WIDTH_PX = 3
 
 local function Button(props: Props)
 	props = Llama.Dictionary.merge(DEFAULT_PROPS, props)
 
-	local backgroundTransparency = React.useMemo(function()
-		return if props.style == "Solid" or props.image then 0 else 1
-	end, { props.style, props.image })
+	local isHovering, setIsHovering = React.useState(false)
 
-	local backgroundColour = React.useMemo(function()
-		local colour: Color3 | nil = if props.style == "Solid" or props.image
-			then InterfaceConfig.Theme.Colours[props.kind]
-			else nil
-		if colour then
-			if props.active then
-				return colour
-			else
-				return colour:Lerp(Color3.new(0, 0, 0), 0.25)
-			end
+	local styles = ReactSpring.useSpring({
+		buttonHoverLerpAlpha = if isHovering and props.active then 1 else 0,
+		config = InterfaceConfig.Springs.Snappy,
+	})
+
+	-- determing what type of button this is
+	local isTextualButton, isImageButton = React.useMemo(function()
+		local imageIsNil = props.image == nil
+		return imageIsNil, not imageIsNil
+	end, { props.image })
+
+	-- means the whole button should be coloured this colour
+	local solidFillButton = React.useMemo(function()
+		return props.style == "Solid"
+	end, { props.style })
+
+	-- outline and text buttons should fill the button white on hover, and otherwise have it as transparent
+	local fillOnlyOnHover = React.useMemo(function()
+		return (props.style == "Outline" or props.style == "Text")
+	end, { props.style })
+
+	-- otherwise the button is transparent
+	local buttonTransparency = React.useMemo(function()
+		return if solidFillButton then 0 else 1
+	end, { solidFillButton })
+
+	-- determining button colour
+	local buttonColour = React.useMemo(function()
+		local colour: Color3 = InterfaceConfig.Theme.Colours[props.kind]
+		if props.active then
+			return colour
+		else
+			return colour:Lerp(Color3.fromHSV(360, 0, 0.2), 0.75)
 		end
-		return nil
-	end, { props.style, props.image, props.kind, props.active })
+	end, { props.kind, props.active })
 
+	-- remapping properties based on hover status and spring alpha
+	local buttonColourMapped = styles.buttonHoverLerpAlpha:map(function(alpha)
+		return buttonColour:Lerp(Color3.fromHSV(360, 0, 1), 0.5 * alpha)
+	end)
+	local buttonBorderSizeMapped = styles.buttonHoverLerpAlpha:map(function(alpha)
+		return alpha * BUTTON_BORDER_STROKE_WIDTH_PX
+	end)
+	local buttonTransparencyMapped = styles.buttonHoverLerpAlpha:map(function(alpha)
+		return (1 - alpha)
+	end)
+
+	-- choosing text to display
 	local buttonText = React.useMemo(function()
 		return if props.active then props.text else props.disabledText
 	end, { props.active, props.text, props.disabledText })
 
-	return e("TextButton", {
-		BackgroundTransparency = backgroundTransparency,
-		BackgroundColor3 = backgroundColour,
+	local buttonBackgroundColour = if solidFillButton then buttonColourMapped else Color3.fromHSV(360, 0, 0.5)
+
+	return e(if isTextualButton then "TextButton" else "ImageButton", {
+		BackgroundTransparency = if fillOnlyOnHover then buttonTransparencyMapped else buttonTransparency,
+		BackgroundColor3 = buttonBackgroundColour,
 		AnchorPoint = props.anchorPoint,
 		Size = props.size,
 		Position = props.position,
-		Text = "",
 		BorderSizePixel = 0,
+		AutoButtonColor = false,
+
+		-- textual button exclusive
+		Text = if isTextualButton then "" else nil,
+
+		-- image button exclusive
+		Image = if isImageButton then props.image else nil,
+		ImageColor3 = if isImageButton then buttonBackgroundColour else nil,
+		ScaleType = if isImageButton then Enum.ScaleType.Fit else nil,
 
 		[React.Event.MouseButton1Click] = props.onActivate,
-		[React.Event.MouseEnter] = props.onHoverIn,
-		[React.Event.MouseLeave] = props.onHoverOut,
+		[React.Event.MouseEnter] = function()
+			setIsHovering(true)
+			if props.onHoverIn then
+				props.onHoverIn()
+			end
+		end,
+		[React.Event.MouseLeave] = function()
+			setIsHovering(false)
+			if props.onHoverOut then
+				props.onHoverOut()
+			end
+		end,
 	}, {
-		label = e("TextLabel", {
+		Label = isTextualButton and e("TextLabel", {
 			BackgroundTransparency = 1,
 			Size = UDim2.new(1, 0, 0.6, 0),
 			AnchorPoint = Vector2.new(0.5, 0.5),
@@ -83,8 +177,19 @@ local function Button(props: Props)
 			Font = InterfaceConfig.Theme.Font,
 			TextScaled = true,
 		}),
-		corner = e("UICorner", {
+		Corner = e("UICorner", {
 			CornerRadius = UDim.new(0, 10),
+		}),
+		Stroke = e("UIStroke", {
+			Enabled = true,
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+			Color = if props.style == "Solid" then Color3.fromHSV(0, 0, 1) else buttonColourMapped,
+			LineJoinMode = Enum.LineJoinMode.Round,
+			Thickness = if props.style == "Solid"
+				then buttonBorderSizeMapped
+				elseif props.style == "Outline" then BUTTON_BORDER_STROKE_WIDTH_PX
+				else 0,
+			Transparency = 0,
 		}),
 	}, props.children)
 end

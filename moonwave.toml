@@ -25,6 +25,11 @@ section = "Data Modules"
 classes = ["GroupIds", "RankData"]
 collapsed = true
 
+[[classOrder]]
+section = "User Interface"
+classes = ["InterfaceConfig", "Button"]
+collapsed = true
+
 autoSectionPath = "src"
 
 [docusaurus]

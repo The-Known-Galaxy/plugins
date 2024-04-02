@@ -2,6 +2,8 @@
 	@class Config
 	
 	Plugin configuration module.
+	Houses configuration information about the entire plugin, and is meant to be the single source of truth for backend settings.
+	Frontend settings are in [InterfaceConfig].
 ]=]
 
 local Config = {}

@@ -4,7 +4,8 @@
         "$className": "DataModel",
         "Workspace": {
             "$className": "Workspace",
-            "$path": "assets/testing-models"
+            "$path": "assets/testing-models",
+            "$ignoreUnknownInstances": true
         },
         "ServerStorage": {
             "$className": "ServerStorage",

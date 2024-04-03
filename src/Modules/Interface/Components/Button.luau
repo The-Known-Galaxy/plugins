@@ -20,6 +20,7 @@ local InterfaceConfig = require(script.Parent.Parent.InterfaceConfig)
 local Llama = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.Llama)
 local React = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.React)
 local ReactSpring = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.ReactSpring)
+local Text = require(script.Parent.Text)
 
 local e = React.createElement
 
@@ -175,17 +176,20 @@ local function Button(props: Props)
 			SizeConstraint = e("UISizeConstraint", {
 				MinSize = Vector2.new(16, 16),
 			}),
-			Label = isTextualButton and e("TextLabel", {
-				BackgroundTransparency = 1,
-				Size = UDim2.new(1, 0, 0.6, 0),
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.new(0.5, 0, 0.5, 0),
-				Text = buttonText,
-				RichText = true,
-				TextColor3 = InterfaceConfig.Theme.Colours.Text,
-				Font = InterfaceConfig.Theme.Font,
-				TextScaled = true,
-			}),
+			Label = isTextualButton and e(
+				Text,
+				{
+					text = buttonText,
+					style = "normal",
+					autoSize = true,
+					autoSizeDirection = Enum.FillDirection.Horizontal,
+					native = {
+						Size = UDim2.new(1, 0, 0.6, 0),
+						AnchorPoint = Vector2.new(0.5, 0.5),
+						Position = UDim2.new(0.5, 0, 0.5, 0),
+					},
+				} :: Text.Props
+			),
 			Corner = e("UICorner", {
 				CornerRadius = InterfaceConfig.Theme.CornerRadius,
 			}),

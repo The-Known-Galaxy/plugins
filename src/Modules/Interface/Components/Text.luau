@@ -137,6 +137,7 @@ local function Text(props: Props)
 		Llama.Dictionary.merge(props.native, {
 			Size = elementSize,
 			BackgroundTransparency = 1,
+			BackgroundColor3 = Color3.fromRGB(0, 255, 0),
 			FontFace = font,
 			RichText = true,
 			Text = text,

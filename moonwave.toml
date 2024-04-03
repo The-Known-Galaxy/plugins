@@ -27,7 +27,7 @@ collapsed = true
 
 [[classOrder]]
 section = "User Interface"
-classes = ["InterfaceConfig", "Button"]
+classes = ["InterfaceConfig", "Button", "Panel"]
 collapsed = true
 
 autoSectionPath = "src"

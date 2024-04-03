@@ -34,7 +34,7 @@ type Callback = () -> ()
 	@within Button
 	.style "Solid" | "Outline" | "Text"
 	.kind "Primary" | "Secondary"
-	.active boolean? -- whether the button is active. Not  
+	.active boolean? -- whether the button is active.
 	.size UDim2?
 	.position UDim2?
 	.anchorPoint Vector2?
@@ -44,7 +44,7 @@ type Callback = () -> ()
 	.text string? -- the text to display when the button is active
 	.disabledText string? -- the text to display when the button is NOT active
 	.image string? -- image asset URL. If supplied, an image is shown instead of text
-	.children any? -- any children to pass to the button, if extra descendants are desired  
+	.children any?
 ]=]
 export type Props = {
 	style: "Solid" | "Outline" | "Text",

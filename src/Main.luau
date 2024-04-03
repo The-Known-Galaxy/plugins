@@ -1,5 +1,6 @@
 local PluginFacade = require(script.Parent.PluginFacade)
 local Config = require(script.Parent.Config)
+local InterfaceConfig = require(script.Parent.Modules.Interface.InterfaceConfig)
 local Logger = require(script.Parent.Modules.Logger)
 local Permissions = require(script.Parent.Modules.Permissions)
 local SubModuleManager = require(script.Parent.Modules.SubModuleManager)
@@ -22,6 +23,9 @@ local function MainPluginExecutor(facade: PluginFacade.PluginFacade, _savedState
 		)
 		return
 	end
+
+	-- deciding theme from access level
+	InterfaceConfig.Theme.Colours = Permissions.GetAccessLevel().Theme
 
 	local displaySuffix, _nameSuffix = getToolbarNameSuffixes(facade)
 	local toolbarName = `{Config.Name.Long}{displaySuffix}`

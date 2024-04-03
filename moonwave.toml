@@ -17,7 +17,7 @@ collapsed = false
 
 [[classOrder]]
 section = "Utilities"
-classes = ["Logger", "Permissions", "NextId"]
+classes = ["Logger", "Permissions", "NextId", "TextFormat"]
 collapsed = true
 
 [[classOrder]]
@@ -27,7 +27,7 @@ collapsed = true
 
 [[classOrder]]
 section = "User Interface"
-classes = ["InterfaceConfig", "Button", "Panel"]
+classes = ["InterfaceConfig", "Button", "Panel", "Text"]
 collapsed = true
 
 autoSectionPath = "src"

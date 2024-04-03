@@ -3,11 +3,16 @@ local Selection = game:GetService("Selection")
 local ImportHilt = require(script.Parent.ImportHilt)
 local Button = require(script.Parent.Parent.Parent.Modules.Interface.Components.Button)
 local Panel = require(script.Parent.Parent.Parent.Modules.Interface.Components.Panel)
+local Text = require(script.Parent.Parent.Parent.Modules.Interface.Components.Text)
 local NextId = require(script.Parent.Parent.Parent.Modules.Utilities.NextId)
+local TextFormat = require(script.Parent.Parent.Parent.Modules.Utilities.TextFormat)
 local Llama = require(script.Parent.Parent.Parent.Parent.Libraries.Llama)
 local React = require(script.Parent.Parent.Parent.Parent.Libraries.React)
 
 local e = React.createElement
+
+local MAIN_PADDING = 10
+local TEXT_PADDING = 5
 
 local function HiltSetProcessorApp(_props)
 	local selection, setSelection = React.useState(Selection:Get())
@@ -39,6 +44,41 @@ local function HiltSetProcessorApp(_props)
 		Size = UDim2.new(1, 0, 1, 0),
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 	}, {
+		UsagePanel = e(Panel, {
+			anchorPoint = Vector2.new(0.5, 0),
+			size = UDim2.new(1, 0, 0, 120),
+			layoutOrder = nextOrder(),
+		}, {
+			Title = e(
+				Text,
+				{
+					style = "title",
+					text = "Hilt Set Processor",
+					native = {
+						Size = UDim2.new(1, 0, 0, 25),
+					},
+				} :: Text.Props
+			),
+			Description = e(
+				Text,
+				{
+					text = `Use this tool import and configure lightsaber hilts. Currently supports importing lightsaber hilts and previewing materials. Detailed guides on how to use this are in: {TextFormat.Hyperlink(
+						"the-known-galaxy.github.io/plugins/docs"
+					)}`,
+					native = {
+						Size = UDim2.new(1, 0, 1, -25),
+						Position = UDim2.new(0, 0, 0, 25),
+						TextYAlignment = Enum.TextYAlignment.Top,
+					},
+				} :: Text.Props
+			),
+			Padding = e("UIPadding", {
+				PaddingBottom = UDim.new(0, TEXT_PADDING),
+				PaddingTop = UDim.new(0, TEXT_PADDING),
+				PaddingLeft = UDim.new(0, TEXT_PADDING),
+				PaddingRight = UDim.new(0, TEXT_PADDING),
+			}),
+		}),
 		ButtonPanel = e(
 			Panel,
 			{
@@ -75,7 +115,7 @@ local function HiltSetProcessorApp(_props)
 			}
 		),
 		Layout = e("UIListLayout", {
-			Padding = UDim.new(0, 10),
+			Padding = UDim.new(0, MAIN_PADDING),
 			FillDirection = Enum.FillDirection.Vertical,
 			HorizontalAlignment = Enum.HorizontalAlignment.Center,
 			VerticalAlignment = Enum.VerticalAlignment.Top,
@@ -88,10 +128,10 @@ local function HiltSetProcessorApp(_props)
 			-- ItemLineAlignment = "Automatic", -- enums: Automatic, Center, End, Start, Stretch
 		}),
 		Padding = e("UIPadding", {
-			PaddingBottom = UDim.new(0, 10),
-			PaddingTop = UDim.new(0, 10),
-			PaddingLeft = UDim.new(0, 10),
-			PaddingRight = UDim.new(0, 10),
+			PaddingBottom = UDim.new(0, MAIN_PADDING),
+			PaddingTop = UDim.new(0, MAIN_PADDING),
+			PaddingLeft = UDim.new(0, MAIN_PADDING),
+			PaddingRight = UDim.new(0, MAIN_PADDING),
 		}),
 	})
 end

@@ -117,6 +117,8 @@ export type PluginFacade = {
 	_toolbars: { [PluginToolbarName]: PluginToolbar },
 	_pluginGuis: any,
 	_buttons: { [PluginToolbar]: { [string]: PluginToolbarButton } },
+	_actions: { [string]: PluginAction },
+	_menus: { [string]: PluginMenu },
 	_watching: any,
 	_beforeUnload: any?,
 	_source: Instance | any,
@@ -133,6 +135,16 @@ export type PluginFacade = {
 		text: string?
 	) -> PluginToolbarButton,
 	CreateDockWidgetPluginGui: (self: PluginFacade, name: string, info: DockWidgetPluginGuiInfo) -> DockWidgetPluginGui,
+	GetMouse: (self: PluginFacade) -> PluginMouse,
+	CreatePluginAction: (
+		self: PluginFacade,
+		actionId: string,
+		text: string,
+		statusTip: string,
+		iconName: string,
+		allowBinding: boolean
+	) -> PluginAction,
+	CreatePluginMenu: (self: PluginFacade, id: string, title: string, icon: string) -> PluginMenu,
 	RegisterPreUnloadHook: (self: PluginFacade, callback: (...any) -> ...any) -> (),
 	LoadPlugin: (self: PluginFacade, savedState: SavedState) -> (),
 	UnloadPlugin: (self: PluginFacade) -> SavedState?,
@@ -147,6 +159,8 @@ local PluginFacade = {
 	_pluginGuis = {},
 	_buttons = {},
 	_watching = {},
+	_actions = {},
+	_menus = {},
 	_beforeUnload = nil,
 	_source = nil,
 	_setup = false,
@@ -184,7 +198,7 @@ end
 --[=[
 	@tag methods
 	@since 0.1.0
-	Abstraction for [Plugin:CreateToolbar]
+	Hot-reload-safe wrapper for [Plugin:CreateToolbar].
 ]=]
 function PluginFacade.CreateToolbar(self: PluginFacade, name: string): PluginToolbar
 	assertNoSetup(self)
@@ -201,7 +215,7 @@ end
 --[=[
 	@tag methods
 	@since 0.1.0
-	Abstraction for [PluginToolbar:CreateButton]
+	Hot-reload-safe wrapper for [PluginToolbar:CreateButton].
 ]=]
 function PluginFacade.CreateButton(
 	self: PluginFacade,
@@ -234,7 +248,7 @@ end
 --[=[
 	@tag methods
 	@since 0.1.0
-	Wrapper around [Plugin:CreateDockWidgetPluginGui]
+	Hot-reload-safe wrapper around [Plugin:CreateDockWidgetPluginGui].
 ]=]
 function PluginFacade.CreateDockWidgetPluginGui(
 	self: PluginFacade,
@@ -255,11 +269,52 @@ end
 --[=[
 	@tag methods
 	@since 0.1.0
-	Wrapper around [Plugin:GetMouse].
+	Hot-reload-safe wrapper around [Plugin:GetMouse].
 ]=]
 function PluginFacade.GetMouse(self: PluginFacade): PluginMouse
 	assertNoSetup(self)
 	return self.PluginObject:GetMouse()
+end
+
+--[=[
+	@tag methods
+	@since 0.3.0
+	Hot-reload-safe wrapper around [Plugin:CreatePluginAction].
+]=]
+function PluginFacade.CreatePluginAction(
+	self: PluginFacade,
+	actionId: string,
+	text: string,
+	statusTip: string,
+	iconName: string,
+	allowBinding: boolean
+): PluginAction
+	assertNoSetup(self)
+	local existingAction = self._actions[actionId]
+	if existingAction then
+		return existingAction
+	end
+
+	local newAction = self.PluginObject:CreatePluginAction(actionId, text, statusTip, iconName, allowBinding)
+	self._actions[actionId] = newAction
+	return newAction
+end
+
+--[=[
+	@tag methods
+	@since 0.3.0
+	Hot-reload-safe wrapper around [Plugin:CreatePluginMenu].
+]=]
+function PluginFacade.CreatePluginMenu(self: PluginFacade, id: string, title: string, icon: string): PluginMenu
+	assertNoSetup(self)
+	local existingMenu = self._menus[id]
+	if existingMenu then
+		return existingMenu
+	end
+
+	local newMenu = self.PluginObject:CreatePluginMenu(id, title, icon)
+	self._menus[id] = newMenu
+	return newMenu
 end
 
 --[=[

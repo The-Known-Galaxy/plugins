@@ -130,19 +130,8 @@ end
 	Whether the currently logged in Studio user can user this plugin.
 ]=]
 function Permissions.CanUsePlugin(): boolean
-	local userGroups = Permissions._getGroups()
-	if userGroups == false then
-		return userGroups
-	end
-
-	for _, group: UserGroup in userGroups do
-		if group.Id == GroupIds.TESTERS then
-			if group.Rank >= RankData.TESTERS.Contractor then
-				return true
-			end
-		end
-	end
-	return false
+	local accessLevel = Permissions.GetAccessLevel()
+	return not (accessLevel == Permissions.AccessLevels.NoAccess)
 end
 
 --[=[

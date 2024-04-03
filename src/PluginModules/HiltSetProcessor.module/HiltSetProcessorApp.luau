@@ -7,7 +7,6 @@ local Panel = require(script.Parent.Parent.Parent.Modules.Interface.Components.P
 local Text = require(script.Parent.Parent.Parent.Modules.Interface.Components.Text)
 local NextId = require(script.Parent.Parent.Parent.Modules.Utilities.NextId)
 local TextFormat = require(script.Parent.Parent.Parent.Modules.Utilities.TextFormat)
-local Llama = require(script.Parent.Parent.Parent.Parent.Libraries.Llama)
 local React = require(script.Parent.Parent.Parent.Parent.Libraries.React)
 
 local e = React.createElement
@@ -21,9 +20,7 @@ local function HiltSetProcessorApp(_props)
 
 	React.useEffect(function()
 		local connection = Selection.SelectionChanged:Connect(function()
-			setSelection(Llama.List.filter(Selection:Get(), function(value: Instance)
-				return value:IsA("Model")
-			end))
+			setSelection(ImportHilt.FilterSelectionForImportableModels(Selection:Get()))
 		end)
 
 		return function()
@@ -143,7 +140,7 @@ local function HiltSetProcessorApp(_props)
 						active = canImport,
 						onActivate = if canImport
 							then function()
-								ImportHilt.Import()
+								ImportHilt.Import(selection)
 							end
 							else nil,
 						native = {

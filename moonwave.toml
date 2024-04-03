@@ -12,12 +12,12 @@ collapsed = true
 
 [[classOrder]]
 section = "Plugin Sub-Modules"
-classes = ["ImportHilt"]
+classes = ["HiltSetProcessor"]
 collapsed = false
 
 [[classOrder]]
 section = "Utilities"
-classes = ["Logger", "Permissions", "NextId", "TextFormat"]
+classes = ["Logger", "Permissions", "NextId", "TextFormat", "ImportHilt"]
 collapsed = true
 
 [[classOrder]]

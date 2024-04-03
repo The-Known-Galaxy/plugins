@@ -1,8 +1,10 @@
 --[=[
-    @class ImportHilt
-    
-    Original code by [Nidoxs](https://github.com/Nidoxs).
-    Refactored and improved by [ShadowEngineer](https://github.com/ShadowEngineer).
+	@class ImportHilt
+
+	Original code by [Nidoxs](https://github.com/Nidoxs).
+	Refactored and improved by [ShadowEngineer](https://github.com/ShadowEngineer).
+
+	Handles all logic related to importing lightsabers.
 ]=]
 local SelectionService = game:GetService("Selection")
 
@@ -17,6 +19,8 @@ local CLONE_OFFSET = Vector3.new(0, 3, 0)
 
 local ImportData = require(script.Parent.ImportData)
 local Logger = require(script.Parent.Parent.Parent.Modules.Logger)
+local Llama = require(script.Parent.Parent.Parent.Parent.Libraries.Llama)
+local t = require(script.Parent.Parent.Parent.Parent.Libraries.t)
 
 --[=[
 	@within ImportHilt
@@ -36,6 +40,7 @@ end
 local ImportHilt = {}
 
 --[=[
+	@since v0.1.0 
 	Main executor function.
 	Also the return-value of this module.
 
@@ -72,13 +77,7 @@ local ImportHilt = {}
 		{ BasePart }
 	```
 ]=]
-function ImportHilt.Import()
-	local selection = SelectionService:Get()
-	if not (#selection > 0) then
-		Logger.Warn(NO_SELECTION_ERROR)
-		return
-	end
-
+function ImportHilt.Import(selection: { Instance })
 	local importedInstances = {}
 
 	for _, selectedInstance in ipairs(selection) do
@@ -218,6 +217,96 @@ function ImportHilt.Import()
 	end
 
 	SelectionService:Set(importedInstances)
+end
+
+--[=[
+	@since v0.3.0
+	Filters a selection for importable models, and then imports them.
+]=]
+function ImportHilt.FilterSelectionAndImport(selection: { Instance })
+	selection = ImportHilt.FilterSelectionForImportableModels(selection)
+	if not (#selection > 0) then
+		Logger.Warn(NO_SELECTION_ERROR)
+		return
+	end
+
+	ImportHilt.Import(selection)
+end
+
+--[=[
+	@tag Utility
+	@since v0.3.0  
+	Checks whether a given model is an importable one by checking its contents.
+]=]
+function ImportHilt.IsImportableModel(instance: Instance): boolean
+	local isModel = instance:IsA("Model")
+	if not isModel then
+		return false
+	end
+
+	-- checking all children are base parts, and that it has children
+	local children = instance:GetChildren()
+	if #children == 0 then
+		return false
+	end
+
+	for _, child in children do
+		if not child:IsA("BasePart") then
+			return false
+		end
+	end
+
+	-- any of its ancestors ARE NOT imported lightsaber models
+	-- in other words, this isn't a model inside an already imported model
+	local function insideImportedModel(recursiveInstance: Instance): boolean
+		if recursiveInstance == workspace then
+			return false
+		end
+
+		local isImportedModel = ImportHilt.IsImportedLightsaberModel(recursiveInstance)
+		if isImportedModel then
+			return true
+		end
+
+		if recursiveInstance.Parent then
+			return insideImportedModel(recursiveInstance.Parent)
+		else
+			return false
+		end
+	end
+
+	return not insideImportedModel(instance)
+end
+
+--[=[
+	@tag Utility
+	@since v0.3.0
+	Checks whether a given model is a fully imported lightsaber model.  
+]=]
+function ImportHilt.IsImportedLightsaberModel(instance: Instance): boolean
+	local sectionCheck = t.instanceIsA("Model", {
+		root = t.instanceIsA("BasePart"),
+		details = t.instanceIsA("Model"),
+	})
+
+	local importedStructureCheck = t.instanceIsA("Model", {
+		[ImportData.sections[1]] = sectionCheck,
+		[ImportData.sections[2]] = sectionCheck,
+		[ImportData.sections[3]] = sectionCheck,
+		[ImportData.sections[4]] = sectionCheck,
+	})
+
+	local passesCheck = importedStructureCheck(instance)
+	return passesCheck
+end
+
+--[=[
+	@tag Utility
+	@since v0.3.0
+	Filters an array of Instances for only the ones that can be imported by the module.
+]=]
+function ImportHilt.FilterSelectionForImportableModels(selection: { Instance }): { Instance }
+	return Llama.List.filter(selection, ImportHilt.IsImportableModel)
 end
 
 return ImportHilt

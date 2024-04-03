@@ -19,8 +19,8 @@ local e = React.createElement
 	@within Panel
 	.autoSize boolean? -- whether the text lable should resize in either axis
 	.autoSizeDirection Enum.FillDirection? -- which axis to resize on if autoSize is true
-	
-    .native { [string]: any }?
+
+	.native { [string]: any }?
 	.children any?
 ]=]
 export type Props = {

@@ -1,4 +1,12 @@
 --!strict
+--[=[
+	@class HiltSetProcessor
+	
+	Provides functionality to import new lightsaber hilts into the game, as well as other utility functions.
+	Heavy lifting done by [ImportHilt].
+]=]
+local Selection = game:GetService("Selection")
+
 local HiltSetProcessorApp = require(script.HiltSetProcessorApp)
 local ImportHilt = require(script.ImportHilt)
 local Permissions = require(script.Parent.Parent.Modules.Permissions)
@@ -68,7 +76,7 @@ HiltSetProcessor:OnPostLoad(
 
 		janitor:Add(
 			importAction.Triggered:Connect(function()
-				ImportHilt.Import()
+				ImportHilt.FilterSelectionAndImport(Selection:Get())
 			end),
 			nil,
 			"ImportActionTriggered"

@@ -25,17 +25,17 @@ type TextConfig = {
 	fontColour: Color3,
 }
 --[=[
-    @interface Props
-    @within Text
-    .style Style? -- configures font styling
-    .italics boolean? -- to format as italics
-    .bold boolean? -- to format as bold
-    .text string? -- the actual text to display itself
+	@interface Props
+	@within Text
+	.style Style? -- configures font styling
+	.italics boolean? -- to format as italics
+	.bold boolean? -- to format as bold
+	.text string? -- the actual text to display itself
 	.autoSize boolean? -- whether the text lable should resize in either axis
 	.autoSizeDirection Enum.FillDirection? -- which axis to resize on if autoSize is true
 
-    .native { [string]: any }?
-    .children any?
+	.native { [string]: any }?
+	.children any?
 ]=]
 export type Props = {
 	style: Style?,

@@ -55,7 +55,11 @@ local function HiltSetProcessorApp(props: Props)
 	-- opening context menu as a side effect when unfiltered selection changes and configure mode is
 	React.useEffect(function()
 		local promise
-		if configureMode and #unfilteredSelection > 0 then
+		if
+			configureMode
+			and #unfilteredSelection > 0
+			and #ConfigureHilt.FilterSelectionForConfigurableHiltParts(unfilteredSelection) > 0
+		then
 			promise = Promise.new(function(resolve)
 				local chosenAction: PluginAction? = props.configurationMenu:ShowAsync()
 				if chosenAction then
@@ -143,7 +147,7 @@ local function HiltSetProcessorApp(props: Props)
 				Description = e(
 					Text,
 					{
-						text = `Use this tool import and configure lightsaber hilts. Currently supports importing lightsaber hilts and previewing materials. Detailed guides on how to use this are in: {TextFormat.Hyperlink(
+						text = `Use this tool import and configure lightsaber hilts. Currently supports importing lightsaber hilts, configuring hilt parts and previewing materials. Detailed guides on how to use this are in: {TextFormat.Hyperlink(
 							"the-known-galaxy.github.io/plugins"
 						)}`,
 						autoSize = true,
@@ -202,7 +206,7 @@ local function HiltSetProcessorApp(props: Props)
 					Button,
 					{
 						style = "Solid",
-						kind = "Secondary",
+						kind = if configureMode then "Secondary" else "Primary",
 						text = `Turn {if configureMode then "off" else "on"} Hilt Configuration Mode`,
 						active = true,
 						onActivate = configureModeButtonActivated,

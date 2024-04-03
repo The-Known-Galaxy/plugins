@@ -34,7 +34,14 @@ collapsed = true
 
 [[classOrder]]
 section = "User Interface"
-classes = ["InterfaceConfig", "Button", "Panel", "Text", "Padding"]
+classes = [
+	"InterfaceConfig",
+	"PluginWidgetFrame",
+	"Button",
+	"Panel",
+	"Text",
+	"Padding",
+]
 collapsed = true
 
 autoSectionPath = "src"

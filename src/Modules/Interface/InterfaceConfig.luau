@@ -6,6 +6,17 @@
 ]=]
 local InterfaceConfig = {}
 
+--[=[
+	@interface ColourPalette
+	@within InterfaceConfig
+	.Primary Color3, -- should be a bright vibrant colour
+	.Secondary Color3, -- a different colour to primary. Should be a good contrast
+	.Tertiary Color3, -- used rarely. Can be anything
+	.Accent Color3, -- should be very bright, almost white-ish
+	.Text Color3, -- should be very dark
+
+	Describes a general colour palette, used when specifying various plugin UI themes.
+]=]
 export type ColourPalette = {
 	Primary: Color3, -- should be a bright vibrant colour
 	Secondary: Color3, -- a different colour to primary. Should be a good contrast

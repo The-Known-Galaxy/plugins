@@ -14,6 +14,7 @@ local PluginSubModule = require(script.Parent.Parent.Modules.PluginSubModule)
 local PluginFacade = require(script.Parent.Parent.PluginFacade)
 local _ImportHilt = require(script.ImportHilt)
 local Config = require(script.Parent.Parent.Config)
+local PluginWidgetFrame = require(script.Parent.Parent.Modules.Interface.PluginWidgetFrame)
 local SubModuleManager = require(script.Parent.Parent.Modules.SubModuleManager)
 local images = require(script.Parent.Parent.Parent.Assets.images)
 local Janitor = require(script.Parent.Parent.Parent.Libraries.Janitor)
@@ -106,8 +107,10 @@ HiltSetProcessor:OnPostLoad(
 		end)
 
 		local pluginReactTree = ReactRoblox.createRoot(pluginWidgetGui)
-		pluginReactTree:render(React.createElement(HiltSetProcessorApp, {
-			configurationMenu = configurationActionMenu,
+		pluginReactTree:render(React.createElement(PluginWidgetFrame, {}, {
+			HiltSetProcessorApp = React.createElement(HiltSetProcessorApp, {
+				configurationMenu = configurationActionMenu,
+			}),
 		}))
 		janitor:Add(pluginReactTree, "unmount", "RoactTree")
 

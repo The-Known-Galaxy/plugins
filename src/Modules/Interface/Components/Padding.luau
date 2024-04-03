@@ -39,10 +39,10 @@ export type Props = {
 }
 
 local DEFAULT_PROPS: Props = {
-	bottom = UDim.new(0, 10),
-	left = UDim.new(0, 10),
-	right = UDim.new(0, 10),
-	top = UDim.new(0, 10),
+	bottom = UDim.new(0, 0),
+	left = UDim.new(0, 0),
+	right = UDim.new(0, 0),
+	top = UDim.new(0, 0),
 }
 
 local function Padding(props: Props)

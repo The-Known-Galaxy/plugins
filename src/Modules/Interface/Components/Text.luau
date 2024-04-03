@@ -14,10 +14,10 @@ local TextFormat = require(script.Parent.Parent.Parent.Utilities.TextFormat)
 
 local e = React.createElement
 --[=[
-    @type Style "normal" | "title" | "subtitle"
+    @type Style "normal" | "title" | "subtitle" | "note"
     @within Text
 ]=]
-type Style = "normal" | "title" | "subtitle"
+type Style = "normal" | "title" | "subtitle" | "note"
 type TextConfig = {
 	font: Enum.Font,
 	fontSize: number,
@@ -66,6 +66,12 @@ local STYLE_TO_CONFIG: { [Style]: TextConfig } = {
 		font = InterfaceConfig.Theme.Font,
 		fontSize = 16,
 		fontWeight = Enum.FontWeight.Regular,
+		fontColour = InterfaceConfig.Theme.Colours.Text,
+	},
+	["note"] = {
+		font = InterfaceConfig.Theme.Font,
+		fontSize = 12,
+		fontWeight = Enum.FontWeight.ExtraLight,
 		fontColour = InterfaceConfig.Theme.Colours.Text,
 	},
 }

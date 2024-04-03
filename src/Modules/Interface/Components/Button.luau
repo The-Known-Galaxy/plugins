@@ -149,7 +149,11 @@ local function Button(props: Props)
 			ImageColor3 = if isImageButton then buttonBackgroundColour else nil,
 			ScaleType = if isImageButton then Enum.ScaleType.Fit else nil,
 
-			[React.Event.MouseButton1Click] = props.onActivate,
+			[React.Event.MouseButton1Click] = function()
+				if props.onActivate then
+					props.onActivate()
+				end
+			end,
 			[React.Event.MouseEnter] = function()
 				setIsHovering(true)
 				if props.onHoverIn then

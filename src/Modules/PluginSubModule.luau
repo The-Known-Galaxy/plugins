@@ -279,7 +279,7 @@ end
     In other words, whenever **you are live testing it with [Config.DevelopmentMode] turned on (hot reloading) or when the end-user deactivates the plugin from the menu**
 ]=]
 function PluginSubModule:OnPreUnload(executor: LifeCycleExecutor)
-	self._executors.Deactivate = executor
+	self._executors.PreUnload = executor
 end
 
 return PluginSubModule

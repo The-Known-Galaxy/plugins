@@ -67,7 +67,7 @@ export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager:
     @prop ButtonIcon string
     @within PluginSubModule
     @readonly
-    @since 0.1.0 
+    @since v0.1.0 
 
     The asset string for the icon of the [PluginToolbarButton] that activates/deactivates this submodule. 
 ]=]
@@ -75,7 +75,7 @@ export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager:
     @prop ActiveByDefault boolean
     @within PluginSubModule
     @readonly
-    @since 0.1.0 
+    @since v0.1.0 
 
     Whether the submodule is turned active immediately after loading.
 ]=]
@@ -83,7 +83,7 @@ export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager:
     @prop Active boolean 
     @within PluginSubModule
     @readonly
-    @since 0.1.0 
+    @since v0.1.0 
     
     Whether the plugin is currently active or not.
 ]=]
@@ -91,7 +91,7 @@ export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager:
     @prop DisplayName string 
     @within PluginSubModule
     @readonly
-    @since 0.1.0 
+    @since v0.1.0 
     
     The display name of the submodule. Used in places like the [PluginToolbarButton] for the submodule.
 ]=]
@@ -99,7 +99,7 @@ export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager:
     @prop Tooltip string 
     @within PluginSubModule
     @readonly
-    @since 0.1.0 
+    @since v0.1.0 
     
     A short description-like text for the submodule. Used in places like the [PluginToolbarButton] for the submodule.
 ]=]
@@ -107,7 +107,7 @@ export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager:
     @prop OneClickExecution boolean
     @within PluginSubModule
     @readonly
-    @since 0.1.0 
+    @since v0.1.0 
     
     Whether the submodule's button should activate and then immediately deactivate the submodule - functioning like a single-click event.
     Both the `Activate` and `Deactivate` hooks will fire in their respective order.
@@ -120,7 +120,7 @@ export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager:
     @prop DevelopmentModule boolean
     @within PluginSubModule
     @readonly
-    @since 0.1.0 
+    @since v0.1.0 
     
     If true, then this submodule **only** loads when [PluginFacade.DevelopmentMode] is turned on.
     Useful for creating submodules intended entirely for testing or plugin development purposes.
@@ -129,7 +129,7 @@ export type PreLoadExecutor = (pluginFacade: PluginFacade.PluginFacade, manager:
     @prop UID string
     @within PluginSubModule
     @readonly
-    @since 0.1.0 
+    @since v0.1.0 
     
     A unique identifier for the submodule, meant for internal use.
 ]=]
@@ -198,7 +198,7 @@ local DEFAULTS = {
 local nextSubModuleId = NextId.New()
 --[=[
     @tag constructor 
-    @since 0.1.0 
+    @since v0.1.0 
     Creates a new PluginSubModule.
 ]=]
 function PluginSubModule.new(config: PluginSubModuleConfig): PluginSubModule
@@ -221,7 +221,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0 
+    @since v0.1.0 
     Register a function that runs _before_ the submodule is about to **load**.
     Its returnvalue's truthyness is used to decide if the submodule should continue to load.
     If it does not load, then no other lifecycle methods run.
@@ -234,7 +234,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0 
+    @since v0.1.0 
     Register a function that runs _after_ the submodule has loaded.
     
     It is best to do any actual initialisation code in here.
@@ -246,7 +246,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0 
+    @since v0.1.0 
     Register a function that runs _after_ the submodule has been "activated".
     [PluginSubModule.Active] will be `true` at this point in time.
 
@@ -259,7 +259,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0 
+    @since v0.1.0 
     Register a function that runs _after_ the submodule has been "deactivated".
     [PluginSubModule.Active] will be `false` at this point in time.
 
@@ -272,7 +272,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0 
+    @since v0.1.0 
     Register a function that runs _before_ the submodule is about to **unload**.
 
     This has no practical usage in most production use-cases, since this hook is only invoked when the entire plugin's modules are unloaded and the plugin's execution is stopped.

@@ -12,8 +12,8 @@ local Janitor = require(script.Parent.Parent.Parent.Libraries.Janitor)
 local React = require(script.Parent.Parent.Parent.Libraries.React)
 local ReactRoblox = require(script.Parent.Parent.Parent.Libraries.ReactRoblox)
 
-local ACTION_ID = {
-	IMPORT_HILTS_IN_SELECTION = "ImportHiltsFromSelection",
+local ID = {
+	ACTION_IMPORT_HILTS_IN_SELECTION = "ImportHiltsFromSelection",
 }
 
 local displayName = "Hilt Set Processor"
@@ -59,7 +59,7 @@ HiltSetProcessor:OnPostLoad(
 
 		-- creating actions
 		local importAction = pluginFacade:CreatePluginAction(
-			ACTION_ID.IMPORT_HILTS_IN_SELECTION,
+			ID.ACTION_IMPORT_HILTS_IN_SELECTION,
 			"Import hilts from selection",
 			"Iterates through all selected Models and imports them into lightsaber hilt models.",
 			pluginIcon,

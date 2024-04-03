@@ -134,7 +134,7 @@ SubModuleManager.__index = SubModuleManager
 
 --[=[
     @tag constructor
-    @since 0.1.0 
+    @since v0.1.0 
     Constructs a new [SubModuleManager].
 ]=]
 function SubModuleManager.new(facade: PluginFacade.PluginFacade): SubModuleManager
@@ -150,7 +150,7 @@ end
 
 --[=[
     @tag utility
-    @since 0.1.0
+    @since v0.1.0
     Validates whether an instance is likely a valid [PluginSubModule].
     Does not `require` it if it is one though.
 ]=]
@@ -160,7 +160,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Finds all [ModuleScript]s that could potentially return a [PluginSubModule] and requires them.
     A module identifiable by the manager is one where the name has `.module` at the end of it.
 ]=]
@@ -178,7 +178,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Loads all the module scripts inside the collection, validating them.
     Uses [Promises](https://eryn.io/roblox-lua-promise/) internally.
     
@@ -241,7 +241,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Runs all life cycle hooks on plugin sub-modules.
     Creates activation buttons for all submodules too, in a toolbar with the given name.
 ]=]
@@ -301,7 +301,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Declares all managed modules that this manager knows about as unloaded, and calls necessary life cycle hooks on them.
     This should be done only once.
 ]=]
@@ -332,7 +332,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Invokes a given life cycle executor hook on a managed module.
 ]=]
 function SubModuleManager:InvokeLifeCycleHookIfExists(managedModule: ManagedModule, executorName: string)
@@ -350,7 +350,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Toggles a [PluginSubModule.Active] status whilst also validating if someone can, _and_ calls the necessary life cycle hooks.
     Optionally can also force a module's activation.
 ]=]
@@ -384,7 +384,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.3.0
+	@since v0.3.0
 	Toggles module activation but intended for use from inside a [PluginSubModule].
 	Achieves the same thing as [SubModuleManager:ToggleModuleActivation].
 ]=]
@@ -400,7 +400,7 @@ end
 
 --[=[
 	@tag methods 
-	@since 0.3.0 
+	@since v0.3.0 
 	Finds the [ManagedModule] associated with the the given [PluginSubModule].
 ]=]
 function SubModuleManager:GetManagedModuleFromSubModule(module: PluginSubModule.PluginSubModule): ManagedModule?

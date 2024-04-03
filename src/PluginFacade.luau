@@ -79,7 +79,7 @@ export type SavedState = any
 	@prop DevelopmentMode boolean
 	@within PluginFacade
 	@readonly
-	@since 0.1.0
+	@since v0.1.0
 	
 	Whether the plugin's execution is currently in "developer mode".
 	Can be used as a flag for having debug-specific features turned on.
@@ -89,7 +89,7 @@ export type SavedState = any
 	@prop PluginObject Plugin
 	@within PluginFacade
 	@readonly
-	@since 0.1.0
+	@since v0.1.0
 	
 	Reference to the running plugin instance, from which native ROBLOX calls can be made.
 	Since the [Plugin] instance is only accessible from the top-level execution [Script] that ROBLOX Studio executes the plugin with,
@@ -99,7 +99,7 @@ export type SavedState = any
 	@prop CurrentRoot Instance
 	@within PluginFacade
 	@readonly
-	@since 0.1.0
+	@since v0.1.0
 	
 	A reference to the top-level root of the plugin, wherever it might be. ALL REQUIRES SHOULD BE DIRECTED FROM HERE
 ]=]
@@ -177,7 +177,7 @@ end
 --[=[
 	@tag methods
 	@tag constructor
-	@since 0.1.0
+	@since v0.1.0
 	Sets up the PluginFacade module.
 	Although not a traditional "constructor" that most Object Classes have in OOP, it sets up the rest of the module.
 
@@ -197,7 +197,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Hot-reload-safe wrapper for [Plugin:CreateToolbar].
 ]=]
 function PluginFacade.CreateToolbar(self: PluginFacade, name: string): PluginToolbar
@@ -214,7 +214,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Hot-reload-safe wrapper for [PluginToolbar:CreateButton].
 ]=]
 function PluginFacade.CreateButton(
@@ -247,7 +247,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Hot-reload-safe wrapper around [Plugin:CreateDockWidgetPluginGui].
 ]=]
 function PluginFacade.CreateDockWidgetPluginGui(
@@ -268,7 +268,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Hot-reload-safe wrapper around [Plugin:GetMouse].
 ]=]
 function PluginFacade.GetMouse(self: PluginFacade): PluginMouse
@@ -278,7 +278,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.3.0
+	@since v0.3.0
 	Hot-reload-safe wrapper around [Plugin:CreatePluginAction].
 ]=]
 function PluginFacade.CreatePluginAction(
@@ -302,7 +302,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.3.0
+	@since v0.3.0
 	Hot-reload-safe wrapper around [Plugin:CreatePluginMenu].
 ]=]
 function PluginFacade.CreatePluginMenu(self: PluginFacade, id: string, title: string, icon: string): PluginMenu
@@ -319,7 +319,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Sets the method to call the next time the plugin tries to hot-reload.
 ]=]
 function PluginFacade.RegisterPreUnloadHook(self: PluginFacade, callback: (...any) -> ...any)
@@ -329,7 +329,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Loads the entire plugin.
 
 	:::warning
@@ -361,7 +361,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Unloads the entire plugin.
 ]=]
 function PluginFacade.UnloadPlugin(self: PluginFacade): SavedState?
@@ -389,7 +389,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Reloads the entire plugin. Used in hot-reloading.
 ]=]
 function PluginFacade.HotReloadPlugin(self: PluginFacade)
@@ -402,7 +402,7 @@ end
 
 --[=[
 	@tag methods
-	@since 0.1.0
+	@since v0.1.0
 	Watch for changes to the given instance and its children, and then hot-reload the entire plugin to reflect those changes.
 
 	:::note

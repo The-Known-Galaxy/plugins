@@ -25,7 +25,7 @@ Config.DevelopmentMode = true
 	
 	Plugin version.
 ]=]
-Config.Version = "0.3.0"
+Config.Version = "v0.3.0"
 
 Config.Name = {}
 --[=[

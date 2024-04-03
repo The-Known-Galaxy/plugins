@@ -1,7 +1,7 @@
 --[=[
 	@class Button
 	@tag Component 
-	@since 0.3.0 
+	@since v0.3.0 
 	
 	Generic button implementation for all UI to use.
 	Takes style themeing from [InterfaceConfig].

@@ -93,9 +93,6 @@ local function HiltSetProcessorApp(_props)
 					{
 						style = "Solid",
 						kind = "Primary",
-						anchorPoint = Vector2.new(0.5, 0),
-						position = UDim2.new(0.5, 0, 0, 10),
-						size = UDim2.new(0, 300, 0, 40),
 						text = `Import {selectionCount} Hilt{if selectionCount > 1 then "s" else ""}`,
 						disabledText = "Select Hilts to Import",
 						active = canImport,
@@ -104,6 +101,11 @@ local function HiltSetProcessorApp(_props)
 								ImportHilt.Import()
 							end
 							else nil,
+						native = {
+							AnchorPoint = Vector2.new(0.5, 0),
+							Position = UDim2.new(0.5, 0, 0, 10),
+							Size = UDim2.new(1, 0, 0, 40),
+						},
 					} :: Button.Props
 				),
 				-- FlexItem = e("UIFlexItem", {

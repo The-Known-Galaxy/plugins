@@ -42,7 +42,7 @@ type Callback = () -> ()
 	.disabledText string? -- the text to display when the button is NOT active
 	.image string? -- image asset URL. If supplied, an image is shown instead of text
 
-    .native { [string]: any }?
+	.native { [string]: any }?
 	.children any?
 ]=]
 export type Props = {
@@ -74,7 +74,6 @@ local BUTTON_BORDER_STROKE_WIDTH_PX = 3
 
 local function Button(props: Props)
 	props = Llama.Dictionary.mergeDeep(DEFAULT_PROPS, props)
-	print(props)
 
 	local isHovering, setIsHovering = React.useState(false)
 

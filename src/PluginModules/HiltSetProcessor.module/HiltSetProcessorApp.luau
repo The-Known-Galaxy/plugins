@@ -2,6 +2,7 @@ local Selection = game:GetService("Selection")
 
 local ImportHilt = require(script.Parent.ImportHilt)
 local Button = require(script.Parent.Parent.Parent.Modules.Interface.Components.Button)
+local Padding = require(script.Parent.Parent.Parent.Modules.Interface.Components.Padding)
 local Panel = require(script.Parent.Parent.Parent.Modules.Interface.Components.Panel)
 local Text = require(script.Parent.Parent.Parent.Modules.Interface.Components.Text)
 local NextId = require(script.Parent.Parent.Parent.Modules.Utilities.NextId)
@@ -49,6 +50,12 @@ local function HiltSetProcessorApp(_props)
 			size = UDim2.new(1, 0, 0, 120),
 			layoutOrder = nextOrder(),
 		}, {
+			Padding = e(
+				Padding,
+				{
+					all = UDim.new(0, TEXT_PADDING),
+				} :: Padding.Props
+			),
 			Title = e(
 				Text,
 				{
@@ -72,12 +79,6 @@ local function HiltSetProcessorApp(_props)
 					},
 				} :: Text.Props
 			),
-			Padding = e("UIPadding", {
-				PaddingBottom = UDim.new(0, TEXT_PADDING),
-				PaddingTop = UDim.new(0, TEXT_PADDING),
-				PaddingLeft = UDim.new(0, TEXT_PADDING),
-				PaddingRight = UDim.new(0, TEXT_PADDING),
-			}),
 		}),
 		ButtonPanel = e(
 			Panel,
@@ -88,6 +89,16 @@ local function HiltSetProcessorApp(_props)
 				layoutOrder = nextOrder(),
 			} :: Panel.Props,
 			{
+				Padding = e(Padding, {
+					all = UDim.new(0, MAIN_PADDING),
+				}),
+				Layout = e("UIListLayout", {
+					Padding = UDim.new(0, MAIN_PADDING),
+					FillDirection = Enum.FillDirection.Vertical,
+					HorizontalAlignment = Enum.HorizontalAlignment.Center,
+					VerticalAlignment = Enum.VerticalAlignment.Top,
+					SortOrder = Enum.SortOrder.LayoutOrder,
+				}),
 				ImportButton = e(
 					Button,
 					{
@@ -103,7 +114,7 @@ local function HiltSetProcessorApp(_props)
 							else nil,
 						native = {
 							AnchorPoint = Vector2.new(0.5, 0),
-							Position = UDim2.new(0.5, 0, 0, 10),
+							Position = UDim2.new(0.5, 0, 0, 0),
 							Size = UDim2.new(1, 0, 0, 40),
 						},
 					} :: Button.Props
@@ -129,12 +140,12 @@ local function HiltSetProcessorApp(_props)
 			-- VerticalFlex = "None",
 			-- ItemLineAlignment = "Automatic", -- enums: Automatic, Center, End, Start, Stretch
 		}),
-		Padding = e("UIPadding", {
-			PaddingBottom = UDim.new(0, MAIN_PADDING),
-			PaddingTop = UDim.new(0, MAIN_PADDING),
-			PaddingLeft = UDim.new(0, MAIN_PADDING),
-			PaddingRight = UDim.new(0, MAIN_PADDING),
-		}),
+		Padding = e(
+			Padding,
+			{
+				all = UDim.new(0, MAIN_PADDING),
+			} :: Padding.Props
+		),
 	})
 end
 

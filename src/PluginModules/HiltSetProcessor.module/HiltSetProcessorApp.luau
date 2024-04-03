@@ -72,6 +72,7 @@ local function HiltSetProcessorApp(_props)
 					text = `Use this tool import and configure lightsaber hilts. Currently supports importing lightsaber hilts and previewing materials. Detailed guides on how to use this are in: {TextFormat.Hyperlink(
 						"the-known-galaxy.github.io/plugins/docs"
 					)}`,
+					autoSize = true,
 					native = {
 						Size = UDim2.new(1, 0, 1, -25),
 						Position = UDim2.new(0, 0, 0, 25),
@@ -119,12 +120,6 @@ local function HiltSetProcessorApp(_props)
 						},
 					} :: Button.Props
 				),
-				-- FlexItem = e("UIFlexItem", {
-				-- 	FlexMode = "Shrink", -- Custom, Fill, Grow, None, Shrink
-				-- 	GrowRatio = 1, -- only used in FlexMode: Custom
-				-- 	ShrinkRatio = 1, -- only used in FlexMode: Custom
-				-- 	ItemLineAlignment = "Automatic",
-				-- }),
 			}
 		),
 		Layout = e("UIListLayout", {
@@ -133,12 +128,6 @@ local function HiltSetProcessorApp(_props)
 			HorizontalAlignment = Enum.HorizontalAlignment.Center,
 			VerticalAlignment = Enum.VerticalAlignment.Top,
 			SortOrder = Enum.SortOrder.LayoutOrder,
-
-			-- beta flex properties
-			-- Wraps = false,
-			-- HorizontalFlex = "Fill", -- no enums for these exist yet: None, Fill, SpaceAround, SpaceBetween, SpaceEvenly
-			-- VerticalFlex = "None",
-			-- ItemLineAlignment = "Automatic", -- enums: Automatic, Center, End, Start, Stretch
 		}),
 		Padding = e(
 			Padding,

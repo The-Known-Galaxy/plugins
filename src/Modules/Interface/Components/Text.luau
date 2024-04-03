@@ -31,6 +31,8 @@ type TextConfig = {
     .italics boolean? -- to format as italics
     .bold boolean? -- to format as bold
     .text string? -- the actual text to display itself
+	.autoSize boolean? -- whether the text lable should resize in either axis
+	.autoSizeDirection Enum.FillDirection? -- which axis to resize on if autoSize is true
 
     .native { [string]: any }?
     .children any?
@@ -40,6 +42,8 @@ export type Props = {
 	italics: boolean?,
 	bold: boolean?,
 	text: string?,
+	autoSize: boolean?,
+	autoSizeDirection: Enum.FillDirection?,
 
 	native: { [string]: any }?,
 	children: any?,
@@ -71,10 +75,18 @@ local DEFAULT_PROPS: Props = {
 	italics = false,
 	bold = false,
 	text = "",
+	autoSize = false,
+	autoSizeDirection = Enum.FillDirection.Vertical,
 }
 
 local function Text(props: Props)
 	props = Llama.Dictionary.merge(DEFAULT_PROPS, props)
+
+	local defaultElementSize = React.useMemo(function()
+		return if props.native and props.native.Size then props.native.Size else UDim2.new(0, 50, 0, 20)
+	end, { props.native })
+
+	local elementSize, setElementSize = React.useBinding(defaultElementSize)
 
 	local text = React.useMemo(function()
 		local formattedText = props.text
@@ -97,9 +109,19 @@ local function Text(props: Props)
 		return customFont
 	end, { textConfig.font, textConfig.fontWeight })
 
+	local changeTextBounds = React.useCallback(function(instance: TextLabel)
+		local oldSize: UDim2 = elementSize:getValue()
+		if props.autoSizeDirection == Enum.FillDirection.Horizontal then
+			setElementSize(UDim2.new(UDim.new(0, instance.TextBounds.X), oldSize.Height))
+		else
+			setElementSize(UDim2.new(oldSize.Width, UDim.new(0, instance.TextBounds.Y)))
+		end
+	end, { props.autoSizeDirection, defaultElementSize })
+
 	return e(
 		"TextLabel",
 		Llama.Dictionary.merge(props.native, {
+			Size = elementSize,
 			BackgroundTransparency = 1,
 			FontFace = font,
 			RichText = true,
@@ -107,6 +129,7 @@ local function Text(props: Props)
 			TextSize = textConfig.fontSize,
 			TextWrapped = true,
 			TextColor3 = textConfig.fontColour,
+			[React.Change.TextBounds] = if props.autoSize then changeTextBounds else nil,
 		}),
 		{
 			SizeConstraint = e("UISizeConstraint", {

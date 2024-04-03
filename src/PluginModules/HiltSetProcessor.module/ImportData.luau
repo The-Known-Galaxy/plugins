@@ -6,6 +6,7 @@ export type SectionName = "pommel" | "grip" | "switch" | "emitter"
 return {
 	basePartMaterial = Enum.Material.Metal,
 
+	basePartColour = Color3.fromRGB(163, 162, 165),
 	primaryPartColour = Color3.fromRGB(132, 132, 130),
 
 	attributes = {

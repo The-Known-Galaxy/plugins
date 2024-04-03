@@ -6,6 +6,7 @@
 
 	Handles all logic related to importing lightsabers.
 ]=]
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local SelectionService = game:GetService("Selection")
 
 local NO_SELECTION_ERROR = "You need to select something before running the import hilt function!"
@@ -17,6 +18,7 @@ local INVALID_CHILDREN_ERROR =
 -- in global space
 local CLONE_OFFSET = Vector3.new(0, 3, 0)
 
+local Configurations = require(script.Parent.ConfigureHilt.Configurations)
 local ImportData = require(script.Parent.ImportData)
 local Logger = require(script.Parent.Parent.Parent.Modules.Logger)
 local Llama = require(script.Parent.Parent.Parent.Parent.Libraries.Llama)
@@ -77,8 +79,10 @@ local ImportHilt = {}
 		{ BasePart }
 	```
 ]=]
-function ImportHilt.Import(selection: { Instance })
+function ImportHilt.Import(selection: { Instance }): ()
 	local importedInstances = {}
+
+	ChangeHistoryService:SetWaypoint("Import lightsabers")
 
 	for _, selectedInstance in ipairs(selection) do
 		if not selectedInstance:IsA("Model") then
@@ -150,14 +154,13 @@ function ImportHilt.Import(selection: { Instance })
 					local isCrystalPart = nameMatchesKeyWords(childName, ImportData.keywords.crystal)
 
 					if isPrimaryPart or isRootPart then
-						child:SetAttribute(ImportData.attributes.primaryHiltPart, true)
-						child.Color = ImportData.primaryPartColour
+						Configurations.MakePrimaryHiltPart(child)
 					else
-						child:SetAttribute(ImportData.attributes.fixedHiltPart, true)
+						Configurations.MakeFixedHiltPart(child)
 					end
 
 					if isCrystalPart then
-						child:SetAttribute(ImportData.attributes.crystalHiltPart, true)
+						Configurations.MakeCrystalPart(child)
 					end
 
 					-- these apparently don't matter anymore, but gg
@@ -214,6 +217,8 @@ function ImportHilt.Import(selection: { Instance })
 		newInstance.Name = setName
 
 		table.insert(importedInstances, newInstance)
+
+		Logger.Print(`Imported hilt [{setName}] from [{selectedInstance:GetFullName()}]`)
 	end
 
 	SelectionService:Set(importedInstances)
@@ -223,7 +228,7 @@ end
 	@since v0.3.0
 	Filters a selection for importable models, and then imports them.
 ]=]
-function ImportHilt.FilterSelectionAndImport(selection: { Instance })
+function ImportHilt.FilterSelectionAndImport(selection: { Instance }): ()
 	selection = ImportHilt.FilterSelectionForImportableModels(selection)
 	if not (#selection > 0) then
 		Logger.Warn(NO_SELECTION_ERROR)
@@ -258,24 +263,29 @@ function ImportHilt.IsImportableModel(instance: Instance): boolean
 
 	-- any of its ancestors ARE NOT imported lightsaber models
 	-- in other words, this isn't a model inside an already imported model
-	local function insideImportedModel(recursiveInstance: Instance): boolean
-		if recursiveInstance == workspace then
-			return false
-		end
+	return not ImportHilt.IsInsideImportedModel(instance)
+end
 
-		local isImportedModel = ImportHilt.IsImportedLightsaberModel(recursiveInstance)
-		if isImportedModel then
-			return true
-		end
-
-		if recursiveInstance.Parent then
-			return insideImportedModel(recursiveInstance.Parent)
-		else
-			return false
-		end
+--[=[
+	@tag Utility
+	@since v0.3.0
+	Checks whether a given instance is inside of an already imported hilt model, recursively.  
+]=]
+function ImportHilt.IsInsideImportedModel(recursiveInstance: Instance): boolean
+	if recursiveInstance == workspace then
+		return false
 	end
 
-	return not insideImportedModel(instance)
+	local isImportedModel = ImportHilt.IsImportedLightsaberModel(recursiveInstance)
+	if isImportedModel then
+		return true
+	end
+
+	if recursiveInstance.Parent then
+		return ImportHilt.IsInsideImportedModel(recursiveInstance.Parent)
+	else
+		return false
+	end
 end
 
 --[=[

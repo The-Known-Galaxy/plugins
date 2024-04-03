@@ -17,7 +17,14 @@ collapsed = false
 
 [[classOrder]]
 section = "Utilities"
-classes = ["Logger", "Permissions", "NextId", "TextFormat", "ImportHilt"]
+classes = [
+	"Logger",
+	"Permissions",
+	"NextId",
+	"TextFormat",
+	"ImportHilt",
+	"ConfigureHilt",
+]
 collapsed = true
 
 [[classOrder]]

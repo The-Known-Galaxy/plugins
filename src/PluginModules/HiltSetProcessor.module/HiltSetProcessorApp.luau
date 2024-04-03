@@ -13,7 +13,7 @@ local React = require(script.Parent.Parent.Parent.Parent.Libraries.React)
 local e = React.createElement
 
 local MAIN_PADDING = 10
-local TEXT_PADDING = 5
+local TEXT_PADDING = MAIN_PADDING
 
 local function HiltSetProcessorApp(_props)
 	local selection, setSelection = React.useState(Selection:Get())
@@ -45,49 +45,82 @@ local function HiltSetProcessorApp(_props)
 		Size = UDim2.new(1, 0, 1, 0),
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 	}, {
-		UsagePanel = e(Panel, {
-			anchorPoint = Vector2.new(0.5, 0),
-			size = UDim2.new(1, 0, 0, 120),
-			layoutOrder = nextOrder(),
-		}, {
-			Padding = e(
-				Padding,
-				{
-					all = UDim.new(0, TEXT_PADDING),
-				} :: Padding.Props
-			),
-			Title = e(
-				Text,
-				{
-					style = "title",
-					text = "Hilt Set Processor",
-					native = {
-						Size = UDim2.new(1, 0, 0, 25),
-					},
-				} :: Text.Props
-			),
-			Description = e(
-				Text,
-				{
-					text = `Use this tool import and configure lightsaber hilts. Currently supports importing lightsaber hilts and previewing materials. Detailed guides on how to use this are in: {TextFormat.Hyperlink(
-						"the-known-galaxy.github.io/plugins/docs"
-					)}`,
-					autoSize = true,
-					native = {
-						Size = UDim2.new(1, 0, 1, -25),
-						Position = UDim2.new(0, 0, 0, 25),
-						TextYAlignment = Enum.TextYAlignment.Top,
-					},
-				} :: Text.Props
-			),
+		Layout = e("UIListLayout", {
+			Padding = UDim.new(0, MAIN_PADDING),
+			FillDirection = Enum.FillDirection.Vertical,
+			HorizontalAlignment = Enum.HorizontalAlignment.Center,
+			VerticalAlignment = Enum.VerticalAlignment.Top,
+			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
+		Padding = e(
+			Padding,
+			{
+				all = UDim.new(0, MAIN_PADDING),
+			} :: Padding.Props
+		),
+		UsagePanel = e(
+			Panel,
+			{
+				autoSize = true,
+				native = {
+					AnchorPoint = Vector2.new(0.5, 0),
+					Size = UDim2.new(1, 0, 0, 120),
+					LayoutOrder = nextOrder(),
+				},
+			} :: Panel.Props,
+			{
+				Layout = e("UIListLayout", {
+					Padding = UDim.new(0, 2),
+					FillDirection = Enum.FillDirection.Vertical,
+					HorizontalAlignment = Enum.HorizontalAlignment.Center,
+					VerticalAlignment = Enum.VerticalAlignment.Top,
+					SortOrder = Enum.SortOrder.LayoutOrder,
+				}),
+				Padding = e(
+					Padding,
+					{
+						all = UDim.new(0, TEXT_PADDING),
+					} :: Padding.Props
+				),
+				Title = e(
+					Text,
+					{
+						style = "title",
+						text = "Hilt Set Processor",
+						autoSize = true,
+						native = {
+							Size = UDim2.new(1, 0, 0, 25),
+							LayoutOrder = nextOrder(),
+						},
+					} :: Text.Props
+				),
+				Description = e(
+					Text,
+					{
+						text = `Use this tool import and configure lightsaber hilts. Currently supports importing lightsaber hilts and previewing materials. Detailed guides on how to use this are in: {TextFormat.Hyperlink(
+							"the-known-galaxy.github.io/plugins/docs"
+						)}`,
+						autoSize = true,
+						native = {
+							Size = UDim2.new(1, 0, 1, -25),
+							Position = UDim2.new(0, 0, 0, 25),
+							TextYAlignment = Enum.TextYAlignment.Top,
+							LayoutOrder = nextOrder(),
+						},
+					} :: Text.Props
+				),
+			}
+		),
 		ButtonPanel = e(
 			Panel,
 			{
-				anchorPoint = Vector2.new(0.5, 0),
-				position = UDim2.new(0.5, 0, 0, 10),
-				size = UDim2.new(1, 0, 0, 60),
-				layoutOrder = nextOrder(),
+				autoSize = true,
+				native = {
+					AnchorPoint = Vector2.new(0.5, 0),
+					Position = UDim2.new(0.5, 0, 0, 0),
+					Size = UDim2.new(1, 0, 0, 60),
+					LayoutOrder = nextOrder(),
+				},
 			} :: Panel.Props,
 			{
 				Padding = e(Padding, {
@@ -121,19 +154,6 @@ local function HiltSetProcessorApp(_props)
 					} :: Button.Props
 				),
 			}
-		),
-		Layout = e("UIListLayout", {
-			Padding = UDim.new(0, MAIN_PADDING),
-			FillDirection = Enum.FillDirection.Vertical,
-			HorizontalAlignment = Enum.HorizontalAlignment.Center,
-			VerticalAlignment = Enum.VerticalAlignment.Top,
-			SortOrder = Enum.SortOrder.LayoutOrder,
-		}),
-		Padding = e(
-			Padding,
-			{
-				all = UDim.new(0, MAIN_PADDING),
-			} :: Padding.Props
 		),
 	})
 end

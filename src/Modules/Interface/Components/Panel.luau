@@ -7,7 +7,7 @@
 	Meant for visually grouping elements.
 
 	Essentially a wrapper around [Frame].
-	Size constrained to `50x50`.
+	Size constrained to `40x40`.
 ]=]
 local InterfaceConfig = require(script.Parent.Parent.InterfaceConfig)
 local Llama = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.Llama)
@@ -17,52 +17,74 @@ local e = React.createElement
 --[=[
 	@interface Props
 	@within Panel
-	.size UDim2?
-	.position UDim2?
-	.anchorPoint Vector2?
-	.layoutOrder number?
+	.autoSize boolean? -- whether the text lable should resize in either axis
+	.autoSizeDirection Enum.FillDirection? -- which axis to resize on if autoSize is true
+	
+    .native { [string]: any }?
 	.children any?
 ]=]
 export type Props = {
-	size: UDim2?,
-	position: UDim2?,
-	anchorPoint: Vector2?,
-	layoutOrder: number?,
+	autoSize: boolean?,
+	autoSizeDirection: Enum.FillDirection?,
+
+	native: { [string]: any }?,
 	children: any?,
 }
 
 local DEFAULT_PROPS: Props = {
-	size = UDim2.new(1, 0, 1, 0),
-	position = UDim2.new(0.5, 0, 0.5, 0),
-	anchorPoint = Vector2.new(0.5, 0.5),
-	layoutOrder = 1,
+	autoSize = false,
+	autoSizeDirection = Enum.FillDirection.Vertical,
+	native = {
+		Size = UDim2.new(1, 0, 1, 0),
+		Position = UDim2.new(0.5, 0, 0.5, 0),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		LayoutOrder = 1,
+	},
 }
 
 local function Panel(props: Props)
+	props.native = Llama.Dictionary.merge(DEFAULT_PROPS.native, props.native)
 	props = Llama.Dictionary.merge(DEFAULT_PROPS, props)
 
-	return e("Frame", {
-		BackgroundTransparency = 1,
-		AnchorPoint = props.anchorPoint,
-		Position = props.position,
-		Size = props.size,
-		LayoutOrder = props.layoutOrder,
-	}, {
-		SizeConstraint = e("UISizeConstraint", {
-			MinSize = Vector2.new(50, 50),
+	local automaticSize, adjustedSize = React.useMemo(function()
+		if props.autoSize then
+			local oldSize: UDim2 = if props.native then props.native.Size else UDim.new()
+
+			if props.autoSizeDirection == Enum.FillDirection.Horizontal then
+				return Enum.AutomaticSize.X, UDim2.new(UDim.new(0, 0), oldSize.Height)
+			else
+				return Enum.AutomaticSize.Y, UDim2.new(oldSize.Width, UDim.new(0, 0))
+			end
+		else
+			return Enum.AutomaticSize.None, Llama.None
+		end
+	end, { props.autoSize, props.autoSizeDirection, props.native })
+
+	return e(
+		"Frame",
+		Llama.Dictionary.merge(props.native, {
+			BackgroundTransparency = 1,
+			AutomaticSize = automaticSize,
+			Size = adjustedSize,
 		}),
-		Stroke = e("UIStroke", {
-			Enabled = true,
-			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-			Color = InterfaceConfig.Theme.Colours.Accent,
-			LineJoinMode = Enum.LineJoinMode.Round,
-			Thickness = 2.5,
-			Transparency = 0,
-		}),
-		Corner = e("UICorner", {
-			CornerRadius = InterfaceConfig.Theme.CornerRadius,
-		}),
-	}, props.children)
+		{
+			SizeConstraint = e("UISizeConstraint", {
+				MinSize = Vector2.new(40, 40),
+			}),
+			Stroke = e("UIStroke", {
+				Enabled = true,
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+				Color = InterfaceConfig.Theme.Colours.Accent,
+				LineJoinMode = Enum.LineJoinMode.Round,
+				Thickness = 2.5,
+				Transparency = 0,
+			}),
+			Corner = e("UICorner", {
+				CornerRadius = InterfaceConfig.Theme.CornerRadius,
+			}),
+		},
+		props.children
+	)
 end
 
 return Panel

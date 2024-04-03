@@ -74,7 +74,8 @@ local DEFAULT_PROPS: Props = {
 local BUTTON_BORDER_STROKE_WIDTH_PX = 3
 
 local function Button(props: Props)
-	props = Llama.Dictionary.mergeDeep(DEFAULT_PROPS, props)
+	props.native = Llama.Dictionary.merge(DEFAULT_PROPS.native, props.native)
+	props = Llama.Dictionary.merge(DEFAULT_PROPS, props)
 
 	local isHovering, setIsHovering = React.useState(false)
 

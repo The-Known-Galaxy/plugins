@@ -77,13 +77,21 @@ local DEFAULT_PROPS: Props = {
 	text = "",
 	autoSize = false,
 	autoSizeDirection = Enum.FillDirection.Vertical,
+	native = {
+		Size = UDim2.new(0, 50, 0, 20),
+	},
 }
 
 local function Text(props: Props)
+	props.native = Llama.Dictionary.merge(DEFAULT_PROPS.native, props.native)
 	props = Llama.Dictionary.merge(DEFAULT_PROPS, props)
 
+	-- technically this memo doesn't need to exist but static analysis complains at types if it doesn't
 	local defaultElementSize = React.useMemo(function()
-		return if props.native and props.native.Size then props.native.Size else UDim2.new(0, 50, 0, 20)
+		if props.native then
+			return props.native.Size
+		end
+		return
 	end, { props.native })
 
 	local elementSize, setElementSize = React.useBinding(defaultElementSize)

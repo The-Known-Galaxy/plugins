@@ -7,11 +7,11 @@
 local InterfaceConfig = {}
 
 export type ColourPalette = {
-	Primary: Color3,
-	Secondary: Color3,
-	Tertiary: Color3,
-	Accent: Color3,
-	Text: Color3,
+	Primary: Color3, -- should be a bright vibrant colour
+	Secondary: Color3, -- a different colour to primary. Should be a good contrast
+	Tertiary: Color3, -- used rarely. Can be anything
+	Accent: Color3, -- should be very bright, almost white-ish
+	Text: Color3, -- should be very dark
 }
 
 InterfaceConfig.ColourPalettes = {
@@ -25,8 +25,8 @@ InterfaceConfig.ColourPalettes = {
 	["Painting"] = {
 		Primary = Color3.fromHex("#30bced"),
 		Secondary = Color3.fromHex("#fc5130"),
-		Tertiary = Color3.fromHex("#fffaff"),
-		Accent = Color3.fromHex("#303036"),
+		Tertiary = Color3.fromHex("#303036"),
+		Accent = Color3.fromHex("#fffaff"),
 		Text = Color3.fromHex("#050401"),
 	} :: ColourPalette,
 	["Cold"] = {
@@ -34,7 +34,7 @@ InterfaceConfig.ColourPalettes = {
 		Secondary = Color3.fromHex("#6f8ab7"),
 		Tertiary = Color3.fromHex("#89bbfe"),
 		Accent = Color3.fromHex("#acedff"),
-		Text = Color3.fromHex("#615d6c"),
+		Text = Color3.fromHex("#151416"),
 	} :: ColourPalette,
 }
 

@@ -11,7 +11,10 @@
                 "$path": "Packages"
             },
             "Assets": {
-                "$path": "assets"
+                "$className": "Folder",
+                "images": {
+                    "$path": "assets/images"
+                }
             }
         }
     }

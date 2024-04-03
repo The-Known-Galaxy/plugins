@@ -2,6 +2,10 @@
     "name": "place",
     "tree": {
         "$className": "DataModel",
+        "Workspace": {
+            "$className": "Workspace",
+            "$path": "assets/testing-models"
+        },
         "ServerStorage": {
             "$className": "ServerStorage",
             "$ignoreUnknownInstances": true,
@@ -14,7 +18,10 @@
                     "$path": "Packages"
                 },
                 "Assets": {
-                    "$path": "assets"
+                    "$className": "Folder",
+                    "images": {
+                        "$path": "assets/images"
+                    }
                 }
             }
         }

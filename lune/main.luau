@@ -12,6 +12,7 @@ if process.os ~= "windows" then
 end
 
 local TEST_PLACE_NAME = "test"
+local ASSET_IMPORT_FILE_FORMAT = ".rbxm"
 
 type ActionTree = {
 	message: string,
@@ -24,6 +25,9 @@ local ProgramActions: ActionTree = {
 	},
 	run = {
 		message = "What would you like to run?",
+	},
+	import = {
+		message = "What would you like to import?",
 	},
 }
 
@@ -221,6 +225,72 @@ function ProgramActions.run.static_analysis()
 	end
 
 	return result.ok
+end
+
+--[=[
+	Reads the local studio place file and imports all models from Workspace into a mirrored folder structure here.
+	Useful for saving any plugin testing assets, and rojo-syncing them back in.
+
+	It is advised to do this when Live-Sync is off.
+	MeshId's don't get synced in.
+]=]
+function ProgramActions.import.local_testing_assets()
+	Out.Info("importing testing assets from the local place instance...")
+	local testingAssetPath = "assets/testing-models"
+	if fs.isDir(testingAssetPath) then
+		Out.Info("found and deleting old assets directory...")
+		fs.removeDir(testingAssetPath)
+	end
+
+	fs.writeDir(testingAssetPath)
+
+	local testingPlacePath = "build/place.rbxl"
+	if not fs.isFile(testingPlacePath) then
+		Out.Warn(`could not find [{testingPlacePath}]. aborting asset import`)
+		return false
+	end
+
+	local nextId = require("../src/Modules/Utilities/NextId").New()
+
+	-- recursively writes model files from the given Roblox Instance.
+	local function recursivelyWriteModelFiles(path: string, instance: roblox.Instance)
+		if instance.ClassName == "Folder" then
+			local folderPath = `{path}/{instance.Name}`
+
+			if fs.isDir(folderPath) then
+				folderPath ..= nextId()
+			end
+
+			for _, child in instance:GetChildren() do
+				recursivelyWriteModelFiles(folderPath, child)
+			end
+		else
+			local modelPath = `{path}/{instance.Name}{ASSET_IMPORT_FILE_FORMAT}`
+			if fs.isFile(modelPath) then
+				modelPath = `{path}/{instance.Name}{nextId()}{ASSET_IMPORT_FILE_FORMAT}`
+			end
+
+			if not fs.isDir(path) then
+				fs.writeDir(path)
+			end
+
+			Out.Info(`importing [{instance:GetFullName()}] to [{modelPath}]`)
+			remodel.writeModelFile(modelPath, instance)
+		end
+	end
+
+	Out.Info("reading place file...")
+	local dataModel: roblox.DataModel = remodel.readPlaceFile(testingPlacePath)
+
+	Out.Info("running recursive imports on all workspace children...")
+	for _, child in dataModel:GetService("Workspace"):GetChildren() do
+		if not (child.ClassName == "Terrain" or child.ClassName == "Camera") then
+			recursivelyWriteModelFiles(testingAssetPath, child)
+		end
+	end
+
+	Out.Success("successfully imported all local testing assets!")
+	return true
 end
 
 --[=[

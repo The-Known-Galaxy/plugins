@@ -20,6 +20,7 @@ type TextConfig = {
 	font: Enum.Font,
 	fontSize: number,
 	fontWeight: Enum.FontWeight,
+	fontColour: Color3,
 }
 --[=[
     @interface Props
@@ -43,9 +44,24 @@ export type Props = {
 }
 
 local STYLE_TO_CONFIG: { [Style]: TextConfig } = {
-	["title"] = { font = Enum.Font.Merriweather, fontSize = 28, fontWeight = Enum.FontWeight.Medium },
-	["subtitle"] = { font = InterfaceConfig.Theme.Font, fontSize = 24, fontWeight = Enum.FontWeight.Light },
-	["normal"] = { font = InterfaceConfig.Theme.Font, fontSize = 16, fontWeight = Enum.FontWeight.Regular },
+	["title"] = {
+		font = Enum.Font.Merriweather,
+		fontSize = 28,
+		fontWeight = Enum.FontWeight.Medium,
+		fontColour = InterfaceConfig.Theme.Colours.Primary,
+	},
+	["subtitle"] = {
+		font = InterfaceConfig.Theme.Font,
+		fontSize = 24,
+		fontWeight = Enum.FontWeight.Light,
+		fontColour = InterfaceConfig.Theme.Colours.Tertiary,
+	},
+	["normal"] = {
+		font = InterfaceConfig.Theme.Font,
+		fontSize = 16,
+		fontWeight = Enum.FontWeight.Regular,
+		fontColour = InterfaceConfig.Theme.Colours.Text,
+	},
 }
 
 local DEFAULT_PROPS: Props = {
@@ -88,7 +104,7 @@ local function Text(props: Props)
 			Text = text,
 			TextSize = textConfig.fontSize,
 			TextWrapped = true,
-			TextColor3 = InterfaceConfig.Theme.Colours.Text,
+			TextColor3 = textConfig.fontColour,
 		}),
 		props.children
 	)

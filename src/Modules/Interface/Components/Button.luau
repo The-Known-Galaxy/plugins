@@ -5,6 +5,7 @@
 	
 	Generic button implementation for all UI to use.
 	Takes style themeing from [InterfaceConfig].
+	Size constrained to `16x16`.
 
 	Implements 3 styles:
 	1. **Solid**: Solid-filled buttons, where hovering creates a white border and whitens the fill.
@@ -162,6 +163,9 @@ local function Button(props: Props)
 			end,
 		}),
 		{
+			SizeConstraint = e("UISizeConstraint", {
+				MinSize = Vector2.new(16, 16),
+			}),
 			Label = isTextualButton and e("TextLabel", {
 				BackgroundTransparency = 1,
 				Size = UDim2.new(1, 0, 0.6, 0),

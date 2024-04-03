@@ -4,8 +4,10 @@
 	@since v0.3.0 
 
 	Generic panel with a transparent background and rounded border.
-
 	Meant for visually grouping elements.
+
+	Essentially a wrapper around [Frame].
+	Size constrained to `50x50`.
 ]=]
 local InterfaceConfig = require(script.Parent.Parent.InterfaceConfig)
 local Llama = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.Llama)
@@ -46,6 +48,9 @@ local function Panel(props: Props)
 		Size = props.size,
 		LayoutOrder = props.layoutOrder,
 	}, {
+		SizeConstraint = e("UISizeConstraint", {
+			MinSize = Vector2.new(50, 50),
+		}),
 		Stroke = e("UIStroke", {
 			Enabled = true,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,

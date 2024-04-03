@@ -1,9 +1,11 @@
 --[=[
-    @class Text
-    @tag Component
-    @since v0.3.0  
-    
-    Generic text display component
+	@class Text
+	@tag Component
+	@since v0.3.0  
+
+	Generic text display component.
+	Pretty much a wrapper around [TextLabel].
+	Size constrained to minimum `32x10`.
 ]=]
 local InterfaceConfig = require(script.Parent.Parent.InterfaceConfig)
 local Llama = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.Llama)
@@ -106,6 +108,11 @@ local function Text(props: Props)
 			TextWrapped = true,
 			TextColor3 = textConfig.fontColour,
 		}),
+		{
+			SizeConstraint = e("UISizeConstraint", {
+				MinSize = Vector2.new(32, 10),
+			}),
+		},
 		props.children
 	)
 end

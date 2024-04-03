@@ -73,6 +73,10 @@ local DEFAULT_PROPS: Props = {
 }
 local BUTTON_BORDER_STROKE_WIDTH_PX = 3
 
+local function lerp(min: number, max: number, alpha: number): number
+	return min + alpha * (max - min)
+end
+
 local function Button(props: Props)
 	props.native = Llama.Dictionary.merge(DEFAULT_PROPS.native, props.native)
 	props = Llama.Dictionary.merge(DEFAULT_PROPS, props)
@@ -123,7 +127,7 @@ local function Button(props: Props)
 		return alpha * BUTTON_BORDER_STROKE_WIDTH_PX
 	end)
 	local buttonTransparencyMapped = styles.buttonHoverLerpAlpha:map(function(alpha)
-		return (1 - alpha)
+		return lerp(1, 0.65, alpha)
 	end)
 
 	-- choosing text to display
@@ -131,7 +135,7 @@ local function Button(props: Props)
 		return if props.active then props.text else props.disabledText
 	end, { props.active, props.text, props.disabledText })
 
-	local buttonBackgroundColour = if solidFillButton then buttonColourMapped else Color3.fromHSV(360, 0, 0.5)
+	local buttonBackgroundColour = if solidFillButton then buttonColourMapped else Color3.fromHSV(0, 0, 1)
 
 	return e(
 		if isTextualButton then "TextButton" else "ImageButton",

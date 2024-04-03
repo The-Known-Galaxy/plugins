@@ -45,7 +45,7 @@ local function PluginWidgetFrame(props: Props)
 			NameDisplay = e(
 				Text,
 				{
-					style = "note",
+					style = "code",
 					text = `{Config.Name.Long}`,
 					bold = true,
 					native = {
@@ -59,7 +59,7 @@ local function PluginWidgetFrame(props: Props)
 			VersionDisplay = e(
 				Text,
 				{
-					style = "note",
+					style = "code",
 					text = `{Config.Version}`,
 					native = {
 						Size = UDim2.new(0.5, 0, 0.5, 0),
@@ -81,7 +81,7 @@ local function PluginWidgetFrame(props: Props)
 				}),
 			}),
 			AccessLevelDisplay = e(Text, {
-				style = "note",
+				style = "code",
 				text = accessLevel.Name,
 				bold = true,
 				italics = true,

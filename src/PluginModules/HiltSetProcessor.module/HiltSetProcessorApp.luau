@@ -1,6 +1,6 @@
 local Selection = game:GetService("Selection")
 
-local ApplyHiltMaterial = require(script.Parent.ApplyHiltMaterial)
+local MaterialManager = require(script.Parent.MaterialManager)
 local ConfigureHilt = require(script.Parent.ConfigureHilt)
 local ImportHilt = require(script.Parent.ImportHilt)
 local MaterialFragment = require(script.Parent.Interface.MaterialFragment)
@@ -105,7 +105,7 @@ local function HiltSetProcessorApp(props: Props)
 	end, { importedModelSelection })
 
 	local applyHiltMaterial = React.useCallback(function(realMaterialName: string)
-		ApplyHiltMaterial.ToggleMaterialPreviewForSelection(
+		MaterialManager.ToggleMaterialPreviewForSelection(
 			importedModelSelection,
 			HiltMaterials.NameToInternalName[realMaterialName]
 		)
@@ -123,7 +123,7 @@ local function HiltSetProcessorApp(props: Props)
 		for materialName, materialData in HiltMaterials.materials do
 			local modelsWithMaterialPreviewApplied = 0
 			for _, instance in importedModelSelection do
-				if ApplyHiltMaterial.ModelHasMaterialPreviewSpecific(instance, materialName) then
+				if MaterialManager.ModelHasMaterialPreviewSpecific(instance, materialName) then
 					modelsWithMaterialPreviewApplied += 1
 				end
 			end

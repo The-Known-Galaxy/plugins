@@ -116,7 +116,7 @@ function ImportHilt.Import(selection: { Instance }): ()
 		setModel.Name = setName
 
 		local longHandleModel = Instance.new("Model")
-		longHandleModel.Name = setName .. "_double_grip"
+		longHandleModel.Name = setName .. ImportData.doubleGripSuffix
 
 		local longDetailsModel = Instance.new("Model")
 		longDetailsModel.Name = "details"
@@ -291,7 +291,7 @@ end
 --[=[
 	@tag utility
 	@since v0.3.0
-	Checks whether a given model is a fully imported lightsaber model.  
+	Checks whether a given model is a fully imported lightsaber model (or its double-grip variant).
 ]=]
 function ImportHilt.IsImportedLightsaberModel(instance: Instance): boolean
 	local sectionCheck = t.instanceIsA("Model", {
@@ -307,6 +307,7 @@ function ImportHilt.IsImportedLightsaberModel(instance: Instance): boolean
 	})
 
 	local passesCheck = importedStructureCheck(instance)
+		or (instance.Name:find(ImportData.doubleGripSuffix) and sectionCheck(instance))
 	return passesCheck
 end
 

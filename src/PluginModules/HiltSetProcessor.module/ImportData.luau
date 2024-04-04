@@ -15,6 +15,8 @@ return {
 		crystalHiltPart = "CrystalHiltPart",
 	},
 
+	doubleGripSuffix = "_double_grip",
+
 	sections = {
 		[1] = "pommel",
 		[2] = "grip",

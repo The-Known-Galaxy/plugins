@@ -1,13 +1,18 @@
 local Selection = game:GetService("Selection")
 
+local ApplyHiltMaterial = require(script.Parent.ApplyHiltMaterial)
 local ConfigureHilt = require(script.Parent.ConfigureHilt)
 local ImportHilt = require(script.Parent.ImportHilt)
+local MaterialFragment = require(script.Parent.Interface.MaterialFragment)
+local HiltMaterials = require(script.Parent.Parent.Parent.Modules.Data.Materials.HiltMaterials)
 local Button = require(script.Parent.Parent.Parent.Modules.Interface.Components.Button)
 local Padding = require(script.Parent.Parent.Parent.Modules.Interface.Components.Padding)
 local Panel = require(script.Parent.Parent.Parent.Modules.Interface.Components.Panel)
+local ScrollingList = require(script.Parent.Parent.Parent.Modules.Interface.Components.ScrollingList)
 local Text = require(script.Parent.Parent.Parent.Modules.Interface.Components.Text)
 local NextId = require(script.Parent.Parent.Parent.Modules.Utilities.NextId)
 local TextFormat = require(script.Parent.Parent.Parent.Modules.Utilities.TextFormat)
+local Llama = require(script.Parent.Parent.Parent.Parent.Libraries.Llama)
 local Promise = require(script.Parent.Parent.Parent.Parent.Libraries.Promise)
 local React = require(script.Parent.Parent.Parent.Parent.Libraries.React)
 
@@ -22,8 +27,9 @@ local TEXT_PADDING = MAIN_PADDING
 local BUTTON_SIZE_Y = 40
 
 local function HiltSetProcessorApp(props: Props)
-	local filteredSelection, setFilteredSelection = React.useState(Selection:Get())
 	local unfilteredSelection, setUnfilteredSelection = React.useState({})
+	local filteredSelection, setFilteredSelection = React.useState({})
+	local importedModelSelection, setImportedModelSelection = React.useState({})
 	local nextOrder = NextId.New()
 
 	local selectionCount = React.useMemo(function()
@@ -78,16 +84,61 @@ local function HiltSetProcessorApp(props: Props)
 
 	-- keeping track of selections - both filtered for import and not
 	React.useEffect(function()
-		local connection = Selection.SelectionChanged:Connect(function()
+		local function updateSelection()
 			local newSelection = Selection:Get()
 			setUnfilteredSelection(newSelection)
 			setFilteredSelection(ImportHilt.FilterSelectionForImportableModels(newSelection))
-		end)
+			setImportedModelSelection(ImportHilt.FilterSelectionForImportedModels(newSelection))
+		end
+
+		updateSelection()
+		local connection = Selection.SelectionChanged:Connect(updateSelection)
 
 		return function()
 			connection:Disconnect()
 		end
-	end)
+	end, {})
+
+	-- material stuff
+	local showMaterialPreviewList = React.useMemo(function()
+		return #importedModelSelection > 0
+	end, { importedModelSelection })
+
+	local applyHiltMaterial = React.useCallback(function(realMaterialName: string)
+		ApplyHiltMaterial.ToggleMaterialPreviewForSelection(
+			importedModelSelection,
+			HiltMaterials.NameToInternalName[realMaterialName]
+		)
+
+		-- VERY BAD IDEA
+		-- triggers a re-render of the component since "state has changed" (when in reality only the table pointer has changed, and not the actual contents themselves)
+		-- doing this because i want the button selected values to update on the material list, after applying a material
+		-- but there isn't another way of doing it that i've come up with
+		-- so this is it...
+		setImportedModelSelection(Llama.List.copy(importedModelSelection))
+	end, { importedModelSelection })
+
+	local materialList = React.useMemo(function()
+		local list = {}
+		for materialName, materialData in HiltMaterials.materials do
+			local modelsWithMaterialPreviewApplied = 0
+			for _, instance in importedModelSelection do
+				if ApplyHiltMaterial.ModelHasMaterialPreviewSpecific(instance, materialName) then
+					modelsWithMaterialPreviewApplied += 1
+				end
+			end
+
+			list[materialName] = e(
+				MaterialFragment,
+				{
+					selected = modelsWithMaterialPreviewApplied > 0,
+					materialData = materialData,
+					onSelect = applyHiltMaterial,
+				} :: MaterialFragment.Props
+			)
+		end
+		return list
+	end, { importedModelSelection, applyHiltMaterial })
 
 	return e("Frame", {
 		BackgroundTransparency = 1,
@@ -215,6 +266,58 @@ local function HiltSetProcessorApp(props: Props)
 							Size = UDim2.new(1, 0, 0, BUTTON_SIZE_Y),
 						},
 					} :: Button.Props
+				),
+				Panel = e(
+					Panel,
+					{
+						autoSize = true,
+						-- autoSizeDirection = Enum.FillDirection.Vertical,
+						native = {
+							AnchorPoint = Vector2.new(0.5, 0),
+							Size = UDim2.new(1, 0, 0, 200),
+							LayoutOrder = nextOrder(),
+						},
+					} :: Panel.Props,
+					{
+						Padding = e(Padding, {
+							vertical = UDim.new(0, MAIN_PADDING),
+						}),
+						Layout = e("UIListLayout", {
+							Padding = UDim.new(0, MAIN_PADDING),
+							FillDirection = Enum.FillDirection.Vertical,
+							HorizontalAlignment = Enum.HorizontalAlignment.Center,
+							VerticalAlignment = Enum.VerticalAlignment.Top,
+							SortOrder = Enum.SortOrder.LayoutOrder,
+						}),
+						MaterialPreviewNote = e(
+							Text,
+							{
+								style = "normal",
+								text = "Select imported hilts, and then select a material from the list below to preview it. Select the material again to remove the preview.",
+								autoSize = true,
+								native = {
+									Size = UDim2.new(1, -20, 0, 30),
+									LayoutOrder = nextOrder(),
+								},
+							} :: Text.Props
+						),
+						MaterialList = showMaterialPreviewList and e(
+							ScrollingList,
+							{
+								elements = materialList,
+								listSortOrder = Enum.SortOrder.Name,
+								listPadding = UDim.new(0, 8),
+								startPadding = UDim.new(0, 5),
+								endPadding = UDim.new(0, 5),
+								leftPadding = UDim.new(0, 10),
+								rightPadding = UDim.new(0, 10),
+								native = {
+									Size = UDim2.new(1, 0, 0, 200),
+									LayoutOrder = nextOrder(),
+								},
+							} :: ScrollingList.Props
+						),
+					}
 				),
 			}
 		),

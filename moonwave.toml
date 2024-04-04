@@ -23,13 +23,15 @@ classes = [
 	"NextId",
 	"TextFormat",
 	"ImportHilt",
+	"MaterialManager",
 	"ConfigureHilt",
+	"Colour",
 ]
 collapsed = true
 
 [[classOrder]]
 section = "Data Modules"
-classes = ["GroupIds", "RankData"]
+classes = ["GroupIds", "RankData", "HiltMaterials"]
 collapsed = true
 
 [[classOrder]]

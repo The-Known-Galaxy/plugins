@@ -1,3 +1,19 @@
+--[=[
+	@class HiltMaterials
+
+	All the hilt materials in the game.
+	The data from this has been directly copied across from the galaxy repository.
+	If materials in that codebase get updated, then they won't be updated here - it needs to be done manually.
+]=]
+--[=[
+	@interface Material
+	@within HiltMaterials
+	.name string
+	.color Color3
+	.material Enum.Material
+	.price number?
+	.collectible boolean?
+]=]
 export type Material = {
 	name: string,
 	color: Color3,
@@ -8,7 +24,9 @@ export type Material = {
 
 export type Materials = { [string]: Material }
 
-local Materials = {
+local Materials = {}
+
+Materials.materials = {
 	alloy_metal = {
 		name = "Alloy Metal",
 		color = Color3.fromRGB(109, 109, 99),
@@ -152,4 +170,12 @@ local Materials = {
 		collectible = true, -- christmas 2023 ossus 20/20 collectibles
 	},
 }
+
+Materials.NameToData = {}
+Materials.NameToInternalName = {}
+for internalName, data in Materials.materials do
+	Materials.NameToData[data.name] = data
+	Materials.NameToInternalName[data.name] = internalName
+end
+
 return Materials

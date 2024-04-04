@@ -50,7 +50,7 @@ function ConfigureHilt.ConfigureSelectionByActionId(selection: { Instance }, plu
 end
 
 --[=[
-	@tag Utility
+	@tag utility
 	@since v0.3.0  
 	Filters a given selection for only the parts that can be configured (their attributes changed).
 ]=]
@@ -59,7 +59,7 @@ function ConfigureHilt.FilterSelectionForConfigurableHiltParts(selection: { Inst
 end
 
 --[=[
-	@tag Utility
+	@tag utility
 	@since v0.3.0
 	Checks whether a given instance is a [BasePart] and if it's inside an already imported lightsaber hilt model.
 	This is a pre-requisite for doing any part-level hilt configuration.  

@@ -7,7 +7,7 @@
 ]=]
 local Selection = game:GetService("Selection")
 
-local HiltSetProcessorApp = require(script.HiltSetProcessorApp)
+local HiltSetProcessorApp = require(script.Interface.HiltSetProcessorApp)
 local ImportHilt = require(script.ImportHilt)
 local Permissions = require(script.Parent.Parent.Modules.Permissions)
 local PluginSubModule = require(script.Parent.Parent.Modules.PluginSubModule)

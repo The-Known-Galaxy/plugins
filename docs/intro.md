@@ -4,9 +4,8 @@ sidebar_position: 1
 
 # Introduction
 Welcome!
-I assume you are reading this guide because you wish to develop some plugins for The Known Galaxy.
-Great!
-Then, let us get started.
+1. If you are reading this guide with the intent of developing plugins for The Known Galaxy, continue reading.
+2. If you are reading this guide with the goal of understanding _how to use a specific plugin_, refer to the `Guides > For Plugin Users` section and all its docs within.
 
 ## Running the Project
 Basically everything you could need to do is achieved through a [Lune](https://lune-org.github.io/docs) Module.
@@ -84,7 +83,7 @@ Once inside, use this snippet to create all the boilerplate for the new submodul
     ],
 },
 ```
-When working, make sure you pay attention to [Development Rules](Guides/development-rules).
+When working, make sure you pay attention to [Development Rules](Guides/Development/development-rules).
 
 Thanks for working towards making the lives of TKG developers just that little bit better...
 > plugins Creator and Architect, [ShadowEngineer](https://github.com/ShadowEngineer)

@@ -56,7 +56,7 @@ local function Panel(props: Props)
 				return Enum.AutomaticSize.Y, UDim2.new(oldSize.Width, UDim.new(0, 0))
 			end
 		else
-			return Enum.AutomaticSize.None, Llama.None
+			return Enum.AutomaticSize.None, nil
 		end
 	end, { props.autoSize, props.autoSizeDirection, props.native })
 

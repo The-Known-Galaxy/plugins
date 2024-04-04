@@ -1,4 +1,5 @@
 local HiltMaterials = require(script.Parent.Parent.Parent.Parent.Modules.Data.Materials.HiltMaterials)
+local ButtonMask = require(script.Parent.Parent.Parent.Parent.Modules.Interface.Components.ButtonMask)
 local Text = require(script.Parent.Parent.Parent.Parent.Modules.Interface.Components.Text)
 local InterfaceConfig = require(script.Parent.Parent.Parent.Parent.Modules.Interface.InterfaceConfig)
 local Colour = require(script.Parent.Parent.Parent.Parent.Modules.Utilities.Colour)
@@ -63,22 +64,23 @@ local function MaterialFragment(props: Props)
 				},
 			} :: Text.Props
 		),
-		ButtonFunctionality = e("TextButton", {
-			BackgroundTransparency = 1,
-			AutoButtonColor = false,
-			Text = "",
-			Size = UDim2.new(1, 0, 1, 0),
-			[React.Event.MouseButton1Click] = function()
-				props.onSelect(props.materialData.name)
-			end,
-			[React.Event.MouseEnter] = function()
-				setHovered(true)
-			end,
-			[React.Event.MouseLeave] = function()
-				setHovered(false)
-			end,
-			ZIndex = 5,
-		}),
+		ButtonFunctionality = e(
+			ButtonMask,
+			{
+				onActivate = function()
+					props.onSelect(props.materialData.name)
+				end,
+				onHoverIn = function()
+					setHovered(true)
+				end,
+				onHoverOut = function()
+					setHovered(false)
+				end,
+				native = {
+					ZIndex = 10,
+				},
+			} :: ButtonMask.Props
+		),
 		Stroke = e("UIStroke", {
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			Color = InterfaceConfig.Theme.Colours.Accent,

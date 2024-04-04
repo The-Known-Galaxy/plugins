@@ -39,10 +39,12 @@ section = "User Interface"
 classes = [
 	"InterfaceConfig",
 	"PluginWidgetFrame",
+	"ScrollingList",
 	"Button",
 	"Panel",
 	"Text",
 	"Padding",
+	"ButtonMask",
 ]
 collapsed = true
 

@@ -8,6 +8,7 @@
 	Scrollbar hides itself after some seconds of inactivity AND not hovering over the list - as a nice UX touch.
 	Scrollbar is also invisible when the content size is less than the canvas size (in the scroll direction).
 ]=]
+local ButtonMask = require(script.Parent.ButtonMask)
 local Padding = require(script.Parent.Padding)
 local InterfaceConfig = require(script.Parent.Parent.InterfaceConfig)
 local Llama = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.Llama)
@@ -141,24 +142,47 @@ local function ScrollingList(props: Props)
 		setAbsoluteCanvasSize(frame.AbsoluteSize)
 	end, {})
 
+	-- ensuring that the canvas shrinks when the scroll bar expands
+	local scrollBarThicknessMappedToCanvasSize = styles.scrollBarThickness:map(function(value)
+		if props.canvasIgnoresScrollBar then
+			return canvasSize
+		end
+
+		if props.scrollDirection == Enum.FillDirection.Vertical then
+			return UDim2.new(UDim.new(canvasSize.X.Scale, canvasSize.X.Offset - value), canvasSize.Height)
+		else
+			return UDim2.new(canvasSize.Width, UDim.new(canvasSize.Y.Scale, canvasSize.Y.Offset - value))
+		end
+	end)
+
 	return e("Frame", {
 		BackgroundTransparency = 1,
 		Size = (props.native :: any).Size,
 		LayoutOrder = (props.native :: any).LayoutOrder,
 		[React.Change.AbsoluteSize] = absoluteSizeChanged,
 	}, {
-		ButtonFunctionality = e("TextButton", {
-			BackgroundTransparency = 1,
-			AutoButtonColor = false,
-			Text = "",
-			Size = UDim2.new(1, 0, 1, 0),
-			[React.Event.MouseEnter] = function()
-				setHovered(true)
-			end,
-			[React.Event.MouseLeave] = function()
-				setHovered(false)
-			end,
-		}),
+		ButtonFunctionality = e(
+			ButtonMask,
+			{
+				onHoverIn = function()
+					setHovered(true)
+				end,
+				onHoverOut = function()
+					setHovered(false)
+				end,
+				native = {
+					Size = scrollBarThicknessMappedToCanvasSize:map(function(size: UDim2)
+						-- ensuring that the button mask also shrinks with scrollbar size
+						-- because otherwise the mask is over the scrollbar and you can't click the scrollbar to scroll
+						if props.scrollDirection == Enum.FillDirection.Vertical then
+							return UDim2.new(size.Width, UDim.new(1, 0))
+						else
+							return UDim2.new(UDim.new(1, 0), size.Height)
+						end
+					end),
+				},
+			} :: ButtonMask.Props
+		),
 		ScrollableList = e(
 			"ScrollingFrame",
 			Llama.Dictionary.merge(props.native, {
@@ -166,17 +190,7 @@ local function ScrollingList(props: Props)
 				ScrollingEnabled = scrollingEnabled,
 				BackgroundTransparency = 1,
 				ScrollingDirection = scrollDirection,
-				CanvasSize = styles.scrollBarThickness:map(function(value)
-					if props.canvasIgnoresScrollBar then
-						return canvasSize
-					end
-
-					if props.scrollDirection == Enum.FillDirection.Vertical then
-						return UDim2.new(UDim.new(canvasSize.X.Scale, canvasSize.X.Offset - value), canvasSize.Height)
-					else
-						return UDim2.new(canvasSize.Width, UDim.new(canvasSize.Y.Scale, canvasSize.Y.Offset - value))
-					end
-				end),
+				CanvasSize = scrollBarThicknessMappedToCanvasSize,
 				BorderSizePixel = 0,
 				ScrollBarImageColor3 = InterfaceConfig.Theme.Colours.Accent,
 				ScrollBarImageTransparency = 0,

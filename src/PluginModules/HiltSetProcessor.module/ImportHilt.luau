@@ -239,7 +239,7 @@ function ImportHilt.FilterSelectionAndImport(selection: { Instance }): ()
 end
 
 --[=[
-	@tag Utility
+	@tag utility
 	@since v0.3.0  
 	Checks whether a given model is an importable one by checking its contents.
 ]=]
@@ -267,7 +267,7 @@ function ImportHilt.IsImportableModel(instance: Instance): boolean
 end
 
 --[=[
-	@tag Utility
+	@tag utility
 	@since v0.3.0
 	Checks whether a given instance is inside of an already imported hilt model, recursively.  
 ]=]
@@ -289,7 +289,7 @@ function ImportHilt.IsInsideImportedModel(recursiveInstance: Instance): boolean
 end
 
 --[=[
-	@tag Utility
+	@tag utility
 	@since v0.3.0
 	Checks whether a given model is a fully imported lightsaber model.  
 ]=]
@@ -311,12 +311,21 @@ function ImportHilt.IsImportedLightsaberModel(instance: Instance): boolean
 end
 
 --[=[
-	@tag Utility
+	@tag utility
 	@since v0.3.0
 	Filters an array of Instances for only the ones that can be imported by the module.
 ]=]
 function ImportHilt.FilterSelectionForImportableModels(selection: { Instance }): { Instance }
 	return Llama.List.filter(selection, ImportHilt.IsImportableModel)
+end
+
+--[=[
+	@tag utility
+	@since v0.3.0
+	Filters an array of Instances for only the ones that are already imported.
+]=]
+function ImportHilt.FilterSelectionForImportedModels(selection: { Instance }): { Instance }
+	return Llama.List.filter(selection, ImportHilt.IsImportedLightsaberModel)
 end
 
 return ImportHilt

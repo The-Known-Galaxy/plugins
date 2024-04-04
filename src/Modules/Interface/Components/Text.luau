@@ -31,6 +31,7 @@ type TextConfig = {
 	.italics boolean? -- to format as italics
 	.bold boolean? -- to format as bold
 	.text string? -- the actual text to display itself
+	.colour Color3? -- an override for the text colour. Should be used only when needed
 	.autoSize boolean? -- whether the text lable should resize in either axis
 	.autoSizeDirection Enum.FillDirection? -- which axis to resize on if autoSize is true
 
@@ -42,6 +43,7 @@ export type Props = {
 	italics: boolean?,
 	bold: boolean?,
 	text: string?,
+	colour: Color3?,
 	autoSize: boolean?,
 	autoSizeDirection: Enum.FillDirection?,
 
@@ -85,6 +87,8 @@ local DEFAULT_PROPS: Props = {
 	autoSizeDirection = Enum.FillDirection.Vertical,
 	native = {
 		Size = UDim2.new(0, 50, 0, 20),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.new(0.5, 0, 0.5, 0),
 	},
 }
 
@@ -143,7 +147,7 @@ local function Text(props: Props)
 			Text = text,
 			TextSize = textConfig.fontSize,
 			TextWrapped = true,
-			TextColor3 = textConfig.fontColour,
+			TextColor3 = if props.colour then props.colour else textConfig.fontColour,
 			[React.Change.TextBounds] = if props.autoSize then changeTextBounds else nil,
 		}),
 		{

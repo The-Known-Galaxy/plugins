@@ -68,21 +68,21 @@ HiltSetProcessor:OnPostLoad(
 
 		local setAsPrimaryPartAction = pluginFacade:CreatePluginAction(
 			Config.ActionAndMenuId.ACTION_SET_AS_PRIMARY_PART,
-			"Set as Primary Hilt Part",
+			"Set as Material-influenced Primary Hilt Part",
 			"Sets a given BasePart inside an imported hilt as the primary part. These don't have materials",
 			"",
 			false
 		)
 		local setAsFixedPartAction = pluginFacade:CreatePluginAction(
 			Config.ActionAndMenuId.ACTION_SET_AS_FIXED_PART,
-			"Set as Material-influenced Fixed Part",
+			"Set as Static Fixed Part",
 			"Sets a given BasePart inside an imported hilt as a fixed part. These are influenced by materials.",
 			"",
 			false
 		)
 		local setAsCrystalPartAction = pluginFacade:CreatePluginAction(
 			Config.ActionAndMenuId.ACTION_SET_AS_CRYSTAL_PART,
-			"Set Hilt Part as Crystal Part",
+			"Set as Crystal Part",
 			"Sets a given BasePart inside an imported hilt as a crystal part. These change depending on crystal.",
 			"",
 			false

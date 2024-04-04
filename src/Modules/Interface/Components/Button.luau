@@ -181,8 +181,6 @@ local function Button(props: Props)
 				{
 					text = buttonText,
 					style = "normal",
-					autoSize = true,
-					autoSizeDirection = Enum.FillDirection.Horizontal,
 					native = {
 						Size = UDim2.new(1, 0, 0.6, 0),
 						AnchorPoint = Vector2.new(0.5, 0.5),

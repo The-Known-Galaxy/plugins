@@ -111,6 +111,14 @@ Doing this is as simple as:
 2. Pressing the _"Validate x Hilts"_ button.
 3. Reading the validation results from the **Output** (opened from `View > Show > Output` - 2nd column 1st item).
 
+:::tip
+Failed validations are highlighted in **orange** in the Output tab.
+When they fail, they provide very _verbose_ descriptions taken directly from the raw validation outputs.
+They are not the cleanest to read, but they provide the most accurate information to you in telling you what's wrong.
+
+_Take your time reading them!_
+:::
+
 Here we see a validation succeeding:
 
 ![Successful Validation](./hsp/validation_success.png)

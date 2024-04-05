@@ -83,7 +83,7 @@ Once inside, use this snippet to create all the boilerplate for the new submodul
     ],
 },
 ```
-When working, make sure you pay attention to [Development Rules](Guides/Development/development-rules).
+When working, make sure you pay attention to [Development Rules](Guides/for-developers/development-rules).
 
 Thanks for working towards making the lives of TKG developers just that little bit better...
 > plugins Creator and Architect, [ShadowEngineer](https://github.com/ShadowEngineer)

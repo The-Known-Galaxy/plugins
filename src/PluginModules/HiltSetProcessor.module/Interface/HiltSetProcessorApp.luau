@@ -38,7 +38,7 @@ local function HiltSetProcessorApp(props: Props)
 		return #unimportedSelection
 	end)
 
-	local unfilteredSelectionCount = React.useMemo(function()
+	local _unfilteredSelectionCount = React.useMemo(function()
 		return #unfilteredSelection
 	end, { unfilteredSelection })
 

@@ -103,3 +103,18 @@ Closing configuration mode and previewing a material.
 ![Material Change After Configuration](./hsp/post_config_mode.png)
 
 Notice how that part, since it's not a primary part instead of a fixed part, is now coloured white!
+
+## Validating Hilts
+Once you are done with importing/configuring a hilt, you may wish to validate it to ensure you have made no mistakes in editing it.
+Doing this is as simple as:
+1. Selecting the model(s) you wish to verify are correct lightsaber hilts.
+2. Pressing the _"Validate x Hilts"_ button.
+3. Reading the validation results from the **Output** (opened from `View > Show > Output` - 2nd column 1st item).
+
+Here we see a validation succeeding:
+
+![Successful Validation](./hsp/validation_success.png)
+
+And here we see a validation failing:
+
+![Failed Validation](./hsp/validation_fail.png)

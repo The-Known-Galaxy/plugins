@@ -12,7 +12,7 @@ collapsed = true
 
 [[classOrder]]
 section = "Plugin Sub-Modules"
-classes = ["HiltSetProcessor"]
+classes = ["HiltSetProcessor", "DummyPluginModule"]
 collapsed = false
 
 [[classOrder]]
@@ -26,6 +26,8 @@ classes = [
 	"MaterialManager",
 	"ConfigureHilt",
 	"Colour",
+	"HiltValidator",
+	"HiltValidations",
 ]
 collapsed = true
 

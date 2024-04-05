@@ -4,6 +4,7 @@ local MaterialManager = require(script.Parent.Parent.MaterialManager)
 local ConfigureHilt = require(script.Parent.Parent.ConfigureHilt)
 local ImportHilt = require(script.Parent.Parent.ImportHilt)
 local MaterialFragment = require(script.Parent.MaterialFragment)
+local HiltValidator = require(script.Parent.Parent.HiltValidator)
 local HiltMaterials = require(script.Parent.Parent.Parent.Parent.Modules.Data.Materials.HiltMaterials)
 local Button = require(script.Parent.Parent.Parent.Parent.Modules.Interface.Components.Button)
 local Padding = require(script.Parent.Parent.Parent.Parent.Modules.Interface.Components.Padding)
@@ -28,18 +29,27 @@ local BUTTON_SIZE_Y = 40
 
 local function HiltSetProcessorApp(props: Props)
 	local unfilteredSelection, setUnfilteredSelection = React.useState({})
-	local filteredSelection, setFilteredSelection = React.useState({})
+	local unimportedSelection, setUnimportedSelection = React.useState({})
 	local importedModelSelection, setImportedModelSelection = React.useState({})
+	local modelSelection, setModelSelection = React.useState({})
 	local nextOrder = NextId.New()
 
-	local selectionCount = React.useMemo(function()
-		return #filteredSelection
+	local filteredSelectionCount = React.useMemo(function()
+		return #unimportedSelection
 	end)
+
+	local unfilteredSelectionCount = React.useMemo(function()
+		return #unfilteredSelection
+	end, { unfilteredSelection })
+
+	local modelSelectionCount = React.useMemo(function()
+		return #modelSelection
+	end, { modelSelection })
 
 	-- import logic
 	local canImport = React.useMemo(function()
-		return selectionCount > 0
-	end, { selectionCount })
+		return filteredSelectionCount > 0
+	end, { filteredSelectionCount })
 
 	-- hilt part configuration logic
 	local configureMode, setConfigureMode = React.useState(false)
@@ -87,8 +97,11 @@ local function HiltSetProcessorApp(props: Props)
 		local function updateSelection()
 			local newSelection = Selection:Get()
 			setUnfilteredSelection(newSelection)
-			setFilteredSelection(ImportHilt.FilterSelectionForImportableModels(newSelection))
+			setUnimportedSelection(ImportHilt.FilterSelectionForImportableModels(newSelection))
 			setImportedModelSelection(ImportHilt.FilterSelectionForImportedModels(newSelection))
+			setModelSelection(Llama.List.filter(newSelection, function(value: Instance): boolean
+				return value:IsA("Model")
+			end))
 		end
 
 		updateSelection()
@@ -139,6 +152,16 @@ local function HiltSetProcessorApp(props: Props)
 		end
 		return list
 	end, { importedModelSelection, applyHiltMaterial })
+
+	-- validation logic
+	local canValidate = React.useMemo(function()
+		return modelSelectionCount > 0
+	end, { modelSelectionCount })
+
+	local validationActivated = React.useCallback(function()
+		local selectionResults = HiltValidator.RunValidationsOnSelection(unfilteredSelection)
+		HiltValidator.OutputSelectionValidation(selectionResults)
+	end, { unfilteredSelection })
 
 	return e("Frame", {
 		BackgroundTransparency = 1,
@@ -239,17 +262,18 @@ local function HiltSetProcessorApp(props: Props)
 					{
 						style = "Solid",
 						kind = "Primary",
-						text = `Import {selectionCount} Hilt{if selectionCount > 1 then "s" else ""}...`,
+						text = `Import {filteredSelectionCount} Hilt{if filteredSelectionCount > 1 then "s" else ""}...`,
 						disabledText = "Select Hilts to Import",
 						active = canImport,
 						onActivate = if canImport
 							then function()
-								ImportHilt.Import(filteredSelection)
+								ImportHilt.Import(unimportedSelection)
 							end
 							else nil,
 						native = {
 							AnchorPoint = Vector2.new(0.5, 0),
 							Size = UDim2.new(1, 0, 0, BUTTON_SIZE_Y),
+							LayoutOrder = nextOrder(),
 						},
 					} :: Button.Props
 				),
@@ -264,6 +288,23 @@ local function HiltSetProcessorApp(props: Props)
 						native = {
 							AnchorPoint = Vector2.new(0.5, 0),
 							Size = UDim2.new(1, 0, 0, BUTTON_SIZE_Y),
+							LayoutOrder = nextOrder(),
+						},
+					} :: Button.Props
+				),
+				ValidationButton = e(
+					Button,
+					{
+						style = "Solid",
+						kind = "Primary",
+						text = `Validate {modelSelectionCount} Model{if modelSelectionCount > 1 then "s" else ""}`,
+						active = canValidate,
+						disabledText = "Select Imported Hilts to Validate...",
+						onActivate = validationActivated,
+						native = {
+							AnchorPoint = Vector2.new(0.5, 0),
+							Size = UDim2.new(1, 0, 0, BUTTON_SIZE_Y),
+							LayoutOrder = nextOrder(),
 						},
 					} :: Button.Props
 				),

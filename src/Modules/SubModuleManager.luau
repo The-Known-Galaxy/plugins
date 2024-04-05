@@ -39,6 +39,12 @@ type SubModuleManagerImpl = {
 	UnloadAllModules: (self: SubModuleManager) -> (),
 	InvokeLifeCycleHookIfExists: (self: SubModuleManager, module: ManagedModule, key: string) -> (),
 	ToggleModuleActivation: (self: SubModuleManager, managedModule: ManagedModule, forcedState: boolean?) -> (),
+	ToggleModuleActivationFromPlugin: (
+		self: SubModuleManager,
+		module: PluginSubModule.PluginSubModule,
+		forcedState: boolean?
+	) -> (),
+	GetManagedModuleFromSubModule: (self: SubModuleManager, module: PluginSubModule.PluginSubModule) -> ManagedModule?,
 }
 type SubModuleManagerProperties = {
 	_janitor: typeof(Janitor.new()),
@@ -128,7 +134,7 @@ SubModuleManager.__index = SubModuleManager
 
 --[=[
     @tag constructor
-    @since 0.1.0 
+    @since v0.1.0 
     Constructs a new [SubModuleManager].
 ]=]
 function SubModuleManager.new(facade: PluginFacade.PluginFacade): SubModuleManager
@@ -144,7 +150,7 @@ end
 
 --[=[
     @tag utility
-    @since 0.1.0
+    @since v0.1.0
     Validates whether an instance is likely a valid [PluginSubModule].
     Does not `require` it if it is one though.
 ]=]
@@ -154,7 +160,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Finds all [ModuleScript]s that could potentially return a [PluginSubModule] and requires them.
     A module identifiable by the manager is one where the name has `.module` at the end of it.
 ]=]
@@ -172,7 +178,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Loads all the module scripts inside the collection, validating them.
     Uses [Promises](https://eryn.io/roblox-lua-promise/) internally.
     
@@ -235,7 +241,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Runs all life cycle hooks on plugin sub-modules.
     Creates activation buttons for all submodules too, in a toolbar with the given name.
 ]=]
@@ -254,7 +260,7 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 		-- development modules should be skipped in non-development contexts.
 		if module.DevelopmentModule and self.PluginFacade.DevelopmentMode then
 			Logger.Warn(`Loading submodule [{module.DisplayName}] for development.`)
-		else
+		elseif module.DevelopmentModule then
 			continue
 		end
 
@@ -283,7 +289,7 @@ function SubModuleManager:RunLifeCycles(pluginSubModules: SubModuleCollection, t
 
 		-- running post loading hooks
 		if shouldLoad then
-			self:InvokeLifeCycleHookIfExists(self.ManagedModules[moduleId], "Postload")
+			self:InvokeLifeCycleHookIfExists(self.ManagedModules[moduleId], "PostLoad")
 		end
 
 		-- turning modules on by default if they should be
@@ -295,7 +301,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Declares all managed modules that this manager knows about as unloaded, and calls necessary life cycle hooks on them.
     This should be done only once.
 ]=]
@@ -326,14 +332,14 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Invokes a given life cycle executor hook on a managed module.
 ]=]
 function SubModuleManager:InvokeLifeCycleHookIfExists(managedModule: ManagedModule, executorName: string)
 	local executors = managedModule.Module._executors
 
 	if executors[executorName] ~= nil and type(executors[executorName]) == "function" then
-		local ok, result = pcall(executors[executorName], self.PluginFacade)
+		local ok, result = pcall(executors[executorName], self.PluginFacade, self)
 
 		-- warning when life cycle executor fails
 		if not ok then
@@ -344,7 +350,7 @@ end
 
 --[=[
     @tag methods
-    @since 0.1.0
+    @since v0.1.0
     Toggles a [PluginSubModule.Active] status whilst also validating if someone can, _and_ calls the necessary life cycle hooks.
     Optionally can also force a module's activation.
 ]=]
@@ -374,6 +380,36 @@ function SubModuleManager:ToggleModuleActivation(managedModule: ManagedModule, f
 		-- deactivate immediately after activating
 		self:ToggleModuleActivation(managedModule, false)
 	end
+end
+
+--[=[
+	@tag methods
+	@since v0.3.0
+	Toggles module activation but intended for use from inside a [PluginSubModule].
+	Achieves the same thing as [SubModuleManager:ToggleModuleActivation].
+]=]
+function SubModuleManager:ToggleModuleActivationFromPlugin(
+	module: PluginSubModule.PluginSubModule,
+	forcedState: boolean?
+): ()
+	local managedModule = self:GetManagedModuleFromSubModule(module)
+	if managedModule then
+		self:ToggleModuleActivation(managedModule, forcedState)
+	end
+end
+
+--[=[
+	@tag methods 
+	@since v0.3.0 
+	Finds the [ManagedModule] associated with the the given [PluginSubModule].
+]=]
+function SubModuleManager:GetManagedModuleFromSubModule(module: PluginSubModule.PluginSubModule): ManagedModule?
+	for _, managedModule in self.ManagedModules do
+		if managedModule.Module.UID == module.UID then
+			return managedModule
+		end
+	end
+	return nil
 end
 
 return SubModuleManager

@@ -2,6 +2,8 @@
 	@class Config
 	
 	Plugin configuration module.
+	Houses configuration information about the entire plugin, and is meant to be the single source of truth for backend settings.
+	Frontend settings are in [InterfaceConfig].
 ]=]
 
 local Config = {}
@@ -23,7 +25,7 @@ Config.DevelopmentMode = false
 	
 	Plugin version.
 ]=]
-Config.Version = "0.2.0"
+Config.Version = "v0.3.0"
 
 Config.Name = {}
 --[=[
@@ -66,5 +68,22 @@ if script ~= nil then
 	local images = require(script.Parent.Parent.Assets.images)
 	Config.MainIcon = images.sienartech_notext
 end
+
+--[=[
+	@since v0.3.0 
+	@prop ActionAndMenuId { [string]: string }
+	@within Config
+	A dictionary of IDs that are supposed to be shared plugin-wide, corresponding to the IDs for [PluginAction] objects and [PluginMenu] objects.
+	Since these are supposed to be constant, they should never be changed.
+	They are also hence managed from here - the entire plugin needs access to these.
+]=]
+Config.ActionAndMenuId = {
+	ACTION_IMPORT_HILTS_IN_SELECTION = "ImportHiltsFromSelection",
+	ACTION_SET_AS_PRIMARY_PART = "SetAsPrimaryPart",
+	ACTION_SET_AS_FIXED_PART = "SetAsFixedPart",
+	ACTION_SET_AS_CRYSTAL_PART = "SetAsCrystalPart",
+
+	MENU_CONFIGURE_HILT_PART = "ConfigureHiltParts",
+}
 
 return Config

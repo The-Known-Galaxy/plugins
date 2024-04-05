@@ -30,6 +30,12 @@ local PluginFacade = require(script.Parent.PluginFacade)
 local shouldUseDevelopmentSource = Config.DevelopmentMode
 local developmentSource = ServerStorage:FindFirstChild(Config.Name.PluginRoot)
 
+-- initialising react in dev mode
+-- selene: allow(global_usage)
+_G.__DEV__ = shouldUseDevelopmentSource
+local _React = require(script.Parent.Parent.Libraries.React)
+local _ReactRoblox = require(script.Parent.Parent.Libraries.ReactRoblox)
+
 -- The source that's shipped integrated into the plugin.
 -- If this code is executing inside a locally installed plugin instance, then `builtInSource` will refer to that instance.
 -- If not, it'll refer to the one directly parented to ServerStorage.

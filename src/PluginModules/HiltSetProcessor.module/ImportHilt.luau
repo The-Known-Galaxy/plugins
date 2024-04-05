@@ -292,8 +292,29 @@ end
 	@tag utility
 	@since v0.3.0
 	Checks whether a given model is a fully imported lightsaber model (or its double-grip variant).
+	Returns a message indicating why it isn't, if it isn't.
 ]=]
-function ImportHilt.IsImportedLightsaberModel(instance: Instance): boolean
+function ImportHilt.IsImportedLightsaberModel(instance: Instance): (boolean, string?)
+	local singlePass, singleMessage = ImportHilt.IsSingleImportedHilt(instance)
+	local doublePass, doubleMessage = ImportHilt.IsDoubleImportedHiltSection(instance)
+	if singlePass or doublePass then
+		return true
+	else
+		-- only putting double message if the hilt is supposed to be a double hilt but doesn't match structure
+		local message = if doubleMessage ~= nil and instance.Name:find(ImportData.doubleGripSuffix)
+			then doubleMessage
+			else singleMessage
+		return false, `Not structured like a single or double hilt. Raw description: {message}.`
+	end
+end
+
+--[=[
+	@tag utility
+	@since v0.3.0 
+	Checks whether a given instance is a valid single lightasber hilt.
+	Returns a message indicating why it isn't, if it isn't.
+]=]
+function ImportHilt.IsSingleImportedHilt(instance: Instance): (boolean, string?)
 	local sectionCheck = t.instanceIsA("Model", {
 		root = t.instanceIsA("BasePart"),
 		details = t.instanceIsA("Model"),
@@ -306,9 +327,38 @@ function ImportHilt.IsImportedLightsaberModel(instance: Instance): boolean
 		[ImportData.sections[4]] = sectionCheck,
 	})
 
-	local passesCheck = importedStructureCheck(instance)
-		or (instance.Name:find(ImportData.doubleGripSuffix) and sectionCheck(instance))
-	return passesCheck
+	return importedStructureCheck(instance)
+end
+
+--[=[
+	@tag utility
+	@since v0.3.0 
+	Checks whether a given instance is a valid double lightsaber hilt section.
+	Returns a message indicating why it isn't, if it isn't.
+]=]
+function ImportHilt.IsDoubleImportedHiltSection(instance: Instance): (boolean, string?)
+	local hasDoubleName = instance.Name:find(ImportData.doubleGripSuffix)
+	local pass, message = ImportHilt.IsImportedLightsaberSection(instance)
+
+	if not hasDoubleName then
+		return false, `Name does not include "{ImportData.doubleGripSuffix}"`
+	else
+		return pass, message
+	end
+end
+
+--[=[
+	@tag utility
+	@since v0.3.0
+	Checks whether a given instance is a valid lightsaber hilt section (emitter, grip, etc)
+	Returns a message indicating why it isn't, if it isn't.
+]=]
+function ImportHilt.IsImportedLightsaberSection(instance: Instance): (boolean, string?)
+	local sectionCheck = t.instanceIsA("Model", {
+		root = t.instanceIsA("BasePart"),
+		details = t.instanceIsA("Model"),
+	})
+	return sectionCheck(instance)
 end
 
 --[=[

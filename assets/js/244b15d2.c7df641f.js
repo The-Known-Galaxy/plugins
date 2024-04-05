@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[830],{31239:e=>{e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"DummyPluginModule","desc":"Test module for testing PluginSubModule implementation.","source":{"line":7,"path":"src/PluginModules/DummyPluginModule.module.luau"}}')}}]);

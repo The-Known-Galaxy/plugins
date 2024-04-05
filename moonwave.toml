@@ -28,6 +28,7 @@ classes = [
 	"Colour",
 	"HiltValidator",
 	"HiltValidations",
+	"VisualiseHilt",
 ]
 collapsed = true
 

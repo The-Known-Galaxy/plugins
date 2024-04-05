@@ -184,7 +184,7 @@ function ImportHilt.Import(selection: { Instance }): ()
 					-- everything that isn't a root part is detail
 					if isDoubleRoot then
 						if not doubleRoot and isRootPart then
-							child.Name = "root"
+							child.Name = ImportData.rootPartName
 							child.Parent = longHandleModel
 							doubleRoot = child
 							longHandleModel.PrimaryPart = child
@@ -196,7 +196,7 @@ function ImportHilt.Import(selection: { Instance }): ()
 						end
 					else
 						if not rootForSection and isRootPart then
-							child.Name = "root"
+							child.Name = ImportData.rootPartName
 							child.Parent = sectionModel
 							rootForSection = child
 							sectionModel.PrimaryPart = child

@@ -16,6 +16,7 @@ local TextFormat = require(script.Parent.Parent.Parent.Parent.Modules.Utilities.
 local Llama = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.Llama)
 local Promise = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.Promise)
 local React = require(script.Parent.Parent.Parent.Parent.Parent.Libraries.React)
+local VisualiseHilt = require(script.Parent.Parent.VisualiseHilt)
 
 local e = React.createElement
 
@@ -32,15 +33,21 @@ local function HiltSetProcessorApp(props: Props)
 	local unimportedSelection, setUnimportedSelection = React.useState({})
 	local importedModelSelection, setImportedModelSelection = React.useState({})
 	local modelSelection, setModelSelection = React.useState({})
-	local nextOrder = NextId.New()
+	local lastVisualisation, setLastVisualisation = React.useState(os.time())
 
-	local filteredSelectionCount = React.useMemo(function()
-		return #unimportedSelection
-	end)
+	local nextOrder = NextId.New()
 
 	local _unfilteredSelectionCount = React.useMemo(function()
 		return #unfilteredSelection
 	end, { unfilteredSelection })
+
+	local unimportedSelectionCount = React.useMemo(function()
+		return #unimportedSelection
+	end, { unimportedSelection })
+
+	local importedModelSelectionCount = React.useMemo(function()
+		return #importedModelSelection
+	end, { importedModelSelection })
 
 	local modelSelectionCount = React.useMemo(function()
 		return #modelSelection
@@ -48,8 +55,8 @@ local function HiltSetProcessorApp(props: Props)
 
 	-- import logic
 	local canImport = React.useMemo(function()
-		return filteredSelectionCount > 0
-	end, { filteredSelectionCount })
+		return unimportedSelectionCount > 0
+	end, { unimportedSelectionCount })
 
 	-- hilt part configuration logic
 	local configureMode, setConfigureMode = React.useState(false)
@@ -114,8 +121,8 @@ local function HiltSetProcessorApp(props: Props)
 
 	-- material stuff
 	local showMaterialPreviewList = React.useMemo(function()
-		return #importedModelSelection > 0
-	end, { importedModelSelection })
+		return importedModelSelectionCount > 0
+	end, { importedModelSelectionCount })
 
 	local applyHiltMaterial = React.useCallback(function(realMaterialName: string)
 		MaterialManager.ToggleMaterialPreviewForSelection(
@@ -162,6 +169,26 @@ local function HiltSetProcessorApp(props: Props)
 		local selectionResults = HiltValidator.RunValidationsOnSelection(unfilteredSelection)
 		HiltValidator.OutputSelectionValidation(selectionResults)
 	end, { unfilteredSelection })
+
+	-- visualisation logic
+	local canVisualise = React.useMemo(function()
+		-- since the material preview list is dependent on proper lightsaber hilts being selected
+		return showMaterialPreviewList
+	end, { showMaterialPreviewList })
+
+	local visualisationActivated = React.useCallback(function()
+		VisualiseHilt.VisualiseRootsInSelection(importedModelSelection)
+		setLastVisualisation(os.time())
+	end, { importedModelSelection })
+
+	local visualisationsExist = React.useMemo(function()
+		return VisualiseHilt.VisualisationsExist()
+	end, { lastVisualisation })
+
+	local clearVisualsActivated = React.useCallback(function()
+		VisualiseHilt.ClearAllVisualisations()
+		setLastVisualisation(os.time())
+	end, { lastVisualisation })
 
 	return e("Frame", {
 		BackgroundTransparency = 1,
@@ -262,7 +289,7 @@ local function HiltSetProcessorApp(props: Props)
 					{
 						style = "Solid",
 						kind = "Primary",
-						text = `Import {filteredSelectionCount} Hilt{if filteredSelectionCount > 1 then "s" else ""}...`,
+						text = `Import {unimportedSelectionCount} Hilt{if unimportedSelectionCount > 1 then "s" else ""}...`,
 						disabledText = "Select Hilts to Import",
 						active = canImport,
 						onActivate = if canImport
@@ -301,6 +328,40 @@ local function HiltSetProcessorApp(props: Props)
 						active = canValidate,
 						disabledText = "Select Imported Hilts to Validate...",
 						onActivate = validationActivated,
+						native = {
+							AnchorPoint = Vector2.new(0.5, 0),
+							Size = UDim2.new(1, 0, 0, BUTTON_SIZE_Y),
+							LayoutOrder = nextOrder(),
+						},
+					} :: Button.Props
+				),
+				VisualisationButton = e(
+					Button,
+					{
+						style = "Solid",
+						kind = "Primary",
+						text = `Visualise Roots of {importedModelSelectionCount} Hilt{if importedModelSelectionCount
+								> 1
+							then "s"
+							else ""}`,
+						active = canVisualise,
+						disabledText = "Select Imported Hilts to Visualise Roots...",
+						onActivate = visualisationActivated,
+						native = {
+							AnchorPoint = Vector2.new(0.5, 0),
+							Size = UDim2.new(1, 0, 0, BUTTON_SIZE_Y),
+							LayoutOrder = nextOrder(),
+						},
+					} :: Button.Props
+				),
+				ClearVisualsButton = visualisationsExist and e(
+					Button,
+					{
+						style = "Solid",
+						kind = "Primary",
+						text = "Clear All Visualisations",
+						active = visualisationsExist,
+						onActivate = clearVisualsActivated,
 						native = {
 							AnchorPoint = Vector2.new(0.5, 0),
 							Size = UDim2.new(1, 0, 0, BUTTON_SIZE_Y),

@@ -15,6 +15,7 @@ return {
 		crystalHiltPart = "CrystalHiltPart",
 	},
 
+	rootPartName = "root",
 	doubleGripSuffix = "_double_grip",
 
 	sections = {

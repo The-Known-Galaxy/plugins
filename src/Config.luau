@@ -17,7 +17,7 @@ local Config = {}
 	Opening a place containing the code synced via Rojo will cause the plugin to be reloaded in edit mode.
 	(No need for play solo or the hotswap plugin.)
 ]=]
-Config.DevelopmentMode = true
+Config.DevelopmentMode = false
 
 --[=[
 	@prop Version string

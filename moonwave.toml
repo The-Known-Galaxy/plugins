@@ -12,17 +12,43 @@ collapsed = true
 
 [[classOrder]]
 section = "Plugin Sub-Modules"
-classes = []
+classes = ["HiltSetProcessor", "DummyPluginModule"]
 collapsed = false
 
 [[classOrder]]
 section = "Utilities"
-classes = ["Logger", "Permissions", "NextId"]
+classes = [
+	"Logger",
+	"Permissions",
+	"NextId",
+	"TextFormat",
+	"ImportHilt",
+	"MaterialManager",
+	"ConfigureHilt",
+	"Colour",
+	"HiltValidator",
+	"HiltValidations",
+	"VisualiseHilt",
+]
 collapsed = true
 
 [[classOrder]]
 section = "Data Modules"
-classes = ["GroupIds", "RankData"]
+classes = ["GroupIds", "RankData", "HiltMaterials"]
+collapsed = true
+
+[[classOrder]]
+section = "User Interface"
+classes = [
+	"InterfaceConfig",
+	"PluginWidgetFrame",
+	"ScrollingList",
+	"Button",
+	"Panel",
+	"Text",
+	"Padding",
+	"ButtonMask",
+]
 collapsed = true
 
 autoSectionPath = "src"

@@ -126,3 +126,11 @@ Here we see a validation succeeding:
 And here we see a validation failing:
 
 ![Failed Validation](./hsp/validation_fail.png)
+
+## Visualisation
+
+### Root Parts
+Since the root parts are the sole driving components that determine how the saber will be mounted on benches and held in hands, it is often useful to visualise the root parts exclusively.
+Therefore, a utility for this purpose exists:
+
+![Visualise Roots](./hsp/visualise_roots.png)

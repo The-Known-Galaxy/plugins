@@ -19,8 +19,9 @@ There are 4 sections that all parts may fall under:
 	> "switch", "switche"
 4. The **emitter** - the top of the hilt, where the blade comes out from
 	> "emitter", "emiiter", "emmiter", "emiter", "emmitur", "ommiter", "emiitter"
-5. There is technically a 5th and 6th section, the **double grip** and **staff** sections, but they function kind of like a second and third extended _grip_ sections, and parts with any of the following keywords will be put inside that them, respectively
+5. There are technically a 5th and 6th section, the **double grip** and **staff** sections, but they function kind of like a 2nd and 3rd extended _grip_ section, and parts with any of the following keywords will be put inside that them, respectively:
 	> "handle_long", "long", "griplong", "grip_long", "long_grip", "handlelong", "handle.long", "long.handle", "longhandle", "longgrip", "long_grip", "long_handle", "double_handle", "double.grip"
+
 	> "staff", "staf", "staaf", "pike", "pyke"
 
 :::tip

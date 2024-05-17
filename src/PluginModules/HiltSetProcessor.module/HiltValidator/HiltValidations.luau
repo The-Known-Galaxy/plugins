@@ -71,6 +71,9 @@ local SingleRules: ValidationRules = {
 local DoubleRules: ValidationRules = {
 	ExistingAndUniqueConfigurations,
 }
+local StaffRules: ValidationRules = {
+	ExistingAndUniqueConfigurations,
+}
 
 local UniversalAndCorrectStructure = {
 	name = "HasCorrectStructure",
@@ -81,8 +84,10 @@ local UniversalAndCorrectStructure = {
 	subRules = function(hilt: Model): ValidationRules
 		if ImportHilt.IsSingleImportedHilt(hilt) then
 			return SingleRules
-		else
+		elseif ImportHilt.IsDoubleImportedHiltSection(hilt) then
 			return DoubleRules
+		else
+			return StaffRules
 		end
 	end,
 }

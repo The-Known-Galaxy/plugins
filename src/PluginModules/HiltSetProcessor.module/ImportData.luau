@@ -17,6 +17,7 @@ return {
 
 	rootPartName = "root",
 	doubleGripSuffix = "_double_grip",
+	staffSuffix = "_staff",
 
 	sections = {
 		[1] = "pommel",
@@ -56,6 +57,13 @@ return {
 			"long_handle",
 			"double_handle",
 			"double.grip",
+		},
+		staffGrip = {
+			"staff", -- ideal
+			"staf",
+			"staaf",
+			"pike",
+			"pyke",
 		},
 		primary = { "prim", "primary", "prime" },
 		secondary = { "sec", "second", "secondary" },

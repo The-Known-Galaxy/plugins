@@ -16,7 +16,7 @@ local INVALID_CHILDREN_ERROR =
 	"Invalid child (%s<%s>) found in (%s). Remove anything that isn't a BasePart of MeshPart and try again. Setup has been skipped for this selection."
 
 -- in global space
-local CLONE_OFFSET = Vector3.new(0, 3, 0)
+local CLONE_OFFSET = Vector3.new(0, 1, 0)
 
 local Configurations = require(script.Parent.ConfigureHilt.Configurations)
 local ImportData = require(script.Parent.ImportData)
@@ -71,6 +71,8 @@ local ImportHilt = {}
 				BasePart: root
 		Model: lightsaber_name_double_grip
 			Model: details
+		Model: lightsaber_name_staff
+			Model: details
 	```
 
 	Expects an Instance of the form:
@@ -105,24 +107,36 @@ function ImportHilt.Import(selection: { Instance }): ()
 		end
 
 		-- making a copy in order to not alter the previous mesh if the old one wants to be kept around
+		local _orientation, boundingBox = selectedInstance:GetBoundingBox()
 		local newInstance = selectedInstance:Clone()
 		newInstance.Parent = selectedInstance.Parent
-		newInstance:PivotTo(newInstance:GetPivot() + CLONE_OFFSET)
+		newInstance:PivotTo(newInstance:GetPivot() + Vector3.new(0, boundingBox.Y, 0) + CLONE_OFFSET)
 
 		-- this might be put in some names, so removing
-		local setName = newInstance.Name:lower():gsub("_lightsaber", "")
+		local setName = newInstance.Name:lower():gsub("_lightsaber", ""):gsub(" ", "_"):gsub("-", "_")
 
 		local setModel = Instance.new("Model")
 		setModel.Name = setName
 
-		local longHandleModel = Instance.new("Model")
-		longHandleModel.Name = setName .. ImportData.doubleGripSuffix
+		-- double hilt models
+		local doubleModel = Instance.new("Model")
+		doubleModel.Name = `{setName}{ImportData.doubleGripSuffix}`
 
-		local longDetailsModel = Instance.new("Model")
-		longDetailsModel.Name = "details"
+		local doubleDetailsModel = Instance.new("Model")
+		doubleDetailsModel.Name = "details"
 
-		local doubleRoot
-		local doubleGripDetailCount = 0
+		-- staff section models
+		local staffModel = Instance.new("Model")
+		staffModel.Name = `{setName}{ImportData.staffSuffix}`
+
+		local staffDetailsModel = Instance.new("Model")
+		staffDetailsModel.Name = "details"
+
+		local doubleRootPart
+		local doubleDetailCount = 0
+
+		local staffRootPart
+		local staffDetailCount = 0
 
 		-- finding all the BaseParts that belong to each of the 4 sections, and processing them individually
 		for sectionIndex, sectionName: ImportData.SectionName in ImportData.sections do
@@ -146,20 +160,23 @@ function ImportHilt.Import(selection: { Instance }): ()
 				local childName = child.Name
 				child.Material = ImportData.basePartMaterial
 
-				if nameMatchesKeyWords(childName, keywordsForSection) then
-					-- checking for what kind of part it is by searching for keyword matches against the part's name
-					local isPrimaryPart = nameMatchesKeyWords(childName, ImportData.keywords.primary)
-					local isRootPart = nameMatchesKeyWords(childName, ImportData.keywords.root)
-					local isDoubleRoot = nameMatchesKeyWords(childName, ImportData.keywords.doubleGrip)
-					local isCrystalPart = nameMatchesKeyWords(childName, ImportData.keywords.crystal)
+				local childIsASectionPart = nameMatchesKeyWords(childName, keywordsForSection)
+				local childIsADoublePart = nameMatchesKeyWords(childName, ImportData.keywords.doubleGrip)
+				local childIsAStaffPart = nameMatchesKeyWords(childName, ImportData.keywords.staffGrip)
 
-					if isPrimaryPart or isRootPart then
+				if childIsASectionPart or childIsADoublePart or childIsAStaffPart then
+					-- checking for what kind of part it is by searching for keyword matches against the part's name
+					local childIsAPrimaryPart = nameMatchesKeyWords(childName, ImportData.keywords.primary)
+					local childIsARootPart = nameMatchesKeyWords(childName, ImportData.keywords.root)
+					local childIsACrystalPart = nameMatchesKeyWords(childName, ImportData.keywords.crystal)
+
+					-- configuring part
+					if childIsAPrimaryPart or childIsARootPart then
 						Configurations.MakePrimaryHiltPart(child)
 					else
 						Configurations.MakeFixedHiltPart(child)
 					end
-
-					if isCrystalPart then
+					if childIsACrystalPart then
 						Configurations.MakeCrystalPart(child)
 					end
 
@@ -176,33 +193,45 @@ function ImportHilt.Import(selection: { Instance }): ()
 						partCategory = "(tertiary_old)"
 					elseif isFixedPart then
 						partCategory = "(fixed_old)"
-					elseif isCrystalPart then
+					elseif childIsACrystalPart then
 						partCategory = "(crystal)"
 					end
 
 					-- if a root part for the given section does not yet exist, then set it up as a root part if it matches root part keywords
 					-- everything that isn't a root part is detail
-					if isDoubleRoot then
-						if not doubleRoot and isRootPart then
+					if childIsADoublePart then
+						-- a part for a double hilt
+						if not doubleRootPart and childIsARootPart then
 							child.Name = ImportData.rootPartName
-							child.Parent = longHandleModel
-							doubleRoot = child
-							longHandleModel.PrimaryPart = child
+							child.Parent = doubleModel
+							doubleRootPart = child
+							doubleModel.PrimaryPart = child
 						else
-							doubleGripDetailCount += 1
-
-							child.Name = DETAIL_NAME:format(setName, sectionName, partCategory, detailCount)
-							child.Parent = longDetailsModel
+							doubleDetailCount += 1
+							child.Name = DETAIL_NAME:format(setName, "double", partCategory, doubleDetailCount)
+							child.Parent = doubleDetailsModel
+						end
+					elseif childIsAStaffPart then
+						-- a part for a staff
+						if not staffRootPart and childIsARootPart then
+							child.Name = ImportData.rootPartName
+							child.Parent = staffModel
+							staffRootPart = child
+							staffModel.PrimaryPart = child
+						else
+							staffDetailCount += 1
+							child.Name = DETAIL_NAME:format(setName, "staff", partCategory, staffDetailCount)
+							child.Parent = staffDetailsModel
 						end
 					else
-						if not rootForSection and isRootPart then
+						-- regular hilt part in a given section
+						if not rootForSection and childIsARootPart then
 							child.Name = ImportData.rootPartName
 							child.Parent = sectionModel
 							rootForSection = child
 							sectionModel.PrimaryPart = child
 						else
 							detailCount += 1
-
 							child.Name = DETAIL_NAME:format(setName, sectionName, partCategory, detailCount)
 							child.Parent = detailsModel
 						end
@@ -212,8 +241,10 @@ function ImportHilt.Import(selection: { Instance }): ()
 		end
 
 		setModel.Parent = newInstance
-		longHandleModel.Parent = newInstance
-		longDetailsModel.Parent = longHandleModel
+		doubleModel.Parent = newInstance
+		doubleDetailsModel.Parent = doubleModel
+		staffModel.Parent = newInstance
+		staffDetailsModel.Parent = staffModel
 		newInstance.Name = setName
 
 		table.insert(importedInstances, newInstance)
@@ -297,21 +328,46 @@ end
 function ImportHilt.IsImportedLightsaberModel(instance: Instance): (boolean, string?)
 	local singlePass, singleMessage = ImportHilt.IsSingleImportedHilt(instance)
 	local doublePass, doubleMessage = ImportHilt.IsDoubleImportedHiltSection(instance)
-	if singlePass or doublePass then
+	local staffPass, staffMessage = ImportHilt.IsStaffImportedHiltSection(instance)
+	if singlePass or doublePass or staffPass then
 		return true
 	else
 		-- only putting double message if the hilt is supposed to be a double hilt but doesn't match structure
-		local message = if doubleMessage ~= nil and instance.Name:find(ImportData.doubleGripSuffix)
-			then doubleMessage
-			else singleMessage
-		return false, `Not structured like a single or double hilt. Raw description: {message}.`
+		local message = nil
+		if ImportHilt.HasDoubleName(instance) then
+			message = doubleMessage
+		elseif ImportHilt.HasStaffName(instance) then
+			message = staffMessage
+		else
+			message = singleMessage
+		end
+
+		return false, `Not structured like a single, double or staff hilt. Raw description: {message}.`
 	end
 end
 
 --[=[
 	@tag utility
+	@since v0.3.1 
+	Checks whether a model is named like a double hilt. 
+]=]
+function ImportHilt.HasDoubleName(instance: Instance): boolean
+	return instance.Name:find(ImportData.doubleGripSuffix) ~= nil
+end
+
+--[=[
+	@tag utility
+	@since v0.3.1 
+	Checks whether a model is named like a double hilt. 
+]=]
+function ImportHilt.HasStaffName(instance: Instance): boolean
+	return instance.Name:find(ImportData.staffSuffix) ~= nil
+end
+
+--[=[
+	@tag utility
 	@since v0.3.0 
-	Checks whether a given instance is a valid single lightasber hilt.
+	Checks whether a given instance is a valid single lightsaber hilt.
 	Returns a message indicating why it isn't, if it isn't.
 ]=]
 function ImportHilt.IsSingleImportedHilt(instance: Instance): (boolean, string?)
@@ -337,11 +393,28 @@ end
 	Returns a message indicating why it isn't, if it isn't.
 ]=]
 function ImportHilt.IsDoubleImportedHiltSection(instance: Instance): (boolean, string?)
-	local hasDoubleName = instance.Name:find(ImportData.doubleGripSuffix)
+	local hasDoubleName = ImportHilt.HasDoubleName(instance)
 	local pass, message = ImportHilt.IsImportedLightsaberSection(instance)
 
 	if not hasDoubleName then
 		return false, `Name does not include "{ImportData.doubleGripSuffix}"`
+	else
+		return pass, message
+	end
+end
+
+--[=[
+	@tag utility
+	@since v0.3.1
+	Checks whether a given instance is a valid double lightsaber hilt section.
+	Returns a message indicating why it isn't, if it isn't.
+]=]
+function ImportHilt.IsStaffImportedHiltSection(instance: Instance): (boolean, string?)
+	local hasDoubleName = ImportHilt.HasStaffName(instance)
+	local pass, message = ImportHilt.IsImportedLightsaberSection(instance)
+
+	if not hasDoubleName then
+		return false, `Name does not include "{ImportData.staffSuffix}"`
 	else
 		return pass, message
 	end

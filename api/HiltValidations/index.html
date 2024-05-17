@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v2.3.1">
 <title data-rh="true">HiltValidations | The Known Tools</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://the-known-galaxy.github.io/plugins/api/HiltValidations"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="HiltValidations | The Known Tools"><meta data-rh="true" name="description" content="Declares a tree of validation rules for all lightsaber hilts, to be used by [HiltValidator]."><meta data-rh="true" property="og:description" content="Declares a tree of validation rules for all lightsaber hilts, to be used by [HiltValidator]."><link data-rh="true" rel="icon" href="/plugins/assets/images/sienartech_notext.png"><link data-rh="true" rel="canonical" href="https://the-known-galaxy.github.io/plugins/api/HiltValidations"><link data-rh="true" rel="alternate" href="https://the-known-galaxy.github.io/plugins/api/HiltValidations" hreflang="en"><link data-rh="true" rel="alternate" href="https://the-known-galaxy.github.io/plugins/api/HiltValidations" hreflang="x-default"><link rel="stylesheet" href="/plugins/assets/css/styles.e1adec2f.css">
-<link rel="preload" href="/plugins/assets/js/runtime~main.1286e15b.js" as="script">
-<link rel="preload" href="/plugins/assets/js/main.e8e5b743.js" as="script">
+<link rel="preload" href="/plugins/assets/js/runtime~main.e8832e64.js" as="script">
+<link rel="preload" href="/plugins/assets/js/main.ce49a21e.js" as="script">
 </head>
 <body class="navigation-with-keyboard">
 <script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
@@ -21,7 +21,7 @@
 <p>on successful validation, this function can return a list of new rules to validate - rules that DEPEND on this one succeeding</p>
 </span></span></div></div><code>}</code></div><div></div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="ValidationRules"><code style="text-decoration:none">ValidationRules</code><a href="#ValidationRules" class="hash-link" aria-label="Direct link to ValidationRules" title="Direct link to ValidationRules">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/PluginModules/HiltSetProcessor.module/HiltValidator/HiltValidations.luau#L28"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code class="purple_ieR2">type</code> <code>ValidationRules<!-- --> = </code> <code class="purple_ieR2">{</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/HiltValidations#ValidationRule">ValidationRule</a></code><code class="purple_ieR2">}</code></div><div>
 <p>A list of validation rules.</p>
-</div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="properties">Properties<a href="#properties" class="hash-link" aria-label="Direct link to Properties" title="Direct link to Properties">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="ValidationRules"><code style="text-decoration:none">ValidationRules</code><a href="#ValidationRules" class="hash-link" aria-label="Direct link to ValidationRules" title="Direct link to ValidationRules">​</a></h3><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->v0.3.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/PluginModules/HiltSetProcessor.module/HiltValidator/HiltValidations.luau#L101"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>HiltValidations<!-- -->.<!-- -->ValidationRules<!-- -->:<!-- --> </code> <code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/HiltValidations#ValidationRules">ValidationRules</a></code></div><div>
+</div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="properties">Properties<a href="#properties" class="hash-link" aria-label="Direct link to Properties" title="Direct link to Properties">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="ValidationRules"><code style="text-decoration:none">ValidationRules</code><a href="#ValidationRules" class="hash-link" aria-label="Direct link to ValidationRules" title="Direct link to ValidationRules">​</a></h3><div class="repositoryDetailsContainer_BPdw"><span class="releaseVersion_EonW">since <!-- -->v0.3.0</span><a class="sourceButton_sEho" href="https://github.com/The-Known-Galaxy/plugins/blob/main/src/PluginModules/HiltSetProcessor.module/HiltValidator/HiltValidations.luau#L106"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>HiltValidations<!-- -->.<!-- -->ValidationRules<!-- -->:<!-- --> </code> <code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/plugins/api/HiltValidations#ValidationRules">ValidationRules</a></code></div><div>
 <p>
   The top-level validation rules that all validations start from.
   Sub-rules are contained in each rule.
@@ -35,7 +35,7 @@
             &quot;lua_type&quot;: &quot;ValidationRules&quot;,
             &quot;since&quot;: &quot;v0.3.0&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 101,
+                &quot;line&quot;: 106,
                 &quot;path&quot;: &quot;src/PluginModules/HiltSetProcessor.module/HiltValidator/HiltValidations.luau&quot;
             }
         }
@@ -88,7 +88,7 @@
         &quot;path&quot;: &quot;src/PluginModules/HiltSetProcessor.module/HiltValidator/HiltValidations.luau&quot;
     }
 }</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a><ul><li><a href="#ValidationRule" class="table-of-contents__link toc-highlight">ValidationRule</a></li><li><a href="#ValidationRules" class="table-of-contents__link toc-highlight">ValidationRules</a></li></ul></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a><ul><li><a href="#ValidationRules" class="table-of-contents__link toc-highlight">ValidationRules</a></li></ul></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2024 The Known Galaxy. Built with Moonwave and Docusaurus</div></div></div></footer></div>
-<script src="/plugins/assets/js/runtime~main.1286e15b.js"></script>
-<script src="/plugins/assets/js/main.e8e5b743.js"></script>
+<script src="/plugins/assets/js/runtime~main.e8832e64.js"></script>
+<script src="/plugins/assets/js/main.ce49a21e.js"></script>
 </body>
 </html>

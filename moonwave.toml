@@ -12,7 +12,7 @@ collapsed = true
 
 [[classOrder]]
 section = "Plugin Sub-Modules"
-classes = ["HiltSetProcessor", "DummyPluginModule"]
+classes = ["HiltSetProcessor", "DummyPluginModule", "ComponentVisualiser"]
 collapsed = false
 
 [[classOrder]]

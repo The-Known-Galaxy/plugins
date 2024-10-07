@@ -26,7 +26,7 @@ local HiltSetProcessor = PluginSubModule.new({
 
 local function validateArchives(folder: Folder)
 	Logger.Print(`Validating... {folder:GetFullName()}`)
-	local result = ArchiveParser.ParseArchivesToObject(folder)
+	local result = ArchiveParser.ParseArchivesToObject(folder, true)
 
 	if result.Success then
 		Logger.Print("Library valid! No problems to fix. Well done!")
@@ -34,13 +34,15 @@ local function validateArchives(folder: Folder)
 	end
 
 	Logger.Warn(`{#result.Problems} problem{if #result.Problems == 1 then "" else "s"} were found after validation...`)
-	for _, problem in result.Problems do
-		local problemMessage = `[{problem.Type}]: {problem.Message}`
+	local totalProblems = #result.Problems
+	for problemIndex, problem in result.Problems do
+		local problemMessage =
+			`[{("%0" .. math.floor(math.log10(totalProblems * 10)) .. "d"):format(problemIndex)}/{totalProblems}] [{problem.Type}]: {problem.Message}`
 
 		if problem.GameBreaking then
-			Logger.Warn(`[CRITICAL] {problemMessage}`)
+			Logger.Warn(`[CRIT] {problemMessage}`)
 		else
-			Logger.Print(problemMessage)
+			Logger.Print(`[    ] {problemMessage}`)
 		end
 	end
 end

@@ -1,0 +1,3 @@
+[submodule "submodules/tkg-shared"]
+	path = submodules/tkg-shared
+	url = https://github.com/The-Known-Galaxy/tkg-shared.git

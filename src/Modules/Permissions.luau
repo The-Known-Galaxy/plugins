@@ -105,6 +105,19 @@ Permissions.AccessLevels = {
 			return false
 		end,
 	} :: AccessLevel,
+	ArchiveMaintainer = {
+		Name = "Archive Maintainer",
+		Level = 5,
+		Theme = InterfaceConfig.ColourPalettes.Cold,
+		IsAtLevel = function(groups: UserGroups): boolean
+			for _, group: UserGroup in groups do
+				if group.Id == 15672306 then -- https://www.roblox.com/groups/15672306/The-Known-Galaxy-Archive-Import#!/about
+					return true
+				end
+			end
+			return false
+		end,
+	} :: AccessLevel,
 	NoAccess = {
 		Name = "No Access",
 		Level = 0,

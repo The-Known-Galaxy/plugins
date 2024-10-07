@@ -25,7 +25,7 @@ Config.DevelopmentMode = false
 	
 	Plugin version.
 ]=]
-Config.Version = "v0.4.0"
+Config.Version = "v0.5.1"
 
 Config.Name = {}
 --[=[
@@ -85,6 +85,8 @@ Config.ActionAndMenuId = {
 	ACTION_VISUALISE_NAMED_AREAS = "VisualiseNamedAreas",
 
 	MENU_CONFIGURE_HILT_PART = "ConfigureHiltParts",
+
+	VALIDATE_ARCHIVES = "ValidateArchives",
 }
 
 return Config

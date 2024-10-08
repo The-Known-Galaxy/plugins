@@ -11,9 +11,10 @@ local Logger = require(script.Parent.Parent.Modules.Logger)
 local Permissions = require(script.Parent.Parent.Modules.Permissions)
 local PluginSubModule = require(script.Parent.Parent.Modules.PluginSubModule)
 local Llama = require(script.Parent.Parent.Parent.Libraries.Llama)
+local Promise = require(script.Parent.Parent.Parent.Libraries.Promise)
 local ArchiveParser = require(script.Parent.Parent.TKGShared.ArchiveParser)
 
-ArchiveParser.InjectDependencies(Llama)
+ArchiveParser.InjectDependencies(Llama, Promise)
 
 local HiltSetProcessor = PluginSubModule.new({
 	ButtonIcon = "rbxassetid://12663078719",

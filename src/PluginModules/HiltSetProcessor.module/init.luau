@@ -28,7 +28,7 @@ local HiltSetProcessor = PluginSubModule.new({
 	ButtonIcon = pluginIcon,
 	DisplayName = displayName,
 	Tooltip = "Handles importing, configuring and validating lightsaber hilt sets",
-	ActiveByDefault = Config.DevelopmentMode,
+	ActiveByDefault = false,
 	OneClickExecution = false,
 	DevelopmentModule = false,
 })

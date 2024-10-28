@@ -25,7 +25,7 @@ Config.DevelopmentMode = false
 	
 	Plugin version.
 ]=]
-Config.Version = "v0.3.1"
+Config.Version = "v0.5.2"
 
 Config.Name = {}
 --[=[
@@ -82,8 +82,11 @@ Config.ActionAndMenuId = {
 	ACTION_SET_AS_PRIMARY_PART = "SetAsPrimaryPart",
 	ACTION_SET_AS_FIXED_PART = "SetAsFixedPart",
 	ACTION_SET_AS_CRYSTAL_PART = "SetAsCrystalPart",
+	ACTION_VISUALISE_NAMED_AREAS = "VisualiseNamedAreas",
 
 	MENU_CONFIGURE_HILT_PART = "ConfigureHiltParts",
+
+	VALIDATE_ARCHIVES = "ValidateArchives",
 }
 
 return Config

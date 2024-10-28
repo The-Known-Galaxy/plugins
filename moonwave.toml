@@ -12,23 +12,29 @@ collapsed = true
 
 [[classOrder]]
 section = "Plugin Sub-Modules"
-classes = ["HiltSetProcessor", "DummyPluginModule"]
+classes = [
+    "HiltSetProcessor",
+    "DummyPluginModule",
+    "ComponentVisualiser",
+    "ArchiveValidator",
+]
 collapsed = false
 
 [[classOrder]]
 section = "Utilities"
 classes = [
-	"Logger",
-	"Permissions",
-	"NextId",
-	"TextFormat",
-	"ImportHilt",
-	"MaterialManager",
-	"ConfigureHilt",
-	"Colour",
-	"HiltValidator",
-	"HiltValidations",
-	"VisualiseHilt",
+    "Logger",
+    "Permissions",
+    "NextId",
+    "TextFormat",
+    "ImportHilt",
+    "MaterialManager",
+    "ConfigureHilt",
+    "Colour",
+    "HiltValidator",
+    "HiltValidations",
+    "VisualiseHilt",
+    "NamedAreaVisualiser",
 ]
 collapsed = true
 
@@ -40,14 +46,14 @@ collapsed = true
 [[classOrder]]
 section = "User Interface"
 classes = [
-	"InterfaceConfig",
-	"PluginWidgetFrame",
-	"ScrollingList",
-	"Button",
-	"Panel",
-	"Text",
-	"Padding",
-	"ButtonMask",
+    "InterfaceConfig",
+    "PluginWidgetFrame",
+    "ScrollingList",
+    "Button",
+    "Panel",
+    "Text",
+    "Padding",
+    "ButtonMask",
 ]
 collapsed = true
 

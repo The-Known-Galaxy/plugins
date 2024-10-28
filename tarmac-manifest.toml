@@ -1,3 +1,8 @@
+[inputs."assets/images/eye.png"]
+hash = "a4c5b4f858f6a6614b8187d7a5bcea1dee9cb6a162a196fb199639b98aea8a62"
+id = 18923719483
+packable = false
+
 [inputs."assets/images/hilt_collector_3.png"]
 hash = "8a6068201f72d8a731c0581434ffc7f20752253ef4d57f14795279df3e27dc77"
 id = 16964732929

@@ -13,7 +13,10 @@
             "TKGSuite": {
                 "$className": "Folder",
                 "Plugin": {
-                    "$path": "src"
+                    "$path": "src",
+                    "TKGShared": {
+                        "$path": "submodules/tkg-shared/shared"
+                    }
                 },
                 "Libraries": {
                     "$path": "Packages"

@@ -27,6 +27,14 @@ Config.DevelopmentMode = false
 ]=]
 Config.Version = "v0.5.2"
 
+--[=[
+	@prop PluginAssetId number
+	@within Config
+	
+	The asset ID that the plugin will deploy to.
+]=]
+Config.PluginAssetId = 16915363791
+
 Config.Name = {}
 --[=[
 	@prop Name.Long string 

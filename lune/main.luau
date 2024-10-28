@@ -6,6 +6,7 @@ local roblox = require("@lune/roblox")
 local Util = require("lib/Util")
 local Out = require("lib/Out")
 local remodel = require("remodel")
+local Config = require("../src/Config")
 
 if process.os ~= "windows" then
 	error("Functionality for non-Windows systems has not been implemented yet.")
@@ -144,6 +145,13 @@ function ProgramActions.deploy()
 		return false
 	end
 
+	if process.env.PLUGIN_DEPLOY_KEY == nil then
+		Out.Warn(
+			`Cannot deploy since the PLUGIN_DEPLOY_KEY environment variable is not present. Make sure it's in your .env and you source it!`
+		)
+		return false
+	end
+
 	local confirmedDeploy = stdio.prompt("confirm", "are you sure you want to deploy?", false)
 	if not confirmedDeploy then
 		Out.Info("aborting deployment...")
@@ -158,29 +166,39 @@ function ProgramActions.deploy()
 
 	Out.Info("building plugin for deployment...")
 	local pluginOutput = `{deploymentDirectory}/plugin.rbxm`
-	local result = process.spawn("rojo", {
+	local rojoResult = process.spawn("rojo", {
 		"build",
 		"--output",
 		pluginOutput,
 		"plugin.project.json",
 	})
-	if not result.ok then
+	if not rojoResult.ok then
 		Out.Warn("Something went wrong!")
-		print(result.stderr)
+		print(rojoResult.stderr)
 		return false
 	end
 
-	-- taking 1st array index since it returns an array of Instances, but we'll only ever have 1 instance in said array
-	Out.Info("reading generated plugin file...")
-	local pluginInstance = remodel.readModelFile(pluginOutput)[1]
 	Out.Info("overwriting existing model asset in ROBLOX Marketplace...")
-	local ok, writingResult = pcall(remodel.writeExistingModelAsset, pluginInstance, 16915363791)
-	if ok then
+	local rbxcloudResult = process.spawn("rbxcloud", {
+		"assets",
+		"update",
+		"--asset-type",
+		"model-fbx",
+		"--asset-id",
+		tostring(Config.PluginAssetId),
+		"--filepath",
+		pluginOutput,
+		"--api-key",
+		process.env.PLUGIN_DEPLOY_KEY,
+	})
+
+	print(rbxcloudResult.stdout)
+	if rbxcloudResult.ok then
 		Out.Success("deployment finished!")
 		return true
 	else
 		Out.Warn("something went wrong during overwriting!")
-		print(writingResult)
+		print(rbxcloudResult.stderr)
 		return false
 	end
 end

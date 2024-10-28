@@ -49,7 +49,7 @@ local function validateArchives(folder: Folder)
 end
 
 HiltSetProcessor:OnPreLoad(function(): (boolean, string?)
-	if Permissions.GetAccessLevel().Level >= Permissions.AccessLevels.Contributor.Level then
+	if Permissions.GetAccessLevel().Level >= Permissions.AccessLevels.ArchiveMaintainer.Level then
 		return true
 	else
 		return false,
